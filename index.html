@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#f5f4f0">
+<meta name="application-name" content="BioTest">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.png">
+<title>BioTest</title>
+<style>
+*{-webkit-box-sizing:border-box;box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow-x:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:#f0ede8;color:#1a1a1a;-webkit-text-size-adjust:100%}
+.wrap{max-width:640px;margin:0 auto;padding:1.25rem 1rem 5rem}
+
+/* ── ANIMATIONS ── */
+@-webkit-keyframes fadeUp{from{opacity:0;-webkit-transform:translateY(18px);transform:translateY(18px)}to{opacity:1;-webkit-transform:translateY(0);transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@-webkit-keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@-webkit-keyframes popIn{0%{opacity:0;-webkit-transform:scale(.88);transform:scale(.88)}60%{-webkit-transform:scale(1.03);transform:scale(1.03)}100%{opacity:1;-webkit-transform:scale(1);transform:scale(1)}}
+@keyframes popIn{0%{opacity:0;transform:scale(.88)}60%{transform:scale(1.03)}100%{opacity:1;transform:scale(1)}}
+@-webkit-keyframes ripple{0%{-webkit-transform:scale(0);transform:scale(0);opacity:.35}100%{-webkit-transform:scale(3.5);transform:scale(3.5);opacity:0}}
+@keyframes ripple{0%{transform:scale(0);opacity:.35}100%{transform:scale(3.5);opacity:0}}
+@-webkit-keyframes slideQ{from{opacity:0;-webkit-transform:translateX(22px);transform:translateX(22px)}to{opacity:1;-webkit-transform:translateX(0);transform:translateX(0)}}
+@keyframes slideQ{from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:translateX(0)}}
+@-webkit-keyframes pulse{0%,100%{-webkit-transform:scale(1);transform:scale(1)}50%{-webkit-transform:scale(1.04);transform:scale(1.04)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+
+.screen{display:none}
+.screen.active{display:block;-webkit-animation:fadeIn .22s ease;animation:fadeIn .22s ease}
+
+/* ── LOGO ── */
+.logo{font-size:26px;font-weight:800;letter-spacing:-1px;margin-bottom:3px;-webkit-animation:fadeUp .35s ease both;animation:fadeUp .35s ease both}
+.logo em{color:#3d7a3a;font-style:normal}
+.tagline{font-size:13px;color:#aaa;margin-bottom:1.5rem;-webkit-animation:fadeUp .35s .08s ease both;animation:fadeUp .35s .08s ease both}
+
+/* ── CARDS GRID ── */
+.grid{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;gap:10px;margin-bottom:0}
+.card{
+  position:relative;overflow:hidden;
+  -webkit-box-flex:0;-ms-flex:0 0 calc(50% - 5px);flex:0 0 calc(50% - 5px);
+  background:#fff;border:1.5px solid #e5e2dc;border-radius:18px;padding:1.1rem;
+  cursor:pointer;-webkit-user-select:none;user-select:none;
+  -webkit-transition:-webkit-transform .15s,border-color .15s,background .15s,box-shadow .15s;
+  transition:transform .15s,border-color .15s,background .15s,box-shadow .15s;
+  -webkit-animation:fadeUp .4s ease both;animation:fadeUp .4s ease both
+}
+.card:nth-child(1){-webkit-animation-delay:.05s;animation-delay:.05s}
+.card:nth-child(2){-webkit-animation-delay:.1s;animation-delay:.1s}
+.card:nth-child(3){-webkit-animation-delay:.15s;animation-delay:.15s}
+.card:nth-child(4){-webkit-animation-delay:.2s;animation-delay:.2s}
+.card:active{-webkit-transform:scale(.96);transform:scale(.96)}
+.card.sel{border-color:#3d7a3a;background:#f0f8ef;-webkit-box-shadow:0 0 0 3px rgba(61,122,58,.12);box-shadow:0 0 0 3px rgba(61,122,58,.12)}
+.card-all{
+  -webkit-box-flex:0;-ms-flex:0 0 100%;flex:0 0 100%;
+  background:linear-gradient(135deg,#1a1a1a 0%,#2d4a2b 100%);
+  border-color:#1a1a1a;border-radius:18px;
+  padding:1.1rem 1.3rem;
+  display:-webkit-box;display:-ms-flexbox;display:flex;
+  -webkit-box-align:center;-ms-flex-align:center;align-items:center;gap:14px;
+  -webkit-animation-delay:.25s;animation-delay:.25s
+}
+.card-all.sel{border-color:#3d7a3a;-webkit-box-shadow:0 0 0 3px rgba(61,122,58,.3);box-shadow:0 0 0 3px rgba(61,122,58,.3)}
+.card-all .card-icon{font-size:30px;margin:0}
+.card-all .card-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:2px}
+.card-all .card-sub{font-size:12px;color:rgba(255,255,255,.55)}
+.card-all .badge{background:rgba(255,255,255,.18);color:#fff}
+.card-icon{font-size:26px;display:block;margin-bottom:.45rem}
+.card-name{font-size:13px;font-weight:700;margin-bottom:2px}
+.card-sub{font-size:11px;color:#aaa}
+.badge{position:absolute;top:9px;right:9px;font-size:10px;font-weight:700;background:#e8f5e8;color:#3d7a3a;padding:2px 7px;border-radius:20px}
+
+/* card ripple */
+.card .rpl{position:absolute;border-radius:50%;background:rgba(61,122,58,.18);width:60px;height:60px;margin-top:-30px;margin-left:-30px;-webkit-animation:ripple .55s ease-out forwards;animation:ripple .55s ease-out forwards;pointer-events:none}
+.card-all .rpl{background:rgba(255,255,255,.2)}
+
+/* ── SETUP ── */
+.setup{margin-top:1.25rem;display:none;-webkit-animation:fadeUp .3s ease both;animation:fadeUp .3s ease both}
+.sep{height:1px;background:#e5e2dc;margin:1.25rem 0}
+.lbl{font-size:11px;font-weight:700;color:#bbb;letter-spacing:.7px;text-transform:uppercase;margin-bottom:.65rem}
+.tabs{display:-webkit-box;display:-ms-flexbox;display:flex;gap:8px;margin-bottom:1rem}
+.tab{
+  -webkit-box-flex:1;-ms-flex:1;flex:1;padding:.65rem .5rem;
+  border:1.5px solid #e5e2dc;border-radius:12px;background:#fff;
+  font-size:13px;font-weight:700;cursor:pointer;text-align:center;color:#999;
+  -webkit-transition:all .18s;transition:all .18s;-webkit-user-select:none;user-select:none
+}
+.tab:active{-webkit-transform:scale(.96);transform:scale(.96)}
+.tab.sel{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.cnts{display:-webkit-box;display:-ms-flexbox;display:flex;gap:8px;-ms-flex-wrap:wrap;flex-wrap:wrap;margin-bottom:1rem}
+.cnt{
+  -webkit-box-flex:1;-ms-flex:1 0 0;flex:1 0 0;min-width:44px;
+  padding:.7rem .25rem;border:1.5px solid #e5e2dc;border-radius:12px;
+  background:#fff;font-size:15px;font-weight:700;cursor:pointer;text-align:center;color:#999;
+  -webkit-transition:all .18s;transition:all .18s;position:relative;overflow:hidden;
+  -webkit-user-select:none;user-select:none
+}
+.cnt:active{-webkit-transform:scale(.94);transform:scale(.94)}
+.cnt.sel{background:#1a1a1a;color:#fff;border-color:#1a1a1a;-webkit-animation:popIn .25s ease;animation:popIn .25s ease}
+.cnt .rpl{position:absolute;border-radius:50%;background:rgba(0,0,0,.1);width:50px;height:50px;margin-top:-25px;margin-left:-25px;-webkit-animation:ripple .45s ease-out forwards;animation:ripple .45s ease-out forwards;pointer-events:none}
+.rrow{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;gap:8px;margin-bottom:.75rem}
+.rrow span{font-size:13px;color:#999;white-space:nowrap}
+.rin{-webkit-box-flex:1;-ms-flex:1;flex:1;padding:.7rem .75rem;border:1.5px solid #e5e2dc;border-radius:12px;font-size:16px;font-weight:700;text-align:center;background:#fff;color:#1a1a1a;outline:none;-webkit-appearance:none;appearance:none;-moz-appearance:textfield;-webkit-transition:border-color .18s;transition:border-color .18s}
+.rin::-webkit-inner-spin-button,.rin::-webkit-outer-spin-button{-webkit-appearance:none}
+.rin:focus{border-color:#3d7a3a}
+.rhint{font-size:12px;color:#bbb;text-align:center;margin-bottom:1rem}
+
+/* ── BUTTONS ── */
+.btn{
+  width:100%;padding:.9rem;background:#1a1a1a;color:#fff;border:none;
+  border-radius:15px;font-size:15px;font-weight:700;cursor:pointer;
+  -webkit-transition:-webkit-transform .15s,opacity .15s;transition:transform .15s,opacity .15s;
+  letter-spacing:-.2px;-webkit-appearance:none;position:relative;overflow:hidden
+}
+.btn:disabled{opacity:.28;cursor:default}
+.btn:not(:disabled):active{-webkit-transform:scale(.97);transform:scale(.97);opacity:.9}
+.btn .rpl{position:absolute;border-radius:50%;background:rgba(255,255,255,.18);width:100px;height:100px;margin-top:-50px;margin-left:-50px;-webkit-animation:ripple .55s ease-out forwards;animation:ripple .55s ease-out forwards;pointer-events:none}
+.btn-ghost{background:transparent;color:#888;border:1.5px solid #e5e2dc;margin-top:.65rem;font-size:14px;font-weight:600;padding:.78rem}
+
+/* ── TEST SCREEN ── */
+.pbar-wrap{height:5px;background:#e5e2dc;border-radius:10px;overflow:hidden;margin-bottom:1rem}
+.pbar{height:100%;background:linear-gradient(90deg,#3d7a3a,#5aaa56);border-radius:10px;-webkit-transition:width .45s cubic-bezier(.4,0,.2,1);transition:width .45s cubic-bezier(.4,0,.2,1)}
+.dotrow{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;gap:5px;margin-bottom:1rem}
+.dot{
+  width:22px;height:22px;border-radius:7px;background:#e5e2dc;
+  display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;
+  -webkit-box-align:center;-ms-flex-align:center;align-items:center;
+  -webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;
+  font-size:9px;font-weight:700;color:#bbb;cursor:pointer;
+  -webkit-transition:all .18s;transition:all .18s;-webkit-user-select:none;user-select:none
+}
+.dot:active{-webkit-transform:scale(.88);transform:scale(.88)}
+.dot.filled{background:#c8e6c9;color:#2a6027}
+.dot.cur{background:#1a1a1a;color:#fff;-webkit-transform:scale(1.08);transform:scale(1.08)}
+.qcard{-webkit-animation:slideQ .25s cubic-bezier(.25,.46,.45,.94) both;animation:slideQ .25s cubic-bezier(.25,.46,.45,.94) both}
+.qmeta{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-bottom:.5rem}
+.qn{font-size:12px;font-weight:700;color:#bbb;letter-spacing:.3px}
+.qsub{font-size:11px;font-weight:700;color:#aaa;background:#f0ede8;padding:2px 8px;border-radius:20px}
+.qt{font-size:15px;font-weight:600;line-height:1.65;color:#1a1a1a;margin-bottom:1.1rem}
+.alist{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;gap:8px;margin-bottom:1.1rem}
+.ans{
+  background:#fff;border:1.5px solid #e5e2dc;border-radius:14px;
+  padding:.85rem 1rem;cursor:pointer;font-size:14px;color:#444;
+  -webkit-transition:all .18s cubic-bezier(.25,.46,.45,.94);transition:all .18s cubic-bezier(.25,.46,.45,.94);
+  display:-webkit-box;display:-ms-flexbox;display:flex;
+  -webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;
+  gap:10px;line-height:1.55;text-align:left;width:100%;
+  -webkit-appearance:none;position:relative;overflow:hidden;
+  -webkit-user-select:none;user-select:none
+}
+.ans:active{-webkit-transform:scale(.98);transform:scale(.98)}
+.ans .L{font-size:12px;font-weight:800;min-width:20px;padding-top:1px;color:#ccc;-webkit-transition:color .18s;transition:color .18s;-webkit-user-select:none;user-select:none;-ms-flex-negative:0;flex-shrink:0}
+.ans.pick{border-color:#1a6fba;background:#e8f2fb;color:#0d4a8a;-webkit-transform:scale(1.01);transform:scale(1.01);-webkit-box-shadow:0 2px 12px rgba(26,111,186,.15);box-shadow:0 2px 12px rgba(26,111,186,.15)}
+.ans.pick .L{color:#1a6fba}
+.ans .rpl{position:absolute;border-radius:50%;background:rgba(26,111,186,.12);width:80px;height:80px;margin-top:-40px;margin-left:-40px;-webkit-animation:ripple .5s ease-out forwards;animation:ripple .5s ease-out forwards;pointer-events:none}
+.nav{display:-webkit-box;display:-ms-flexbox;display:flex;gap:8px}
+.nb{
+  -webkit-box-flex:1;-ms-flex:1;flex:1;padding:.8rem .5rem;
+  border:1.5px solid #e5e2dc;border-radius:14px;background:#fff;
+  font-size:14px;font-weight:700;cursor:pointer;color:#555;
+  -webkit-transition:all .18s;transition:all .18s;-webkit-appearance:none;text-align:center;
+  -webkit-user-select:none;user-select:none;position:relative;overflow:hidden
+}
+.nb:disabled{opacity:.22;cursor:default}
+.nb:not(:disabled):active{-webkit-transform:scale(.96);transform:scale(.96);background:#f5f5f5}
+.nb.fin{background:#3d7a3a;color:#fff;border-color:#3d7a3a}
+.nb.fin:active{opacity:.85}
+
+/* ── RESULTS ── */
+.rcircle{
+  width:120px;height:120px;border-radius:50%;
+  display:-webkit-box;display:-ms-flexbox;display:flex;
+  -webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;
+  -webkit-box-align:center;-ms-flex-align:center;align-items:center;
+  -webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;
+  margin:0 auto 1.25rem;border:3px solid #3d7a3a;
+  -webkit-animation:popIn .4s .1s cubic-bezier(.25,.46,.45,.94) both;
+  animation:popIn .4s .1s cubic-bezier(.25,.46,.45,.94) both
+}
+.rpct{font-size:30px;font-weight:800;line-height:1;color:#1a1a1a}
+.rlbl{font-size:11px;color:#aaa;margin-top:3px}
+.sstats{display:-webkit-box;display:-ms-flexbox;display:flex;gap:8px;margin-bottom:1.25rem}
+.sstats .ss{
+  -webkit-box-flex:1;-ms-flex:1;flex:1;
+  background:#fff;border:1.5px solid #e5e2dc;border-radius:14px;
+  padding:.8rem .5rem;text-align:center;
+  -webkit-animation:fadeUp .35s ease both;animation:fadeUp .35s ease both
+}
+.sstats .ss:nth-child(1){-webkit-animation-delay:.15s;animation-delay:.15s}
+.sstats .ss:nth-child(2){-webkit-animation-delay:.2s;animation-delay:.2s}
+.sstats .ss:nth-child(3){-webkit-animation-delay:.25s;animation-delay:.25s}
+.sstats .ss:nth-child(4){-webkit-animation-delay:.3s;animation-delay:.3s}
+.ssn{font-size:22px;font-weight:800}
+.ssl{font-size:11px;color:#aaa;margin-top:2px}
+.ritem{background:#fff;border:1.5px solid #e5e2dc;border-radius:14px;padding:.9rem 1rem;margin-top:8px;-webkit-animation:fadeUp .3s ease both;animation:fadeUp .3s ease both}
+.rq{font-size:13px;color:#444;margin-bottom:.35rem;line-height:1.5}
+.ra{font-size:12px;font-weight:600}
+.rok{color:#2a6027}
+.rerr{color:#a02020}
+.rskip{color:#aaa}
+.shmore{width:100%;margin-top:8px;padding:.7rem;border:1.5px solid #e5e2dc;border-radius:12px;background:#fff;font-size:13px;color:#888;cursor:pointer;-webkit-appearance:none;text-align:center;-webkit-transition:all .15s;transition:all .15s}
+.shmore:active{background:#f5f5f5;-webkit-transform:scale(.98);transform:scale(.98)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div class="logo">Bio<em>Test</em></div>
+  <div class="tagline">395 та савол · 4 та фан</div>
+  <div class="grid">
+    <div class="card" id="c-anatomy" onclick="pickS('anatomy',event)">
+      <span class="badge">98</span>
+      <span class="card-icon">🫀</span>
+      <div class="card-name">Анатомия</div>
+      <div class="card-sub">Физиология</div>
+    </div>
+    <div class="card" id="c-botany" onclick="pickS('botany',event)">
+      <span class="badge">100</span>
+      <span class="card-icon">🌿</span>
+      <div class="card-name">Ботаника</div>
+      <div class="card-sub">Ўсимликлар</div>
+    </div>
+    <div class="card" id="c-zoology" onclick="pickS('zoology',event)">
+      <span class="badge">97</span>
+      <span class="card-icon">🦎</span>
+      <div class="card-name">Зоология</div>
+      <div class="card-sub">Ҳайвонлар</div>
+    </div>
+    <div class="card" id="c-biology" onclick="pickS('biology',event)">
+      <span class="badge">100</span>
+      <span class="card-icon">🔬</span>
+      <div class="card-name">Методика</div>
+      <div class="card-sub">Б. ўқитиш</div>
+    </div>
+    <div class="card card-all" id="c-all" onclick="pickS('all',event)">
+      <span class="badge" style="top:50%;right:12px;-webkit-transform:translateY(-50%);transform:translateY(-50%)">395</span>
+      <span class="card-icon">🧬</span>
+      <div>
+        <div class="card-name">Барча фанлар</div>
+        <div class="card-sub">Аралаш · 4 та фандан</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="setup" id="setup">
+    <div class="sep"></div>
+
+    <!-- Mode tabs — hidden for 'all' -->
+    <div id="mode-tabs-wrap">
+      <div class="lbl">Режим</div>
+      <div class="tabs">
+        <div class="tab sel" id="mt-count" onclick="setMode('count',event)">Сон бўйича</div>
+        <div class="tab" id="mt-range" onclick="setMode('range',event)">Оралиқ</div>
+      </div>
+    </div>
+
+    <!-- Count panel -->
+    <div id="panel-count">
+      <div class="cnts">
+        <div class="cnt" onclick="pickN(10,event)">10</div>
+        <div class="cnt" onclick="pickN(20,event)">20</div>
+        <div class="cnt" onclick="pickN(30,event)">30</div>
+        <div class="cnt" onclick="pickN(50,event)">50</div>
+        <div class="cnt" id="cnt-all" onclick="pickN(0,event)">Барча</div>
+      </div>
+    </div>
+
+    <!-- Range panel -->
+    <div id="panel-range" style="display:none">
+      <div class="rrow">
+        <span>Дан</span>
+        <input type="number" class="rin" id="rfrom" value="1" min="1" inputmode="numeric">
+        <span>—</span>
+        <input type="number" class="rin" id="rto" value="20" min="1" inputmode="numeric">
+        <span>гача</span>
+      </div>
+      <div class="rhint" id="rhint">Жами: 20 та савол (1–20)</div>
+      <div class="lbl" style="margin-top:.5rem">Тартиб</div>
+      <div class="tabs" style="margin-bottom:1rem">
+        <div class="tab sel" id="ot-rand" onclick="setOrd('rand',event)">🔀 Аралаш</div>
+        <div class="tab" id="ot-seq" onclick="setOrd('seq',event)">↕ Кетма-кет</div>
+      </div>
+    </div>
+
+    <button class="btn" id="sbtn" onclick="startTest(event)" disabled>Тестни бошлаш →</button>
+  </div>
+</div>
+
+<!-- TEST -->
+<div id="test" class="screen">
+  <div class="pbar-wrap"><div class="pbar" id="pbar"></div></div>
+  <div class="dotrow" id="dotrow"></div>
+  <div id="qcard" class="qcard">
+    <div class="qmeta">
+      <span class="qn" id="qn">Савол 1 / 20</span>
+      <span class="qsub" id="qsub"></span>
+    </div>
+    <div class="qt" id="qt"></div>
+    <div class="alist" id="alist"></div>
+  </div>
+  <div class="nav">
+    <button class="nb" id="pb" onclick="go(cur-1,event)">←</button>
+    <button class="nb" id="nb2" onclick="go(cur+1,event)">Кейинги →</button>
+    <button class="nb fin" id="fb" onclick="finish(event)">Якун ✓</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="results" class="screen">
+  <div class="rcircle" id="rcirc">
+    <div class="rpct" id="rpct">0%</div>
+    <div class="rlbl">натижа</div>
+  </div>
+  <div class="sstats">
+    <div class="ss"><div class="ssn" id="stot">0</div><div class="ssl">жами</div></div>
+    <div class="ss"><div class="ssn" style="color:#2a6027" id="sok">0</div><div class="ssl">тўғри</div></div>
+    <div class="ss"><div class="ssn" style="color:#a02020" id="serr">0</div><div class="ssl">хато</div></div>
+    <div class="ss"><div class="ssn" style="color:#999" id="sskip">0</div><div class="ssl">ўтказиб</div></div>
+  </div>
+  <button class="btn" onclick="restartTest(event)">Яна бошлаш 🔄</button>
+  <button class="btn btn-ghost" onclick="goHome(event)">Бош саҳифа</button>
+  <div style="margin-top:1.5rem">
+    <div class="lbl">Таҳлил</div>
+    <div id="revlist"></div>
+    <button class="shmore" id="shmore" onclick="showAllR()" style="display:none"></button>
+  </div>
+</div>
+
+</div>
+<script>
+var DB={"anatomy":[{"q":"Определите функции скелета: 1) опора и защита; 2) выработка форменных элементов крови; 3) депо минеральных солей; 4) перенос крови и лимфы; 5) соединение мышц между собой","answers":["1,2 ,3","1,4,5","2,3,4","1,2,5 2."],"correct":0},{"q":"Внутренний слой головок трубчатых костей состоит....?","answers":["губчатого вещества","плотного пластинчатого","твердого","гаверсовой системы"],"correct":0},{"q":"Для питания, роста, восстановления костей при переломах важное значение имеет…","answers":["периостом","миелин","фасция","хрящ"],"correct":0},{"q":"При каком заболевании деформируются кости ног, позвоночника, грудной клетки, таза?","answers":["рахит","сколиоз","кифоз","лордоз"],"correct":0},{"q":"Укажите кости свободных нижних конечностей: 1) кости пальцев; 2) малая берцовая; 3) бедренная; 4) коленная чашечка; 5) копчик","answers":["1,2,3,4","1,2,3","1,2,3,5","1,2,3,4,5"],"correct":0},{"q":"С помощью чего кости соединяются неподвижно?","answers":["с помощью швов","суставной сумки","фасции","суставной жидкости"],"correct":0},{"q":"К какой ткани относится оболочка, выстилающая внутренние органы?","answers":["эпителиальная","соединительная","мышечная","нервная"],"correct":0},{"q":"В клетках какой ткани имеется большое количество эластичных волокон, которые устойчивы к растяжению, сгибанию и разгибанию?","answers":["соединительная ткань","эпителиальная ткань","нервная ткань","мышечная ткань"],"correct":0},{"q":"Что такое контрактура мышц?","answers":["неспособность мышц к сокращению и расслаблению","общее дрожание (тремор) тела человека","воспаление нервных волокон, отвечающих за движения","воспаление нервных волокон головного мозга"],"correct":0},{"q":"Какая из перечисленных функций не входит в деятельность скелета?","answers":["участие в гуморальной регуляции систем организма","выработка форменных элементов крови","опора, депо минеральных солей","защита, опора"],"correct":0},{"q":"Определите кости, которые не относятся к длинным трубчатым костям: a) локтевая; b) плечевая; c) ключица; d) кости кисти; e) ребро","answers":["a, b","c, d, e","a, c, d","b, d"],"correct":1},{"q":"К чему присоединены \"ложные\" ребра?","answers":["к грудине","к хрящу седьмого ребра и грудным позвонкам","между собой и лежат между мышцами живота","между собой и к костям ключицы"],"correct":1},{"q":"Клетки какой ткани организма человека способны к регенерации","answers":["соединительной","эпителиальной","мышечной","нервной"],"correct":1},{"q":"Кому принадлежит следующее высказывание: “Организм без внешней среды, поддерживающей его существование, невозможен...”","answers":["Ивановский","И.М.Сеченов","И.П.Павлов","Филатов"],"correct":1},{"q":"Количество каких клеток человека достигает 30-40 млн :","answers":["рецепторы вкуса","рецепторы обоняния","кожные рецепторы","обонятельный анализатор"],"correct":1},{"q":"Укажите мышцы шеи","answers":["подключичная мышца","грудино-ключично-сосцевидная мышца","дельтовидная","трапециевидная"],"correct":1},{"q":"Найдите свойство, не соответствующее гладкой мышечной ткани","answers":["одноядерная, не зависит от воли человека","не выполняет свою функцию во время сна","всегда выполняет свои функции","веретенообразные, волокна размером 0,1 мм"],"correct":1},{"q":"По строению кости бывают ... 1) трубчатые; 2) короткие; 3) длинные; 4) плоские; 5) губчатые; 6) неподвижные; 7) смешанные; 8) подвижные","answers":["1, 4, 5, 7","1,2,3,6,8","2,3,6,8","2,3,4,5"],"correct":0},{"q":"Каково количество истинных ребер? 6","answers":["14","4","2"],"correct":0},{"q":"Определите кости, которые не соединены с помощью шва?","answers":["височные","ребра","лобная","затылок"],"correct":1},{"q":"В каком возрасте (лет) происходит окостенение пальцев (1) и ладони (2)? a) 17-25; b) 20-25; c) 15-16; d) 16-20","answers":["l-d, 2-c","1-d, 2-a","l-b,2-c","1-d, 2-b"],"correct":0},{"q":"К какому типу ткани относится мышечная фасция?","answers":["мышечная","нервная","соединительная","эпителиальная"],"correct":2},{"q":"Кому из ученых принадлежит труд «Сто книг по медицинскому искусству», состоящий из 100 глав?","answers":["Абу Сахл Масихи Горгани","Ибн Сино","Абу Мансур Бухорий","Абу Бакр Бухорий"],"correct":0},{"q":"Рукоятка, тело, мечевидный отросток составляют….","answers":["грудину","таз","ключицу","ребро"],"correct":0},{"q":"Какой орган состоит из поперечно-полосатой мышечной ткани, но его работа не подчиняется сознанию?","answers":["сердце","язык","сосуды","скелетные мышцы"],"correct":0},{"q":"Что является причиной замедления процесса окостенения?","answers":["неполноценное использование солнечных лучей","повышенное содержание витамина D","образование коллагеновых волокон","чрезмерное занятие спортом"],"correct":0},{"q":"Укажите кости, которые участвуют в образовании грудной клетки","answers":["грудные позвонки, ребра, грудина","грудные позвонки, ключица, ребра","грудные позвонки, ключица, грудина","грудные позвонки, ключица, лучевая кость"],"correct":0},{"q":"Укажите кости, входящие в плечевой пояс","answers":["ключица, лопатка","лопатка, локтевая кость, кости фаланг","ключица, локтевая кость, кости фаланг","локтевая кость, кости фаланг, лучевая кость"],"correct":0},{"q":"Кто сформировал учение о четырех типах телосложения и темпераментах?","answers":["Гиппократ","Аристотель","Герофил","Леонардо да Винчи."],"correct":0},{"q":"До какого возраста отсутствуют естественные изгибы позвоночника?","answers":["до одного года","до двух лет","до трех лет","до шести месяцев"],"correct":0},{"q":"Из скольки позвонков состоит позвоночник и какую длину он составляет?","answers":["33-34 , 70-90 см","31-33, 70-90 см","33-34 , 50-80 см","33-34 , 50-100 см"],"correct":0},{"q":"Какая часть кожи состоит из соединительной ткани?","answers":["дерма, гиподерма","эпидермис, дерма","эпидермис, гиподерма","многослойный плоский эпителий, эпидермис"],"correct":0},{"q":"К системе кровообращения относятся …","answers":["сердце, аорта, артерии, вены, капилляры, сосуды лимфы","селезенка, сердце, артерия, вена, капилляры, лимфа","красный костный мозг, аорта, сердца, артерии, вены","сердце, артерии, вены, капилляры, печень, лимфа"],"correct":0},{"q":"Средняя масса сердца мужчин и женщин соответственно (в гр.)","answers":["220-300, 180-220","400-450, 300-350","450-500 , 300-320","110-220, 110-180"],"correct":0},{"q":"Сколько клапанов в сердце?","answers":["4","2","3","6"],"correct":0},{"q":"Где расположены полулунные клапаны?","answers":["между левым желудочком и отходящей от него аортой, а также между правым желудочком и отходящей от него легочной артерией.","между левым желудочком и аортой, а также между правым желудочком и правым предсердием","между левым желудочком и левым предсердием, а также между правым желудочком и отходящей от него легочной артерией.","только между правым желудочком и легочной артерией"],"correct":0},{"q":"Определите кровеносные сосуды, которые впадают в левое предсердие","answers":["легочные вены","полые вены","легочные артерии","коронарные артерии"],"correct":0},{"q":"Сколько секунд составляет сердечный цикл?","answers":["0,8","0,3","0,4","0,1"],"correct":0},{"q":"Какое вещество в эритроцитах присоединяет кислород в легких?","answers":["гемоглобин","билирубин","глобулин","агглютиноген"],"correct":0},{"q":"Какой из перечисленных ученых определил функцию лейкоцитов в поглощении микробов, попадающих в организм?","answers":["И.И.Мечников","Луи Пастер","Л.М.Сеченов","А.Т.Уголев"],"correct":0},{"q":"За какой промежуток времени происходит свертывание крови у здорового человека?","answers":["3-4 мин","2 мин","4-5 мин","5-6 мин"],"correct":0},{"q":"Определите правильную последовательность расположения органов дыхания: a) носовая полость, b) носоглотка, с) гортань, d) легкие, e) бронхи, f) трахея","answers":["a.b.c.f.е.d.","a.b.c.d.e.f.","b.a.c.d.e.f.","a.c.b.e.f.g."],"correct":0},{"q":"К водорастворимым относятся витамины групп?","answers":["витамины группы B и C","витамины группы А","витамины групп C и E","витамины E и D"],"correct":0},{"q":"К жирорастворимым относятся витамины групп?","answers":["витамины A,D,E,K","только E и D витамины","Только C и E витамины","витамины группы B и C"],"correct":0},{"q":"Частичная нехватка витамина называется?","answers":["гиповитаминоз","авитаминоз","полигиповитаминоз","гипервитаминоз"],"correct":0},{"q":"Нехватка организма в одном витамине","answers":["моногиповитаминоз","гипервитаминоз","авитаминоз","полигиповитаминоз"],"correct":0},{"q":"Полное отсутствие витамина в организме приводит к …...","answers":["авитаминозу этого витамина","полигиповитаминозу этого витамина","Моногиповитаминозу этого витамина","гиповитаминозу этого витамина"],"correct":0},{"q":"Латинское название “Cavitas nasi” переводится как….","answers":["носовая полость","трахея","легкие","глотка"],"correct":0},{"q":"О какой железе идет речь: ее масса у взрослого человека составляет 0,2 г, длина - 8-15 мм, ширина - 6-10 мм, толщина 6-10 мм","answers":["эпифиз","надпочечники","гипофиз","поджелудочная"],"correct":0},{"q":"Область ротовой полости, которая состоит из двух частей и образует верхнюю стенку полости рта.","answers":["нёбо","височные кости","язык","нёбо, язык"],"correct":0},{"q":"Структурной единицей почек является….","answers":["нефрон","капсула Шумлянского","канальцы мозгового вещества","все ответы верны"],"correct":0},{"q":"Сколько слоев в стенке артериального сосуда?","answers":["4","3","2","5"],"correct":0},{"q":"Что является внутренним слоем собственной стенки сердца?","answers":["Эндокард","Клапан","Миокард","Перикард"],"correct":0},{"q":"Каково общее количество лимфы во всех лимфатических сосудах организма ?","answers":["1-2 л","1,5-2,5 л","2-3 л","2,5-3 л"],"correct":0},{"q":"Какова масса селезенки взрослого человека?","answers":["140-200 г","150-220 г","180-230 г","200-250 г"],"correct":0},{"q":"Что означает термин «ассимиляция»?","answers":["образую","удовлетворение потребности","подобие","несоответствие"],"correct":0},{"q":"Какой тканью образована основная масса стенки альвеол?","answers":["эпителиальной","соединительной","мышечной","нервной"],"correct":0},{"q":"Сколько литров составляет минутная вентиляция легких в состоянии покоя?","answers":["восемь-девять","четыре-пять","семь-восемь","шестнадцать-восемнадцать"],"correct":0},{"q":"Стенки трахеи состоят из 16-20 …..","answers":["подвижно соединённых между собой гиалиновых хрящей и связок","неподвижно соединённых между собой гиалиновых хрящей и связок","из конусообразных хрящей и связок","из кольцевых хрящей и связок"],"correct":0},{"q":"Какую роль выполняют тромбоциты?","answers":["свертывание крови","защита организма от вредных микроорганизмов","транспорт кислорода и СО2","запас питательных веществ"],"correct":0},{"q":"Кому принадлежит высказывание: «Понимаемые в глубоком смысле физиология и медицина неотделимы»","answers":["И.П.Павлов","Гипократ","Абу Райхон Беруний","Аристотель"],"correct":0},{"q":"Какой гормон синтезируется в крови в присутствии витамина D?","answers":["паратгормон","тироксин","гонадотропный","тиреотропный"],"correct":0},{"q":"Какая из желез соединена посредством кровеносных сосудов с гипоталамусом?","answers":["гипофиз","эпифиз","щитовидная","вилочковая"],"correct":0},{"q":"Какая секреторная железа имеет форму слегка приплюснутой пирамиды?","answers":["надпочечники","вилочковая","гипофиз","эпифиз"],"correct":0},{"q":"Полное удаление какого-либо органа или анатомической части тела для изучения значения функции этого органа называется......","answers":["экстирпация","трансплантация","денервация","операция"],"correct":0},{"q":"Какая ткань не встречается в организме человека?","answers":["механическая","мышечная","соединительная","нервная"],"correct":0},{"q":"В результате недостатка вазопрессина развивается заболевание","answers":["несахарный диабет","гликозурия","сахарный диабет","альбуминурия"],"correct":0},{"q":"Из скольки звеньев состоит рефлекторная дуга?","answers":["5","3","2","4"],"correct":0},{"q":"Какую функцию выполняет гормон соматотропин?","answers":["усиливает синтез белка в организме, рост и развитие детей и подростков","пигментный обмен, обмен углеводов","снижает уровень глюкозы в крови, обмен кальция и фосфора","замедляет преждевременный рост и развитие детей"],"correct":0},{"q":"Когда начинается расширение кровеносных сосудов кожи?","answers":["когда температура воздуха повышается выше 280С","в теплой среде","когда температура воздуха повышается выше 380С","в холодной среде"],"correct":0},{"q":"Каковы основные свойства поперечнополосатой мышечной ткани человека и позвоночных животных?","answers":["возбуждение, проводимость, сокращение","отсутствие реакции на возбуждение, низкий обмен веществ","отсутствие в клетках митохондрий и ядер","только сокращение"],"correct":0},{"q":"Какой гормон активирует деятельность ЦНС, и его воздействие повышает такие качества как внимание, бдительность, умственные способности?","answers":["адреналин","норадреналин","инсулин","вазопрессин"],"correct":0},{"q":"При нарушении обмена каких солей в организме развивается заболевание, называемое рахитом?","answers":["фосфора и кальция","калия и натрия","фосфора и калия","натрия и кальция"],"correct":0},{"q":"Что относится к соединительным тканям: 1) кости; 2) лимфа; 3) кожа; 4) нейрон; 5) кровь; 6) сухожилия; 7) мышцы.","answers":["1,2,5,6","2,3,5,6","2,3,5,7","1,3,5,6"],"correct":0},{"q":"Длинные мышцы главным образом расположены ...","answers":["на конечностях","возле позвоночника","в межреберье","в области груди"],"correct":0},{"q":"Где располагается высший двигательный центр?","answers":["в передней центральной борозде коры","в мозжечке","в левой лобной доле коры","в височной части коры"],"correct":0},{"q":"Сколько приходится крови на каждый килограмм массы тела человека?","answers":["60-70 мл","40-50 мл","20-30 мл","80-100 мл"],"correct":0},{"q":"Гормон, который сужает кровеносные сосуды и повышает кровяное давление, - ...","answers":["вазопрессин","паратгормон","окситоцин","тимозин"],"correct":0},{"q":"Где вырабатывается фермент пепсиноген?","answers":["в слизистой оболочке желудка","в 12-перстной кишке","в толстом кишечнике","в слизистой оболочке тонкой кишки"],"correct":0},{"q":"Дерма состоит из …","answers":["рыхлой и плотной неоформленной соединительной ткани","железистого эпителия","плотной оформленной соединительной ткани","только рыхлой соединительной ткани"],"correct":0},{"q":"Гипофиз расположен…","answers":["в турецком седле костей черепа","в гипоталамусе","в среднем мозге","над варолиевым мостом"],"correct":0},{"q":"Если из раны на руке кровь бьет фонтаном, то следует наложить…","answers":["жгут выше места ранения","разницы нет, можно выше или ниже раны","жгут на рану","жгут ниже места ранения"],"correct":0},{"q":"Укажите железу, в клетках которой вырабатывается секрет, поступающий в кровь и лимфу.","answers":["щитовидная","слезная","слюнная","печень"],"correct":0},{"q":"Где осуществляется вегетативная регуляция процессов вдоха и выдоха?","answers":["в дыхательном центре продолговатого мозга","в центрах нервов спинного мозга","в ассоциативной зоне коры больших полушарий","в высшем центре дыхания коры головного мозга"],"correct":0},{"q":"Какими методами усовершенствовал И.П. Павлов изучение соковыделительной функции желудка?","answers":["способом мнимого кормления и созданием малого желудка","введением фистулы в желудок","зондированием","помещением капсулы в желудок"],"correct":0},{"q":"Что не характерно для строения зуба человека?","answers":["шейка зуба закрепляется к десне и челюстным костям","коронка, эмаль, дентин","полость-пульпа, цементный слой","эмаль, цементный слой, дентин"],"correct":0},{"q":"Сколько пар слюнных желез открывается в полость рта человека?","answers":["3","4","1","2"],"correct":0},{"q":"Какого слюнных желез человека не существует?","answers":["окологортанная","подъязычная","подчелюстная","околоушная"],"correct":0},{"q":"В каком варианте ответа в правильном порядке перечислены части глотки человека?","answers":["носоглотка, ротоглотка, гортаноглотка","носоглотка, ротоглотка, пищеварительная часть глотки","носоглотка, гортанная часть, ротоглотка","ротоглоточная часть, гортанная часть"],"correct":0},{"q":"Сколько слоев мышц составляют стенку тонкой кишки и что они обеспечивают?","answers":["2 слоя гладких мышц; перемешивание пищи с кишечным соком и продвижение содержимого сверху вниз","3 слоя гладких мышц; перемещение пищи сверху вниз, перемешивание с кишечным соком","3 слоя гладких мышц; маятникообразное движение пищи и волнообразное движение","2 слоя поперечнополосатых мышц; маятникообразное движение и волнообразное движение"],"correct":0},{"q":"Что среди перечисленного не является функцией печени?","answers":["выработка пищеварительных ферментов","участвует в белковом и углеводном обменах","обезвреживает ядовитые вещества","распад эритроцитов"],"correct":0},{"q":"Укажите полную характеристику поджелудочной железы по ее функциям.","answers":["смешанная железа","экзокринная железа","эндокринная железа","пищеварительная железа"],"correct":0},{"q":"Укажите правильно перечисленные секреты, которые вырабатывает поджелудочная железа – как железа смешанной секреции.","answers":["трипсин, липаза, амилаза, инсулин","пепсин, липаза, глюкагон, инсулин","липаза, мальтаза, инсулин, тироксин","тироксин, инсулин, энтерокипаза, липаза"],"correct":0},{"q":"Что не характерно для первой фазы образования мочи в почках?","answers":["состав мочи содержит минимум воды и в большой концентрации мочевину, креатинин","состав мочи близок к составу плазмы крови","фильтрация жидкой части крови в капсулу","в моче отсутствует белок"],"correct":0},{"q":"Что не характерно для второй фазы образования мочи в почках?","answers":["фильтрация жидкой части крови","образование вторичной мочи","98% воды и минеральных солей всасывается в кровь","движение мочи по извитым канальцам"],"correct":0},{"q":"Как по-другому можно назвать пластический обмен веществ?","answers":["анаболизм, ассимиляция","анаболизм, метаболизм","катаболизм","диссимиляция, метаболизм"],"correct":0},{"q":"Как называется состояние организма человека при полном отсутствии в нем какого-нибудь витамина?","answers":["Авитаминоз","Гипервитаминоз","Гиповитаминоз","Диспепсия"],"correct":0},{"q":"Куда попадают гормоны эндокринных желез?","answers":["в кровь и лимфу","в кровь, во внешнюю среду","только в кровь","только в лимфу"],"correct":0}],"botany":[{"q":"На основании изучения каких органов основана систематика растений К. Линнея, и как она называется?","answers":["Количество и расположение пыльцы в цветке. Искусственная.","Естественная текстура цветов и фруктов","Только искусственное составление фруктов","Структура цветка искусственная"],"correct":0},{"q":"Для каких растений характерно дихотомическое ветвление?","answers":["Дихотомическое ветвление наблюдается как у низших растений, так и у некоторых высших растений (например, у Мхов, Плауновидных, некоторых сосудистых споровых).","Только в водорослях","Это ветвление в настоящее время не встречается ни в одной группе растений","В водорослях, грибах и недоразвитых растениях"],"correct":3},{"q":"У растений каких семейств можно через актиноморфные цветы провести несколько осей симметрии","answers":["Линию симметрии можно провести из семейств розоцветных, мальвовых,","У представителей семейства мятных","Это ветвление в настоящее время не встречается ни в одной группе растений","В водорослях, грибах и недоразвитых растениях"],"correct":0},{"q":"Кто «отец» или основатель предмета ботаники?","answers":["Теофраст","Аристотель","Диоскорид","Плиний"],"correct":0},{"q":"Онтогенез это…?","answers":["Период от прорастания одного растения до его гибели, индивидуальное развитие организма.‎","Это жизнь всех растений одного вида","Развитие отдельного растения по отдельности","Эволюция всех растений одного вида"],"correct":0},{"q":"Транспирация это…?","answers":["движения воды через растение и её испарение через наружные органы растения, такие как листья, стебли и цветки.","трихомы выделяют из себя эфирные масла","Подача воздуха к корню у основания ствола через клетки ткани","Это выделение смолы, различных газов, эфирных масел и т. д. за пределы растения секреторными тканями."],"correct":0},{"q":"Что такое бинарная номенклатура и кто ввел ее в науку?","answers":["Двойное название вида растений, К. Линней","Назвать виды растений по К. Линнею одним словом","Называя растение именем, Дж. Б. Ламарк","Двойное название вида растения - Чарльз Дарвин"],"correct":0},{"q":"Явление поляризации…?","answers":["Разница между морфологической верхушкой и морфологической основой стебля растения","Разница между верхними и нижними частями листьев растения","Разница между северной и южной сторонами органов растения","Разница между верхней и нижней сторонами горизонтальных органов, таких как листья"],"correct":0},{"q":"Типы ассимиляционной ткани листа","answers":["Столбчатая, губчатая","Столбчатая, ксилема","Эпидермис, флоэма","Колленхима, эндодерма"],"correct":0},{"q":"Сколько видов растений описал Цезальпини в своей книге «О растениях» (1583г.)?","answers":["1500 видов","2500 видов","500 видов","5000 видов"],"correct":0},{"q":"Что изучает эмбриологии растений?","answers":["Наука о путях зарождения и формировании нового растительного организма.","Структура кустарников","Постэмбриональное развитие","Нет правильного ответа"],"correct":0},{"q":"Что изучает раздел экологии растений?","answers":["Взаимозависимость и взаимодействия между растительными организмами, а также между растениями и средой их обитания.","Эмбриологическое развитие растения","Нет правильного ответа","Биогеоценозы"],"correct":0},{"q":"Сколько видов высших растений произрастает в СНГ?","answers":["Более 20 000","50 тысяч","30 тысяч","40 тысяч"],"correct":0},{"q":"Склеренхима это…?","answers":["Механическая ткань, которая встречается в органах почти всех высших растений. Клетки её имеют прозенхимную форму и представляют собой волокна, длинные, плотно расположенные, с заострёнными концами и равномерно утолщённой, чаще одревесневшей оболочкой. Живое содержимое клеток обычно отмирает.","Представляет собой тип механической ткани, которая не имеет формы прозенхимы и состоит из укрепляющих клеток, кожа которых намного более плоская и толстая.","Представляет собой разновидность механической ткани, состоящей из прозенхиматических клеток, клеточная мембрана толстая, внутренняя живая часть не теряется, в живом состоянии выполняет механическую функцию","Бесклеточная, полая трубчатая, без утолщенной кожи, имеет ядра и пластиды"],"correct":0},{"q":"Среда обитания высших растений….","answers":["Все ответы верны","Вода","Сухие местности","Влажные районы"],"correct":0},{"q":"Эпидермис с обеих сторон листа отличается друг от друга?","answers":["Клетки верхнего эпидермиса немного больше, чем клетки нижнего эпидермиса, а восковой слой и слой кутикулы толще, волоски же очень редки или отсутствуют полностью","Клетки верхнего эпидермиса крупнее клеток нижнего эпидермиса, кутикула толще, волосков больше","Клетки верхнего эпидермиса немного меньше, с небольшим количеством волос или без них","Между ними нет разницы"],"correct":0},{"q":"На сколько отделов разделяются в современной науке высшие растения","answers":["5 отделов","9 отделов","6 отделов","7 отделов"],"correct":0},{"q":"Что происходит в клеточной мембране когда она стареет.","answers":["Лигнификация (одревеснение) клеточных стенок - происходит путём полимеризации нескольких фенольных предшественников.","Кутиновое вещество накапливается","Субериновое вещество накапливается","Стрихниновое вещество накапливается"],"correct":0},{"q":"Перидерма это?","answers":["Вторичная покровная ткань у стебля и корня. Также комплекс тканей, состоящий из феллогена и его производных — феллодермы и феллемы, или пробки.","Первичная покровная ткань, которая находится на поверхности стеблей и листьев","Покровная ткань находится только у корня","Содержится в семенах и накапливает питательные вещества"],"correct":0},{"q":"У мхов различают.","answers":["Тело – слоевище (таллом), у некоторых листостебельное строение.","Гаметофит доминирующий. Тело слоевище, высший гаметофит","Все листовые, гаметофит превосходный","Все превосходят корневые, стеблевые, листовые, спорофитные."],"correct":0},{"q":"К механическим тканям относятся:","answers":["Колленхима и склеренхима.","Кристаллы песка, вискоза, лигнин","Феллема, феллодерма, феллоген","Гипс, оксалат магния"],"correct":0},{"q":"Торф…","answers":["Горючее полезное ископаемое, образованное скоплением остатков растений, подвергшихся неполному разложению в условиях болот.","Однодольные двуполые","Двудольные однополые","Однополые двухдомные, частично однополые, однополые"],"correct":0},{"q":"Отметьте гистологические элементы, отсутствующие в ксилеме:","answers":["Трихомы","Трахеиды","Древесинные волокна","Древесинная паренхима"],"correct":0},{"q":"Типы проводящих элементов ксилемы","answers":["Трахеи (сосуды) и трахеиды","Спиральная трахея и эллиптические трубки","Кольцевая трахея и решетчатые трубки","Только трахеиды"],"correct":0},{"q":"В зрелом спорофите фунарии выделяются следующие части….","answers":["Ножка, коробочка,","Бутон, стебель, лист","Стебель и крышка","Урночка с двойным перистомом"],"correct":0},{"q":"Резервные вещества клеток?","answers":["Растворимые, частично растворимые, частично находятся в твердом состоянии","Бывают только полностью твердые","Бывают только в растворном виде","Бывают частично в растворимом и частично твердом виде"],"correct":0},{"q":"Почему фунария называется индикатором влажности?","answers":["За то, что растет во влажное и теплое время года","Потому что растёт в воде","Потому что впитывает много влаги","Потому что растет там, где нет капилярной воды"],"correct":0},{"q":"Где образуется слой феллогена перидермы?","answers":["В нижнем слое эпидермиса","Может быть образован из флоэмы","Из за разделения камбия","Образуется из феллодермы"],"correct":0},{"q":"Период, в котором возникли риниофиты….","answers":["Силур, девон","Девон","Kарбон","Силур, Карбон"],"correct":0},{"q":"При дыхании растений?","answers":["И днем и ночью поглощают кислород и выделяют углекислый газ","Принимает кислород днем и выделяет углекислый газ ночью","Днем он выделяет кислород, поглощая углекислый газ, а ночью наоборот","Поглощает углекислый газ (CO2) и выделяет кислород (O2)"],"correct":0},{"q":"Укажите вымерший вид плауновидных","answers":["Протолепидодендровые","Полушниковые","Селагинелловые","Плауновые"],"correct":0},{"q":"Растения со сложными парноперистыми листьями?","answers":["Белая акация, гледичия","Шиповник, ежевика","Грецкие орехи","Картошка, морковь"],"correct":0},{"q":"Современные плауновые","answers":["Разно- и равноспоровые","Разноспоровые споры","Равноспоровые","Древесные с равными спорами"],"correct":0},{"q":"Тканью называется ?","answers":["Система клеток и межклеточного вещества, объединенных общим происхождением, строением и выполняемыми функциями","Набор разных клеток","Набор маленьких и больших клеток","Набор спиралевидных клеток"],"correct":0},{"q":"Сколько видов относится к семейству хвощевые","answers":["около 32 видов","25 видов","20 видов","10 видов"],"correct":0},{"q":"Виды проводящих тканей","answers":["Ксилема (древесина) и флоэма (луб)","Перисперм, ксилема","Перисперм, хлоренхима","Паренхима, склеренхима"],"correct":0},{"q":"Резервная питательная ткань","answers":["Эндосперм, перисперм","Перисперм, ксилема","Флоэма, эндосперм","Эпиблема, экзодерма"],"correct":0},{"q":"Вид хвоща со стелющимся стеблем","answers":["Гигантский хвощ","Хвощ ветвистый","Хвощ полевой","Мексиканский хвощ"],"correct":0},{"q":"Функция камбия?","answers":["Позволяет стеблю увеличиваться в толщину","Позволяет стеблю увеличиваться в длину","Образует только клетки ксилемы","Образует только флоэму"],"correct":0},{"q":"Что покрывает сорусы папоротника?","answers":["Индузий","Эпидермис","Зародышевый мешок","Плацента"],"correct":0},{"q":"Вода и растворенные соли проходят через следующую часть стебля:","answers":["Только через ксилему","Флоэму, ксилему","Через кору и сердцевину","Через кору"],"correct":0},{"q":"Для клеток первичной меристемы не характерны","answers":["пластиды и крупная центральная вакуоль","тонкие стенки, целлюлозные клетки мелкие,","отсутствуют межклетники","цитоплазма густая, ядро крупное"],"correct":0},{"q":"Отдел голосеменных на латинский язык переводится как…","answers":["Pinophyta","Pinopsida","Gymnospermatophyta","Angiospermatophyta"],"correct":0},{"q":"Конус нарастания покрытосеменных растений","answers":["Состоит из клеток меристемы","Состоит из эпиблемы, дерматогена и плеромы.","Есть только слой плеромы, из которого формируется эпидермис.","Есть слои дерматогена, периблемы и плеромы."],"correct":0},{"q":"Как размножаются голосеменные растения?","answers":["Семенами","Плодами","Спорами","Сорусами"],"correct":0},{"q":"Сосудисто-волокнистый пучок, в котором флоэма примыкает к ксилеме с двух сторон, называется","answers":["Биколлатеральный","Центрофлоэмный концентрический","Центроксилемный концентрический","Коллатеральный"],"correct":0},{"q":"От кого произошли голосеменные растения","answers":["От семенных папоротников","Равноспоровых папоротников","Из листостебельных мхов","Риниофитов"],"correct":0},{"q":"Радиальный сосудисто-волокнистый пучок характеризуется тем, что…","answers":["Флоэма расположена между лучами ксилемы","В центре пучка есть флоэма, окруженная ксилемой","Ксилема и флоэма соприкасаются по одной стороне","Флоэма примыкает к ксилеме с двух сторон"],"correct":0},{"q":"Отличительным признаком корневища от корня является","answers":["Наличие узлов и междоузлий, т.е. метамеров","Эндогенное возникновение боковых корней","Верхушка, прикрытая корневым чехликом","Развитие эфемерных корневых волосков"],"correct":0},{"q":"Покровная ткань корня первичного строения:","answers":["Ризодерма","Эндодерма","Эпидерма","Пробка"],"correct":0},{"q":"Ценный волокнистый вид рода гибискус.","answers":["Гибискус коноплёвый, или Кенаф","Сирийская роза","Китайская роза","Гибискус тройчатый"],"correct":0},{"q":"Эмбриональное развитие зародыша из неоплодотворенного яйца называется:","answers":["Партонегенезом","Стадией эмбриогенеза","Мегаспорогенезом","Спорогенезом"],"correct":0},{"q":"Виды дикого лука, выращиваемого в Узбекистане для консервирования….","answers":["Лук Анзур","Лук порей","Лук обыкновенный, чеснок","Алайский лук"],"correct":0},{"q":"Когда плод является бобом?","answers":["Одногнездный многосемянный плод, кожистый околоплодник которого лопается по двум швам на 2 створки","Сухой паракарпный плод, образующийся из 2 плодолистиков и имеющий двустворчатую оболочку и внутреннюю перепонку.","Двугнёздая коробочка, образованная двумя плодолистиками и вскрывающаяся двумя створками, по брюшному и спинному шву","Сухой плод с плотным, кожистым или деревянистым околоплодником, внутри которого свободно лежат семена."],"correct":0},{"q":"Сколько видов из семейства мятликовые включены в «Красную книгу»?","answers":["2 вида","40 видов","20 видов","10 видов"],"correct":0},{"q":"Скарификация семян это:","answers":["Механическое повреждение твердой кожи для лучшего роста","Многолетнее хранение с последующей посадкой","Это метод выращивания их сначала в лаборатории, а затем посадки на экспериментальном участке.","Это означает остановку роста семян каким-либо образом."],"correct":0},{"q":"Сколько видов эремуруса занесено в Красную книгу?","answers":["1 вид","500 видов","100 видов","16 видов"],"correct":0},{"q":"Функция камбия:","answers":["Прирост стеблей и корней в длину и в толщину","Проведение органических и неорганических веществ","Образует только клетки ксилемы","Образует только флоэму"],"correct":0},{"q":"К какому семейству относится Тутовник ?","answers":["Тутовые","Пасленовые","Сельдерейные","Луковые"],"correct":0},{"q":"Характеристика стебля однодольных растений","answers":["Четкой границы между первичной корой и центральным цилиндром нет, в строении стеблей видны пучки, камбий работает слабо или не работает вовсе","Центрального цилиндра нет, феллоген хорошо развит.","Флоэма и ксилема хорошо заметны не в виде пучков, а в виде колец","Граница между первичной оболочкой и центральным цилиндром четкая."],"correct":0},{"q":"Какому семейству соответствует данная формула - Ca0 Co3+3 A3+3U(3)?","answers":["Лилейные","Зонтичные","Мятликовые","Пасленовые"],"correct":0},{"q":"Вторичное утолщение стеблей однодольных растений","answers":["Встречается крайне редко","Встречается очень часто","Специфично для злаков","Не встречается"],"correct":0},{"q":"Определите вид из семейства Зонтичные","answers":["Ферула","Псоралея","Саксаул","Термопсис"],"correct":0},{"q":"Растения паразиты - …","answers":["не фотосинтезируют","не хемосинтезируют","не сапрофиты","голозойное питание"],"correct":0},{"q":"Какой способ прививки называется копуляцией:","answers":["Все виды прививки кроме окулировки","Привитый побег переносят под кору подвоя, срезанную по аналогии с буквой «Т»","Подвой оказывается толще привоя и трескается. И привой расходится в обе стороны","Черенок (привой) подбирается одинаковой толщины с подвоем"],"correct":0},{"q":"Какому семейству соответствует данная формула - Ca4 Co4 A4+2 U1 ?","answers":["Крестоцветные","Паслёновые","Зонтичные","Луковые"],"correct":0},{"q":"Гомологичные органы - …","answers":["Органы животных и растений, имеющие одинаковое происхождение, но выполняющие разные функции","Включает процесс редукции органов","Органы животных и растений, имеющие не одинаковое происхождение, но выполняющие разные функции","Органы животных и растений, имеющие не одинаковое происхождение, но выполняющие одинаковые функции"],"correct":0},{"q":"Определите однолетние травы, принадлежащие к семейству капустных?","answers":["Пастушья сумка","Зверобой","Полынь горькая","Ковыль"],"correct":0},{"q":"Придаточные корни образуются из - ..","answers":["Стеблей и листьев","От самой верхушки стебля, где находится конус роста","Образуются только основные корни","Образуются от основного корня"],"correct":0},{"q":"Определите, к какому семейству принадлежит Свинорой пальчатый?","answers":["Мятликовые","Луковые","Пасленовые","Сельдерейные"],"correct":0},{"q":"Какое расположение пазушных почек листа называют коллатеральным","answers":["Горизонтальное расположение, близко друг к другу","Если они расположены один за другим","Если они расположены друг над другом","Если расположены кольцевидно"],"correct":0},{"q":"Видоизмененными побегами являются","answers":["Корневища и корнеплоды, луковицы и луковички","Корнеплоды моркови и репы","Арахис, клубни картофеля","Воздушные корни"],"correct":0},{"q":"Что является резервным питательным веществом у зародыша цветковых растений?","answers":["Триплоидный эндосперм","Липиды в эндосперме","Крахмал","Углеводы в семенах"],"correct":0},{"q":"Цветок это:","answers":["Укороченный видоизмененный побег","Репродуктивный орган, производящий споры","Репродуктивный орган приспособленный только для образования гамет","Метаморфизованный лист"],"correct":0},{"q":"Определите растения, у которых плод коробочка","answers":["Хлопчатник, дурман обыкновенный","Ячмень","Картошка, тюльпан","Картошка, дурман обыкновенный"],"correct":0},{"q":"Сложный околоцветник","answers":["Состоит из чашечки и венчика","Состоит только из лепестков венчика","Состоит только из лепестков чашечки","Состоит из цветоложа, чашечки и венчика"],"correct":0},{"q":"Какие растения имеют стержневые корни?","answers":["Голосеменные и цветковые растения","Папоротник","Хвощ ветвистый","Хвощ полевой"],"correct":0},{"q":"Андроцей -","answers":["Это группа тычинок в одном цветке.","Это пестик в цветке","Это все мегаспорофиллы.","Это одна тычинка в одном цветке."],"correct":0},{"q":"Определите, к какому семейству принадлежит рис?","answers":["Мятликовые","Луковые","Паслёновые","Бобовые"],"correct":0},{"q":"Гинецей -","answers":["Это все мегаспорофиллы или пестики в одном цветке.","Микроспорофиллы или тычинки","Это одна тычинка в одном цветке.","Совокупность пестиков и тычинок"],"correct":0},{"q":"Сколько видов относится к отделу Голосеменных?","answers":["Около 700 видов","Более 5000 видов","15000 видов","10000 видов"],"correct":0},{"q":"К цимозным соцветиям относятся:","answers":["Монохазий, дихазий и плейохазий","Початок, колос, корзинка, зонтик","Монохазий, дихазий и корзинка","Относятся сложные соцветия"],"correct":0},{"q":"Сколько видов цветковых растений растет на Земле?","answers":["Свыше 250 тысяч видов","50 тысяч видов","100 тысяч видов","40 тысяч видов"],"correct":0},{"q":"Найдите дерево, из семейства маревые?","answers":["Саксаул","Псоралея","Гранат","Ковыль"],"correct":0},{"q":"Монокарпические растения:","answers":["Цветут один раз в жизни и погибает после плодоношения","За свою жизнь цветут много раз, а плодоносят только один раз","За время жизни цветут дважды, а затем погибают","Много раз за свою жизнь цветут и много раз плодоносят"],"correct":0},{"q":"Адаптация плавающей сальвинии к плаванию…","answers":["В листьях и стеблях есть воздушные полости","Стебель имеет корень","В корне есть воздух","В листе есть мертвые клетки"],"correct":0},{"q":"Основные принципы изменения формы растений в процессе эволюции?","answers":["Увеличение поверхности тела, то есть увеличение зеленой поверхности позволяет производить больше питательных веществ в этом отношении","Удлинение тела и тем самым обеспечение его защиты","Увеличение только объема, а не поверхности тела","Более быстрое распространение за счет сокращения поверхности тела"],"correct":0},{"q":"Пластиды относятся к следующей группе органелл?","answers":["Двухмембранные органеллы","Одномембранные органеллы","Немембранные органеллы","Трехмембранные органеллы"],"correct":0},{"q":"Где находятся сорусы у лесного папоротника","answers":["На обратной стороне листа в два ряда","На поверхности листа два ряда","Находится по краям листа","Расположен у основания листа"],"correct":0},{"q":"По строению ядерная оболочка?","answers":["Ситовидная, двухмембранная","Ситовидная, одномембранная","Плоская гладкая, двухмембранная","Плоская гладкая, одномембранная"],"correct":0},{"q":"На основании каких характеристик К. Линней классифицировал растения в 24 класса?","answers":["Количество пыльников, длины тычиночных нитей","Исходя из формы и числа чашелистиков","По расположению завязи пестика","По форме рыльца пестика цветка"],"correct":0},{"q":"Какое из следующих утверждений лучше всего описывает порядок тканей в стебле?","answers":["Кора, камбий, древесина, сердцевина","Древесина, кора, сердцевина, камбий","Кора, стебель, камбий, древесина","Кора, стебель, камбий, древесина"],"correct":0},{"q":"Определите семейства у которых соцветие зонтик?","answers":["Сельдерейные, луковые","Капустные, астровые","Луковые, тюльпановые","Розоцветные, маревые"],"correct":0},{"q":"Опишите проводящие пучки листа?","answers":["Закрытый, коллатеральный пучок","Открытый концентрический пучок","Концентрический, закрытый пучок","Коллатеральный открытый пучок"],"correct":0},{"q":"У каких растений происходит двойное оплодотворение?","answers":["Магнолия","Венерины волосы","Ель","Кипарис"],"correct":0},{"q":"Развитие зародыша происходит?","answers":["Из зиготы","Из семяпочки","Из завязи","Из зародышевого мешка"],"correct":0},{"q":"Определите самые высокие деревья?","answers":["Эвкалипт, секвойядендрон","Драконовое дерево, ротанговая пальма","Мамонтово дерево, баобаб","Каштан искусственный, гледичия"],"correct":0},{"q":"Укажите последовательность развития органов зародыша фасоли","answers":["Корешок, стебелек, семядоля, почечка","Корешок, семядоля, стебелек, почечка","Семядоля, почечка, стебелек, корешок","Почечка, семядоля, корешок, стебелек"],"correct":0},{"q":"Определите насекомоядные растения?","answers":["Непентес, дросера","Драконовое дерево, ротанговая пальма","Баобаб, непентес","Раффлезия, повилика"],"correct":0},{"q":"Из каких частей может формироваться плод?","answers":["Цветоложе, чашечка, венчик","Чашечка, прилистник","Только завязь пестика","Только цветоложе и завязь"],"correct":0}],"zoology":[{"q":"Укажите представителя отряда двукрылые","answers":["Овод","Шмель","Каллима","Полисина"],"correct":0},{"q":"Какое животное имеет микроскопическое строение?","answers":["Дафния","Нереида","клещ","Беззубка"],"correct":0},{"q":"Какие животные являются кровососущими?","answers":["Скотный клещ, блоха","клоп, нереида","рапана, ришта","Поликсина,дафния"],"correct":0},{"q":"У какого насекомого крылья редуцированы?","answers":["постельный клоп","Зорька","Слепень","божья корова"],"correct":0},{"q":"Какой организм дышит трахеями и легкими?","answers":["паук- крестовик","Скорпион","Таракан","пресноводная улитка"],"correct":0},{"q":"Какой организм дышит легкими?","answers":["Скорпион","майский жук","Пауки","Клопы"],"correct":0},{"q":"Какая полость тела животного называется смешанной полостью тела?","answers":["паук,  белянка","пауки, пиявки","беззубка, клещ","беззубка, паук"],"correct":0},{"q":"Какой организм питается кровью?","answers":["Клещ","Аскарида","Ришта","Сольпуга"],"correct":0},{"q":"Какие представители организмов не относятся к классу ракообразных?","answers":["Осьминог","Дафния","Циклоп","Краб"],"correct":0},{"q":"Какие организмы дышат только трахеями?","answers":["Насекомые","Моллюски","Ракообразные","Паукообразные"],"correct":0},{"q":"У каких животных раковина  редуцирована?","answers":["Головоногие","Брюхоногие","Двуногие","Прудовик"],"correct":0},{"q":"Какие представители моллюсков выращивают на специальных плантациях?","answers":["мидий, жемчужницы","мидий , рапана","Циклопы","Устрицы"],"correct":0},{"q":"Какой моллюск вредит посевам?","answers":["голый слизень","Рапана","Битиния","Беззубка"],"correct":0},{"q":"Какие моллюски входят в класс брюхоногих моллюсков?","answers":["виноградная улитка","Беззубка","мидия","кальмар"],"correct":0},{"q":"Какие животные входят в класс головоногих моллюсков?","answers":["Осьминог, каракатица","крабы, циклопы","креветка, дафния","крабы, артемии"],"correct":0},{"q":"Какой ответ не соответствует общим признакам строения насекомых?","answers":["они дышат через трахеи и лёгкие","тело состоит из головного, грудного и брюшного отделов","грудной отдел состоит из 3 члеников","в головном отделе расположена 1 пара усиков и глаза"],"correct":0},{"q":"При помощи, каких членистоногих передается инфекция человеку и другим животным?\"","answers":["Клещи","Дафния","Овод","Шмели"],"correct":0},{"q":"Как строены крылья у двукрылых?1) первая пара развито2) задние крылья отсутствуют3) переднее крыло толстое и жёсткое4) не летящие5) остатки заднего крыла свистящие6) при полёте передние крылья создают подъемную поверхность","answers":["1,2","3,6;","3,5;","4,5;"],"correct":0},{"q":"Отметьте двустворчатого моллюска...","answers":["Беззубка","Битиния","Рапана","голый слизень"],"correct":0},{"q":"Укажите признак, не относящийся к членистоногим?\"","answers":["Тело состоит из одних и тех же суставов","ноги разделены на суставы","голова отделена от тела","ноги сильно развиты"],"correct":0},{"q":"Определите головоногого моллюска?","answers":["Кальмары","Хитон","голый слизень","Рапана"],"correct":0},{"q":"У каких животных скелетная основа образует покров тела?","answers":["У членистоногих","У плоских червей","У млекопитающих","У малощетинковых"],"correct":0},{"q":"К какому классу относятся клещи?","answers":["Паукообразные","Хелитсерий","Сальпуги","Многоножки"],"correct":0},{"q":"Что изучает энтомология?","answers":["Насекомых","одноклеточных животных","Паукообразных","Рыб"],"correct":0},{"q":"Тип хордовые включает в себя сколько видов?","answers":["43000","4000","5300","40000"],"correct":0},{"q":"Где расположена хорда ланцетника, какую функцию она выполняет?\"","answers":["Он состоит из острой пули, проходящей через заднюю часть тела во внутренние органы.\",С передней части тела","Он находится посередине тела и действует как опора.","Выступает как опора, как опора","сохраняет гибкость тела."],"correct":0},{"q":"Мышцы какого животного представляют собой длинную полосу поперек тела с обеих сторон в форме.","answers":["Ланцетник","ланцетник, морской рак","ланцетник, дождевой червь","Аскарида"],"correct":0},{"q":"Как передвигается ланцетник?","answers":["он плавает, согнувшись в одну или другую сторону, или пробивается сквозь песок","как рыба","как змея","как ресничные черви"],"correct":1},{"q":"Где происходит газообмен у ланцетника?","answers":["В стенках глотки, жаберних щелях","Жабре","Лёгких","на поверхности тела"],"correct":0},{"q":"Где обитает сазан?","answers":["во всех водоёмах кроме горных вод Амударья, Сирдарья","Зарафшан, Сырдарья","реках Норин, Угом","Прудах ,озёразх"],"correct":0},{"q":"Для чего служат парные плавники рыб?","answers":["поворот, остановка, движение, баланс.","прекращение движения, подвешивание тела.","плыть обратно, остановиться.","баланс, поворот."],"correct":0},{"q":"Какой орган у рыб выполняет функцию резонатора?","answers":["плавательный пузырь","Мышцы","Жабры","Чешуя"],"correct":0},{"q":"Какой орган способствуют не пересечению рыб с другими организмами, если он ослеп?\"","answers":["боковая линия","задний мозг","Жабра","Рефлекс"],"correct":0},{"q":"Какие мышцы хорошо развиты у рыб?","answers":["Хвостовые","Плечевые","Брюшные","Грудные"],"correct":0},{"q":"Где и как происходит оплодотворение у сазана?","answers":["Водоемы, поставленные на мелководье, где мирно текут вода","на пути к особому семени.","в воде","все ответы верны"],"correct":0},{"q":"Как передвигается скаты?","answers":["Волнообразным движением грудных плавников.","волнообразным движением крыльев хвостового плавника.","волнообразным движением брюшных плавников.","с помощью анальных плавников."],"correct":0},{"q":"Какие рыбы являются переходными?","answers":["Форель ,кета, горбуша","Кеta, горбуша, змееголов","Сёмга, треска, налим","Сазан, окунь, сом"],"correct":0},{"q":"У каких животных имеется два круга кровообращение и трехкамерное сердце:1) головастик 2) тритон 3) аллигатор 4) гавиал 5) кожан 6) капуцин 7) геккон","answers":["2, 7","1,2,6,7","3 4,5,7","3,4,5,6"],"correct":0},{"q":"Попадает ли вода в легкие лягушки, когда она ныряет?\"","answers":["В ноздрях есть специальные клапаны, которые закрываются.\",\"вода не попадает, потому что не дышит","Воздух, который попадает в легкие, когда лягушка дышит через отверстия","Под водой заполненные мешком легкие лягушки наполняются водой в стенках легких.","капилляры поглощают растворенный в воде кислород."],"correct":0},{"q":"Где  происходит оплодотворение у жабы?","answers":["Самки лягушки откладывают яйца в слизи в виде специальной системы, погруженной в воду.","после потепления воды и погоды.","поздней весной на специальной семенной дорожке.","весной, клоаке"],"correct":0},{"q":"Отличается ли строение позвоночника лягушки от позвоночника рыбы?»1) голова без движения прикрепляется к позвоночнику 2) шейный отдел единый3) ребра недоразвиты 4) хвостовые позвонки сливаются в один хвост5) Ребра не только в хвостовых позвонках","answers":["2,3,4","1,5","1,3,4","2,3,5"],"correct":0},{"q":"Какие изменения происходят после оплодотворения у жабы","answers":["Корка набухает и образует прозрачную слизистую оболочку.","увеличены и покрыты зрелой белковой коркой.","верхняя часть беловатая.","увеличивается, стоит отдельно на поверхности воды и плавает."],"correct":0},{"q":"Ящерица, которая охотиться ночью?\"","answers":["Геккон","Хамелион","безногая ящерица","Агама"],"correct":0},{"q":"Что из следующего является типичным признаком для класса рептилий?1) кожа, покрытая роговыми чешуйками 2) жизнь на суше3) водные животные 4) 3-х камерное сердце;5) откладывает яйца на суше 6) насчитывает 6000 видов 7) яйцо богата желтком; 8) 1-2 шейных позвонков; 9) двойное дыхание;\"","answers":["1,2,5,7","1,2,3,4","3,4,6,8","2,4,7,8"],"correct":0},{"q":"Какие змеи питаются змеями, а также другой пищей?1) кобра2) гюрза3) удав 4) щитомордник 5) эфазмея 6) полоз\"","answers":["1","2,5","1,3","2,6"],"correct":0},{"q":"В чём различие линьки  ящериц от змеи?","answers":["Отдельными кусками","не различаются","Целиком","Не линяют"],"correct":0},{"q":"Животные, которые двигаются на ребрах?1) кобра 2) желтопузик 3) щитомордник 4) воденой уж5) геккон 6)геккон7) гюрза8) агама\"","answers":["1,3,7","5,8,4","1,2,6,7.","2,5,6,8."],"correct":0},{"q":"В какой части головы у крокодилов глаза и нос?","answers":["в специальных рельефах на голове","на голове","по бокам головы","верхней челюсти"],"correct":0},{"q":"Что заставляет эмбрион дольше развиваться в яйце?","answers":["много желтка","плотная оболочка","есть пути дыхания","наличие скорлупы"],"correct":0},{"q":"Из чего образовалось цевка у птиц?","answers":["От слияния нескольких мелких костей стопы","От удлинения бедра","От слияния нескольких костей пальцев","От слияния костей голени"],"correct":0},{"q":"Различие птиц от пресмыкающихся/","answers":["Теплокровность, разделение сосудов артериальной и венозной крови.","Наличие роговых чешуек в теле .","яйцо богат желтком.","почти отсутствие желез в коже."],"correct":0},{"q":"Различить признаки сходства птиц с пресмыкающиеся1) мозжечок сильно развит,2)сложная кровеносная система,3)почти отсутствие желез в коже,4)крылья, кожа роговые, 5) яйцо богат желтком, 6)постоянство температуры тела, 7)строение эмбриона, 8)дважды вдох воздуха, сделанный один раз\"","answers":["3,4,5,7","3,5,7,8","2,4,5,6","1,2,6,8"],"correct":0},{"q":"Задний пояс ног птиц растёт, силясь с какими частями позвоночного столба?1)грудной,2) поясничный,3) шейный,4) крестцовый,5) все позвонки хвоста,6)2и3 позвонки хвоста,\"","answers":["2,4,7","6,1,3","3,4,5","1,2,3"],"correct":0},{"q":"Причина того, почему кости пальцев у птиц сильные?1) уменьшение числа пальцев, 2) смягчает удар при посадке 3) наполнены воздухом 4) слияние мелких костей\"","answers":["1,4","1,3","2,4","1,2"],"correct":0},{"q":"Выявить особенности, связанные с приспособляемостью птиц к полётуa) трубчатые кости наполнены воздухом b)отсутствие зуб c)челюсти превратились в рогатый клюв d)развита грудная клетка e)поясничный, крестцовый, копчиковый соединяются без движения f)теплокровные j)сердце 4-х камерное k)в лёгких образовались воздушные мешки\"","answers":["a, b, c,  e, k","a, b, c, d, j, k","d, e, f, j, k","a, b, c, d, e, f, j, k"],"correct":0},{"q":"Какую роль помимо дыхания играют воздушные мешочки у птиц?","answers":["предохраняет тело от перегрева и охлаждает","ускоряет функцию почки","улучшает кровеносную систему","обеспечивает высокую температуру тела"],"correct":0},{"q":"Определите характеристику кровеносной системы у птиц1)4-х камерное сердце 2) 3-х камерное сердце 3) из левого желудочка выходит аорта 4) из правого предсердия сердца выходит лёгочная артерия 5) из правого желудочка сердца выходит лёгочная артерия 6) из сердца выходит левая аорта","answers":["1,3,5","1,4,5","1,4,6","5,6"],"correct":0},{"q":"Во сколько раз больше частота дыхания птицы в полёте , чем частота дыхания в состоянии покоя?\"","answers":["15","25","10","5"],"correct":0},{"q":"Расположите период размножение птиц в правильной последовательности.1) откладывание яиц 2) гнездование 3) спаривание 4) кормление 5) вылупленые яйца 6) насиживание;","answers":["3,2,1, 6, 5,4","1,4,5,3,2,6","2,3,1,4,5,6","3,2,5,1,4,6"],"correct":0},{"q":"Определить правильный последственности строение птичьего яйца?1) скорлупа 2) подскорлуповая оболочка 3) воздушная камера 4) белковая оболочка 5) желток 6) зародышевый диск 7) халазы","answers":["1,2,7,3,4,6","1,2,3,4,5,7","1,2,3,7","1,2,3,4,6,7"],"correct":0},{"q":"Укажите оседлых (а) и перелетных (б) птиц.1) дрозд 2) кобыла 3) воробей 4) воробей 5) мускус 6) читтак","answers":["a-2, 3, 5, 6; b-1, 4","a-1, 2, 3; b-4, 5, 6","a-2, 3, 6; b-1, 4,5","a-1, 4; b-2, 3,5,6"],"correct":0},{"q":"Какая особенность птиц отлично умеет летать и летать важный","answers":["способность летать в воздухе","способность летать на большие расстояния в воздухе","утомляемость мышц","хорошо развитая способность видеть"],"correct":0},{"q":"Рептилий (1) и птиц (2), не питающихся птицамиотметить представителей.1) песочная садовая змея 2) кипарисовая змея 3) озерная змея 4) щитовидная 5) желтая змея 6) филин 7) ястреб 8) аист. \"","answers":["I-4,5 II-8","I-1,2,3 II-6,7","I-2,4,5 II-6,7,8","I-1,2,3,4,5 II-6,7,8"],"correct":0},{"q":"Какой из следующих характерных знаков подходит для грифа?1) питается лягушками 2) питается тушами животных 3)Когти сильно развиты 4) не могут напасть на живых животных 5) большиенападает на животных 6) когти слабо развиты 7) на головеимеет два шара в форме уха","answers":["2,4,6","1,3,7","3,4,7","2,3,4,7"],"correct":0},{"q":"Какая хищная птица имеет раздвоенные хвостовые перья","answers":["Коршун","Сокол","Орел","Ястреб"],"correct":0},{"q":"Для каких организмов пищевод расширяется и образует пищеводтипичный?1) планария белая 2) тритон 3) печеночник 4) голубь 5) лягушка 6) дождьчервь 7) угорь 8) нереида","answers":["4,6,7,8","2,5,7","1,3,4,6","1,2,3,8"],"correct":0},{"q":"Когда люди приручили дикую утку","answers":["3000 лет назад","2000 лет назад","200 лет назад","300 лет назад"],"correct":0},{"q":"Какие органы составляют дыхательную систему млекопитающих ?","answers":["носоглотка, гортань, гортань, бронхи, легкие, плевральный выпот","нос, рот, гортань, трахея, бронх","нос, горло, гортань, трахея, бронхи, легкие","полость носа, гортань, гортань, бронхи, легкие"],"correct":0},{"q":"Из скольких камер состоит сердце  млекопитающего?","answers":["4","5","3","2"],"correct":0},{"q":"Особенности адаптации к группе животных и среде их обитания выберите пары1) паразиты 2) водные животные 3) почвенные животные 4) наземные животныеа) форма туловища b) расширенные передние лапы c) задние лапысильно развиты d) развиты органы прикрепления","answers":["1-d, 2-a,3-b, 4-c.","1-a, 2-b, 3-c, 4-d.","1-d, 2-b, 3-b, 4-d.","1-b,2-c,3-d,4-b."],"correct":0},{"q":"Наивысшая, наибольшая и наименьшая систематическая единица животных укажите их\"","answers":["животный мир и виды.","животный мир и род","тип, класс, род","вид и семейство."],"correct":0},{"q":"Какой из следующих ответов правильная таксономия животных?","answers":["вид, род, семейство, отряд, класс, тип","вид, род, семейство, класс, отряд, тип.","вид, семейство, род,отряд, класс, тип.","тип, семейство, поколение, класс, категория, тип."],"correct":0},{"q":"Какие классы входят в состав простейших  животных?1) ложноножки 2) полипы 3) медузы 4) жгутиковые 5) инфузории 6) брюхоногие моллюски 7) споровики","answers":["1,4,5,7.","1,2,5,7.","2,3,6.","1,4,5,6."],"correct":0},{"q":"Что вызывает изменение формы амебы?","answers":["Отсутствие твердой оболочки на поверхности клетки.","цитоплазма перемещается в клетке.","образование ложных ножек.","вариабельность сократительных вакуолей."],"correct":0},{"q":"Когда появляется пищеварительная вакуоль амебы?","answers":["«С отделением пищеварительного сока от цитоплазмы.","С отделением пищеварительного сока от ядра.","С отделением пищеварительного сока от кариоплазмы","С образованием кист."],"correct":0},{"q":"В порядке процессов, происходящих при бесполом размножении амеб.Укажите их1) ядра проходят по обе стороны от делящихся клеток 2) цитоплазмамостик разрывается 3) растягивается ядро   4) образуются две амебы 5) ядроделится на две 6) клетка делится на две части.\"","answers":["3,5,1,2,6,4.","1,2,3,4,5,6.","4,5,6,1,2,3.","2,3,5,1,4,6."],"correct":0},{"q":"По каким признакам эвглена отличается от амебы?1) состоит из 1 ячейки 2) тело имеет постоянную форму 3) тело имеет постоянную формуне 4) наличие сократительной вакуоли 5) питание 6) движение","answers":["2,5,6.","1,3,5.","2,3,4.","1,3,4."],"correct":0},{"q":"Определите простых животных, которые накапливают запасные питательные вещества?\"","answers":["Эвглена","Амёба","паразиты малярии","инфузории."],"correct":0},{"q":"Чем клетки вольвокс отличаются от эвглены?","answers":["с ядовитой формой и двумя жгутиками.","с вредной формой и без крапивницы.","По форме похожа на туфлю, каблуков много.","с двумя бесформенными жгутиками"],"correct":0},{"q":"Определите простых животных с открытым ротовым отверстием?","answers":["инфузория туфелька","Фораминифера","Эвглена","Амёба"],"correct":0},{"q":"Определите, многоядерного одноклеточного животного\"","answers":["Опалина","Вольвокс","Эвглена","Туфелька"],"correct":0},{"q":"Самый древний  из одноклеточных (1), самый сложный (2), самый простой (3),паразиты (4), ?а) ложноножки b) жгутиковые  c) инфузории d) споровики\"","answers":["1-b, 2-c, 3-a, 4-d.","1-a, 2-b, 3-c, 4-d.","1-d, 2-c, 3-b, 4-a.","1-b, 2-a, 3-b, 4-d."],"correct":0},{"q":"Укажите классы, которые относятся к типу кишечнополостные?1) гидроидные полипы;\",2) сцифоидные медузы,3) ресничные черви4) млекопитающие 5) многощетинковые  6) головоногие7) цепень 8) коралловые.полипы 9) пиявки","answers":["1,2,8","3,4,7","5,6,9","3,4,5"],"correct":0},{"q":"Какова функция полости тела гидры?","answers":["функция кишечника","Движение","Регенерация","Размножение"],"correct":0},{"q":"Определите животное, состоящее из двух слоев клеток? \"","answers":["Гидра","Инфузории","Эйзения","Нереида"],"correct":0},{"q":"Какую функцию выполняют следующие клетки тела гидры?1) кожно-мышечный 2) стрекательные 3) нервные ,4) промежуточные;, а) движение b) регенерацияc) пищеварение g) защита d) чувствительность","answers":["1-a, 2-g, 3-d, 4-b.","1-a, 2-g, 3-v, 4-d.","1-b, 2-a, 3-v, 4-d.","1-g, 2-d, 3-b, 4-v."],"correct":0},{"q":"Определите строение нервной системы белой планарии?","answers":["2 крупных нервных узлов и нервных стволов.","кольцевидные нервные волокна, нервы.","нервные клетки разбросаны.","два нервных узла, множество волокон, нервы."],"correct":0},{"q":"Белая планария в неблагоприятных  условиях…","answers":["Делится на мелкие кусочки.","Размножается половым путем.","Делится на две части.","Образует споры."],"correct":0},{"q":"Полость тела  белой планарии состоит…","answers":["из рыхлой соединительной ткани.","клеящее вещество.","из пористой мышечной ткани.","от кольцевых мышц."],"correct":0},{"q":"Найдите представителей плоских червей:а) ресничные, b) сосальщики,\",\" d) ленточные;1) нематода, 2) эхинококк, свиной цепень, 3) кошачье двуустки,печеночный сосальщик 4) планария\"","answers":["a-4, b-3, d-2","a-3, b-2, d-1","a-4, b-3, d-2","a-1, b-2, d-3"],"correct":0},{"q":"Как устроены животные, относящиеся к плоским червям?1) двусторонне-симметричный 2) радиально-симметричный 3) листовой илицилиндрическая 4) тело листовидное или плоское 5) полость теларазвиты 6) полость тела заполнена рыхлой тканью 7) гермафродиты8) однополые »\"","answers":["1,4,6,7.","2,5,7.","2,3,4,5.","2,3,4,8."],"correct":0},{"q":"Определите свободноживущего представителя плоских червей.","answers":["Планария","Сосальщики","Ленточные","Эхинокок"],"correct":0},{"q":"Укажите характерные особенности  белой планарии.","answers":["Слепо замкнутый кишечник","имеют глотку и анальное отверстие","Тело покрыто многослойной эпителиальной тканью","Тело имеет лучевую  симметрию"],"correct":0},{"q":"Какой из следующих паразитических червей не относятся плоским червям?","answers":["Аскарида","Эхинококк","детская острица","бычий солитер"],"correct":0},{"q":"От каких животных началось развитие полости тела?","answers":["человеческая аскарида","бычий солитер","печёночный сосальщик","белая планария"],"correct":0},{"q":"Найдите правильное определение типа круглые черви:1) раздельнополость 2) гермафродит 3) полость тела отсутствует 4) полость тела5) задняя кишка имеет анальное отверстие 6) кишечник разветвленный 7) тело до суставовнеделимая 8) поперечное сечение в виде круга.","answers":["1,4,5,8.","2,4,5,8.","1,3,5,8.","2,3,8,6."],"correct":0},{"q":"Основные отличия круглых червей от плоских червей отметка.1) раздельнополые 2) присоски присутствуют 3) кишечник замкнутый 4) прикрепление неразвитая 5) с анальным отверстием 6) гермафродит","answers":["1,4,5","1,2,5","2,3,6","1, 4, 6"],"correct":0}],"biology":[{"q":"Найдите предмет методики преподавания биологии?","answers":["цель биологического образования, содержание, методы преподавания, формы, воспитание и развитие учащихся","содержание учебного предмета биологии, внедрение его форм преподавания, методов, средств в их взаимосвязи","разработка содержания учебного предмета, его форм преподавания, средств и методов, способствующих всестороннему и глубокому обучению учащихся, формированию всесторонне развитой личности","наука о принципах и закономерностях учебно-воспитательного процесса; разработка содержания учебного предмета, его форм преподавания, средств и методов, способствующих всестороннему и глубокому обучению учащихся, формированию всесторонне развитой личности"],"correct":0},{"q":"Найдите цель методики преподавания биологии?","answers":["внедрение содержания учебного предмета биологии, его форм преподавания, методов и средств в их взаимосвязи","наука о принципах и закономерностях учебно-воспитательного процесса","наука о разработке содержания учебного предмета, его форм преподавания, средств и методов, способствующих всестороннему и глубокому обучению учащихся, формированию всесторонне развитой личности","наука о принципах и закономерностях учебно-воспитательного процесса; наука о разработке содержания учебного предмета, его форм преподавания, средств и методов, способствующих всестороннему и глубокому обучению учащихся, формированию всесторонне развитой личности"],"correct":0},{"q":"Найдите основную цель методики преподавания биологии?","answers":["разработка содержания учебного предмета, его форм преподавания, средств и методов, способствующих всестороннему и глубокому обучению учащихся, формированию всесторонне развитой личности","наука о принципах и закономерностях учебно-воспитательного процесса","внедрение содержания учебного предмета биологии, его форм преподавания, методов и средств в их взаимосвязи","наука о принципах и закономерностях учебно-воспитательного процесса; наука о разработке содержания учебного предмета, его форм преподавания, средств и методов, способствующих всестороннему и глубокому обучению учащихся, формированию всесторонне развитой личности"],"correct":0},{"q":"К какой науке относится методика преподавания биологии?","answers":["педагогика","биология","дидактика","естественные науки"],"correct":0},{"q":"Определите, что входит в систему форм преподавания биологии.","answers":["урок; внеурочная и внешкольная работа; экскурсия","урок","внеурочная и внешкольная работа","экскурсия"],"correct":0},{"q":"Найдите особенности внеурочной работы","answers":["учащиеся выполняют индивидуальные или групповые задания после уроков; обязательные практические работы, указанные в учебной программе, выполняются в кабинете биологии, уголке живой природы, на учебно-опытном участке","учащиеся выполняют индивидуальные или групповые задания после уроков","обязательные практические работы, указанные в учебной программе, выполняются в кабинете биологии, уголке живой природы, на учебно-опытном участке","добровольная форма обучения"],"correct":0},{"q":"Найдите особенности внеклассной работы","answers":["занятия с учащимися проводятся индивидуально, в отдельных группах и массово; обучение осуществляется в добровольной форме","занятия с учащимися проводятся индивидуально, в отдельных группах и массово","обязательные практические работы, указанные в учебной программе, выполняются в кабинете биологии, уголке живой природы, на учебно-опытном участке","обучение осуществляется в добровольной форме"],"correct":0},{"q":"Что взято за основу при формировании научного мировоззрения у учащихся?","answers":["природа – человек – общество","человек – природа – общество","биологические понятия","неразрывная связь обучения и воспитания"],"correct":0},{"q":"Соотнесите следующие методы с устными (1), наглядными (2), логическими (3) методами: а) лекция; б) демонстрация наглядных пособий; в) наблюдение; г) беседа; д) индуктивный; е) практический; ж) анализ","answers":["1 а, г; 2 б; 3 д, ж","1 б, г; 2 б; 3 д, ж","1 г; 2 а; 3 б, е, ж","1 е; 2 б; 3 а"],"correct":0},{"q":"Найдите особенности индуктивного метода","answers":["выведение общего вывода из частных фактов","выведение частного вывода из общих правил","сходства и различия между объектами","выделение и отбор основной мысли в учебном материале"],"correct":0},{"q":"Найдите особенности метода анализа?","answers":["разделение изучаемых объектов на составные части, выявление связей между ними","выведение общего вывода из частных фактов","выведение частного вывода из общих правил","выявление типичных фактов в учебном материале, представление динамики развития первоначальных выводов"],"correct":0},{"q":"Найдите особенности метода сравнения","answers":["сравнение объектов, обозначение сходств и различий с помощью условных признаков","выведение общего вывода из частных фактов","выведение частного вывода из общих правил","выявление типичных фактов в учебном материале, представление динамики развития первоначальных выводов"],"correct":0},{"q":"Найдите особенности метода обобщения","answers":["выявление типичных фактов в учебном материале, представление динамики развития первоначальных выводов, формулирование общих выводов","выведение общего вывода из частных фактов","выведение частного вывода из общих правил","разделение изучаемых объектов на составные части, выявление связей между ними"],"correct":0},{"q":"Найдите особенности проблемного метода","answers":["создание проблемных ситуаций, выдвижение учебных гипотез для их решения","применение теоретических знаний на практике, формирование учебных и трудовых навыков","изучение процессов, происходящих в живых организмах, и явлений, происходящих в природных объектах","разделение изучаемых объектов на составные части, выявление связей между ними"],"correct":0},{"q":"Найдите особенности метода наблюдения","answers":["изучение процессов, происходящих в живых организмах, и явлений, происходящих в природных объектах","применение теоретических знаний на практике, формирование учебных и трудовых навыков","создание проблемных ситуаций, выдвижение учебных гипотез для их решения","разделение изучаемых объектов на составные части, выявление связей между ними"],"correct":0},{"q":"Найдите особенности практического метода","answers":["применение теоретических знаний на практике, формирование учебных и трудовых навыков","изучение процессов, происходящих в живых организмах, и явлений, происходящих в природных объектах","создание проблемных ситуаций, выдвижение учебных гипотез для их решения","разделение изучаемых объектов на составные части, выявление связей между ними"],"correct":0},{"q":"Найдите метод, который позволяет применять теоретические знания на практике, формировать учебные и трудовые навыки","answers":["практический метод","метод наблюдения","проблемный метод","метод обобщения"],"correct":0},{"q":"Найдите метод, который позволяет изучать процессы, происходящие в живых организмах","answers":["метод наблюдения","практический метод","проблемный метод","метод обобщения"],"correct":0},{"q":"Найдите метод, который позволяет создавать проблемные ситуации и выдвигать учебные гипотезы для их решения","answers":["проблемный метод","практический метод","метод обобщения","метод наблюдения"],"correct":0},{"q":"Найдите метод, который позволяет разделять изучаемые объекты на составные части и выявлять связи между ними","answers":["метод обобшения","метод наблюдения","практический метод","проблемный метод"],"correct":0},{"q":"Найдите метод, который позволяет сравнивать объекты, обозначать сходства и различия с помощью условных признаков","answers":["метод сравнения","практический метод","проблемный метод","метод обобщения"],"correct":0},{"q":"Отнесите следующие понятия к морфологическим (1), анатомическим (2), систематическим (3): а) определение природных объектов, выявление внешнего строения их органов; б) клеточное строение; в) определение систематических групп растений и животных; г) изучение тканей.","answers":["1а, 2б, г, 3в","1в, 2г, 3д","1в, 2а, 3б, г","1б, 2а, 3в, г"],"correct":0},{"q":"Найдите ученого, который первым дал определение образованию и воспитанию","answers":["Аль-Фараби","Ибн Сина","Мухаммад Кашгари","Аристотель"],"correct":0},{"q":"Найдите основные задачи курса методики преподавания биологии: 1. дать учащимся глубокие и всесторонние знания по основам науки; 2. воспитать всесторонне развитую личность; 3. организовать учебно-воспитательный процесс в соответствии с требованиями времени; 4. разработать содержание, формы, средства и методы преподавания; 5. изучить историю развития науки; 6. интегрировать естественнонаучные, биологические, психологические, педагогические знания","answers":["1,2,4","2,4,6","1,3,5","1,4,6"],"correct":0},{"q":"Что изучает наука бионика?","answers":["решение инженерных задач на основе морфологических и физиологических приспособлений организмов","роль физиологически активных веществ в управлении жизненными процессами","формы жизни во Вселенной и их распространение","решение инженерных задач на основе физиологических приспособлений"],"correct":0},{"q":"Найдите автора произведения «О достижении счастья»","answers":["Аль-Фараби","Джурджани","Аль-Хорезми","Ибн Сина"],"correct":0},{"q":"Найдите автора произведения «Памятники минувших поколений».","answers":["Беруни","Джурджани","Аль-Хорезми","Ибн Сина"],"correct":0},{"q":"Найдите ученого, который указал на необходимость соблюдения преемственности и последовательности в обучении","answers":["Аль-Фараби","Джурджани","Беруни","Ибн Сина"],"correct":0},{"q":"Найдите ученого, который указал на необходимость выделения наиболее важных знаний","answers":["Ибн Сина","Джурджани","Беруни","Аль-Фараби"],"correct":0},{"q":".... заложил основу просвещения джадидов. Дополните имя ученого.","answers":["Гаспринский","М. Бехбуди","Фитрат","Шакури"],"correct":0},{"q":"По мнению джадидов, совершенный человек — это ... . Дополните предложение.","answers":["самый современный человек","просветитель","человек, проникнутый национальной идеей","просвещение"],"correct":0},{"q":"В Ташкенте открыл школу «усули савтия»","answers":["Мунаввар кари","Фитрат","Шакури","Авлони"],"correct":0},{"q":"Найдите ученого, который первым дал определение педагогике","answers":["Авлони","Фитрат","Шакури","Мунаввар кари"],"correct":0},{"q":"Найдите учёного, написавшего первый учебник по «Естествознанию».","answers":["Ф. Зуев","Ш. Теряев","И. Даль","Н. Бекетов"],"correct":0},{"q":"Отметьте составные части учебников по естествознанию Ф. Зуева (1) и Я. Герда (2): a) неорганическая природа, b) растительный мир, v) животный мир, g) человек, d) история Земли.","answers":["1 abv, 2 abvg","1 ab, 2 vg","1 avgd, 2 abv","различий между учебниками нет"],"correct":0},{"q":"Найдите автора первого «Методического пособия по преподаванию биологии».","answers":["П. И. Боровисский","Ф. Зуев","Ш. Теряев","И. Даль"],"correct":0},{"q":"Найдите автора книги «Общие методические основы естествознания».","answers":["Половцов","Ф. Зуев","И. Даль","П. И. Боровский"],"correct":0},{"q":"В 1920–30-х годах основной проблемой преподавания биологии считалось ...","answers":["внедрение единства теории и практики","включение достижений биологической науки в учебную программу","учебный материал не был распределён по учебным предметам","внедрение единства теории и практики; учебный материал не был распределён по учебным предметам"],"correct":0},{"q":"Найдите темы, включённые в учебник по естествознанию Я. Герда (1) и в учебные программы по биологии 1920–30-х годов (2).","answers":["Растительный мир. Животный мир","Неорганическая природа. Физико-химические основы жизни на Земле","Человек. История Земли","Связь деревни с городом. Посев и уход за растениями"],"correct":0},{"q":"Методику внеклассных занятий, основанных на местном материале, разработали:","answers":["Т. Гафуров, К. Хабиров","Т. Гафуров, О.Н. Носиров","Т. Гафуров, М. Кадыров","Т. Гафуров, М.М. Махкамов"],"correct":0},{"q":"Найдите формы преподавания биологии: 1. урок 2. внеурочная работа 3. внеклассная работа 4. массовые вечера 5. индивидуальная работа с учащимися 6. работа с группой учащихся 7. экскурсия","answers":["1,2,3,7","1,2,4,5","4,5,6","1,2,4"],"correct":0},{"q":"Какие виды воспитания можно реализовать при преподавании биологии?","answers":["нравственно-этическое воспитание; экологическое воспитание; патриотическое воспитание","нравственно-этическое воспитание","экологическое воспитание","патриотическое воспитание"],"correct":0},{"q":"Найдите оптические приборы, используемые при преподавании биологии","answers":["Микроскоп и лупа","микроскоп, лупа и таблицы","микроскоп, предметное и покровное стекло","предметное и покровное стекло"],"correct":0},{"q":"Найдите педагогические требования к кабинету биологии","answers":["Учебные и лабораторные кабинеты, а также их оборудование и средства должны отражать содержание изучаемой на уроке темы","Всё учебное оборудование в кабинете должно соответствовать требованиям технических средств обучения, гигиены труда и техники безопасности","Каждое оборудование, его элементы и общий вид должны соответствовать законам эстетики","Наглядные пособия, используемые на уроках биологии, делятся на натуральные и изобразительные"],"correct":0},{"q":"Найдите составные части материально-технической базы преподавания биологии","answers":["кабинет биологии, лабораторный кабинет и уголок живой природы","кабинет биологии, лабораторный кабинет, уголок живой природы, школьный опытный участок","кабинет биологии","школьный опытный участок"],"correct":0},{"q":"Из каких частей состоит полевой отдел школьного опытного участка?","answers":["коллекционный и опытный","ягодные и декоративные растения","биология растений","отделы зоологии и ботаники"],"correct":0},{"q":"Какие растения выращиваются в отделе декоративных растений школьного опытного участка?","answers":["декоративные однолетние, многолетние растения, кустарники","плодовые деревья","растения, необходимые для преподавания ботаники, зоологии и общей биологии","коллекционные растения"],"correct":0},{"q":"Какие растения выращиваются в отделе биологии растений школьного опытного участка?","answers":["растения, необходимые для преподавания ботаники и общей биологии","декоративные однолетние, многолетние растения, кустарники","плодовые деревья","коллекционные растения"],"correct":0},{"q":"На какие группы делятся экскурсии по биологии в зависимости от продолжительности?","answers":["одночасовые, однодневные и многодневные","весенние и летние","осенние и зимние","однодневные и многодневные, весенние и летние, осенние и зимние"],"correct":0},{"q":"Какими методами изучаются объекты на экскурсии?","answers":["наглядный и устный рассказ","иллюстрация и самостоятельная работа","устный рассказ","самостоятельная работа"],"correct":0},{"q":"На какие группы делятся средства обучения, используемые при преподавании биологии?","answers":["натуральные, изобразительные и вербальные","натуральные, изобразительные","таблицы, схемы и диаграммы","гербарии, макро- и микропрепараты, коллекции"],"correct":0},{"q":"Что относится к натуральным средствам обучения, используемым при преподавании биологии?","answers":["гербарии, макро- и микропрепараты, коллекции, растения и животные в уголке живой природы","натуральные, изобразительные","натуральные, изобразительные и вербальные","таблицы, схемы и диаграммы"],"correct":0},{"q":"Что относится к изобразительным средствам обучения, используемым при преподавании биологии?","answers":["таблицы, схемы, диаграммы, муляжи, модели","натуральные, изобразительные","натуральные, изобразительные и вербальные","гербарии, макро- и микропрепараты, коллекции"],"correct":0},{"q":"Найдите общие биологические понятия","answers":["клеточное строение организмов, обмен веществ и энергии, единство организма и среды, наследственность и изменчивость","законы наследственности Менделя и Моргана, закон Бера, закон Харди-Вайнберга, биогенная миграция атомов","эволюция органического мира, уровни организации живых организмов, единство строения и функции","эволюция органического мира, филэмбриогенез, хромосомная теория"],"correct":0},{"q":"Найдите биологические теории.","answers":["эволюция органического мира, филэмбриогенез, хромосомная теория","клеточное строение организмов, обмен веществ и энергии, единство организма и среды","законы наследственности Менделя и Моргана, закон Бера, закон Харди-Вайнберга, биогенная миграция атомов","эволюция органического мира, уровни организации живых организмов, единство строения и функции"],"correct":0},{"q":"Найдите биологические идеи","answers":["эволюция органического мира, уровни организации живых организмов, единство строения и функции","клеточное строение организмов, обмен веществ и энергии, единство организма и среды","законы наследственности Менделя и Моргана, закон Бера, закон Харди-Вайнберга, биогенная миграция атомов","эволюция органического мира, филэмбриогенез, хромосомная теория"],"correct":0},{"q":"Найдите биологические законы","answers":["законы наследственности Менделя и Моргана, закон Бера, закон Харди-Вайнберга, биогенная миграция атомов","клеточное строение организмов, обмен веществ и энергии, единство организма и среды","эволюция органического мира, уровни организации живых организмов, единство строения и функции","эволюция органического мира, филэмбриогенез, хромосомная теория"],"correct":0},{"q":"В зависимости от преподаваемых в школах учебных предметов по биологии, на какие частные методики делится наука «Методика преподавания биологии»?","answers":["«Методика преподавания ботаники», «Методика преподавания зоологии», «Общая методика преподавания биологии», «Методика преподавания человека и его здоровья», «Методика преподавания общей биологии»","«Методика преподавания ботаники», «Методика преподавания зоологии»","«Общая методика преподавания биологии»","«Методика преподавания человека и его здоровья», «Методика преподавания общей биологии»"],"correct":0},{"q":"Найдите ответ, в котором дано лексическое значение слова «биология».","answers":["биос — жизнь, логос — учение","биос — жизнь, логос — мысль","биос — живой, логос — учение","биос — природа, логос — учение"],"correct":0},{"q":"Достижения биологической науки стали возможны благодаря использованию достижений каких наук?","answers":["физика, химия, математика, астрономия","физика","химия","математика, астрономия"],"correct":0},{"q":"Какие достижения были реализованы благодаря успехам биологической науки?","answers":["был раскрыт механизм биосинтеза белка, установлены структура и функции ДНК и РНК как материальной основы наследственности, расшифрован генетический код аминокислот","Был раскрыт механизм биосинтеза белка","Установлены структура и функции ДНК и РНК как материальной основы наследственности","Расшифрован генетический код аминокислот"],"correct":0},{"q":"Одной из новых областей биологической науки является …","answers":["космическая биология","генетика","анатомия","физиология"],"correct":0},{"q":"Одной из новых областей биологической науки является …","answers":["космическая биология","генетика","анатомия","физиология"],"correct":0},{"q":"С какого года по постановлению правительства была проведена реформа начальной и средней школы, и основной организационной формой обучения был определён урок?","answers":["с 1931 года","с 1900 года","с 1802 года","с 1950 года"],"correct":0},{"q":"Укажите учёных, создавших пособия по «Методике преподавания биологии»","answers":["П. И. Боровицкий «Методика преподавания биологии», Н. М. Верзилин и М. Корсунская «Общая методика преподавания биологии», И. Н. Понамарёва «Общая методика преподавания биологии»","П. И. Боровицкий «Методика преподавания биологии»","Н. М. Верзилин и М. Корсунская «Общая методика преподавания биологии»","И. Н. Понамарёва «Общая методика преподавания биологии»"],"correct":0},{"q":"С какого года во все биологические программы и учебники биологии были включены последние достижения генетики, экологии, цитологии, биохимии, молекулярной биологии?","answers":["1964 год","1907 год","1917 год","1802 год"],"correct":0},{"q":"В какие годы в биологической науке продолжалась ожесточённая идеологическая борьба?","answers":["1935-1965 годы","1900-1930 годы","1907-1917 годы","1920-1930 годы"],"correct":0},{"q":"Исследования по методике преподавания биологии в нашей республике начинаются со второй половины … века.","answers":["XX","XIX","XVIII","XXI"],"correct":0},{"q":"В каком году на Ташкентском государственном педагогическом институте имени Низами была создана кафедра «Методика преподавания биологии»?","answers":["1961 год","1950 год","1930 год","1980 год"],"correct":0},{"q":"Дидактические требования к преподаванию школьного курса ботаники, вопросы активизации познавательной деятельности учащихся на уроках ботаники нашли отражение в каком пособии Е. М. Бельской?","answers":["«Дидактика ботаники»","«Развитие ботаники»","«Методика преподавания ботаники»","«Научная методика ботаники»"],"correct":0},{"q":"Кто доказал значение использования экранных средств (учебные фильмы, диафильмы, диапозитивы) на уроках биологии?","answers":["М. Ортиков","Ж. Толипова","Гафуров","М. Махкамов"],"correct":0},{"q":"Кто показал значение разнообразия уроков биологии, использования нетрадиционных уроков (семинар, конференция, проблемный урок)?","answers":["Ж. Толипова","М. Ортиков","Гафуров","М. Махкамов"],"correct":0},{"q":"Найдите автора учебно-методического пособия «Формирование общебиологических понятий».","answers":["Гафуров","М. Ортиков","Ж. Толипова","М. Махкамов"],"correct":0},{"q":"Найдите авторов учебно-методического пособия «Формирование понятия охраны природы в школьном курсе биологии».","answers":["Гафуров, Н. Носиров","М. Ортиков","Ж. Толипова","М. Махкамов"],"correct":0},{"q":"Найдите авторов учебно-методического пособия «Лабораторные занятия по методике преподавания биологии».","answers":["М. Кадыров, К. Хайдаров","М. Ортиков, М. Кадыров","Гафуров, М. Махкамов","М. Махкамов, И. Норбеков"],"correct":0},{"q":"Найдите автора учебно-методического пособия «Лабораторные занятия по физиологии человека».","answers":["М. Кадыров","М. Ортиков, М. Кадыров","Гафуров, М. Махкамов","М. Махкамов, И. Норбеков"],"correct":0},{"q":"Найдите основные принципы, закреплённые в Законе Республики Узбекистан «Об образовании».","answers":["гуманистический и демократический характер образования и воспитания, непрерывность и преемственность образования, сочетание государственного и общественного управления в системе образования, светский характер системы образования, поощрение знаний и талантов","гуманистический и демократический характер образования и воспитания","непрерывность и преемственность образования, сочетание государственного и общественного управления в системе образования","светский характер системы образования, поощрение знаний и талантов"],"correct":0},{"q":"Найдите определение принципа обучения.","answers":["принцип обучения — это дидактическая категория, определяющая способы применения законов и закономерностей обучения на практике в зависимости от целей и задач учебно-воспитательного процесса","поэтапная организация учебного процесса","использование инновационных методов в процессе обучения","определяет способы применения законов и закономерностей обучения на практике в зависимости от задач"],"correct":0},{"q":"В какие годы были разработаны государственный образовательный стандарт и учебные программы общего среднего образования и апробированы на экспериментальных площадках школ всех областей республики?","answers":["1997–1998 годы","1990–1997 годы","2000–2005 годы","в период после 2005 года"],"correct":0},{"q":"Государственный образовательный стандарт общего среднего образования и учебные программы по всем учебным предметам были утверждены постановлением Кабинета Министров Республики Узбекистан от:","answers":["16 августа 1999 года","16 августа 1996 года","9 августа 2000 года","15 августа 2000 года"],"correct":0},{"q":"Каково лексическое значение слова «стандарт»?","answers":["английское, означает образец, размер, норма","латинское, означает требование, уровень","английское, означает метод, принцип","латинское, означает документ"],"correct":0},{"q":"Найдите определение учебной программы.","answers":["документ, отражающий содержание каждого учебного предмета, совокупность знаний, которые должны усвоить учащиеся, а также учебные умения и навыки, которые они должны приобрести","минимальный уровень знаний по биологии","непрерывность общего среднего образования и его связь с другими видами и этапами образования, а также преемственность содержания образования","единство и целостность содержания образования на всей территории республики"],"correct":0},{"q":"Из каких учебных предметов состоит школьный курс биологии?","answers":["ботаника, зоология, человек и его здоровье, биология","естествознание, ботаника, зоология, анатомия, биология","цитология, эмбриология, человек и его здоровье","ботаника, зоология, анатомия, физиология"],"correct":0},{"q":"На основе какого нормативного документа создаются учебники?","answers":["учебная программа","образовательный стандарт","перечень тем","темы для самостоятельной работы"],"correct":0},{"q":"Найдите автора школьного учебника по зоологии.","answers":["О. Мавлонов","Абдукаримов","Б. Аминов, Т. Тиловов","Э. Гафуров"],"correct":0},{"q":"Найдите авторов школьного учебника «Человек и его здоровье».","answers":["Б. Аминов, Т. Тиловов","Э. Гафуров","Абдукаримов","О. Мавлонов"],"correct":0},{"q":"В каком году была основана наука биология?","answers":["1802 год","1900 год","1800 год","1809 год"],"correct":0},{"q":"Найдите учёных, основавших науку биологию.","answers":["Ж. Ламарк, Тревиранус","Ч. Дарвин","Ж. Кювье","Ж. Кювье"],"correct":0},{"q":"Из каких дисциплин состоит биология?","answers":["ботаника, зоология, человек и его здоровье, генетика","биотехнология, биогеография, биоэстетика","цитология, морфология, экология, гидробиология, микробиология","физиология, антропология, палеонтология, биоэтика, биотехнология, биогеография, биоэстетика"],"correct":0},{"q":"Найдите определение наглядного обучения.","answers":["обучение, проводимое на основе средств, которые можно непосредственно воспринимать","выведение частного вывода из общих правил","выделение и отбор основной мысли в учебном материале","сравнение, обозначение сходств и различий с помощью условных признаков"],"correct":0},{"q":"Какие операции может выполнять ученик с помощью наглядных средств?","answers":["анализ, синтез, выводы, абстрагирование, систематизация, обобщение, конкретизация","анализ, синтез, выводы","абстрагирование, систематизация","обобщение, конкретизация"],"correct":0},{"q":"На какие группы делятся средства обучения?","answers":["натуральные, изобразительные, устные (вербальные)","натуральные","изобразительные","устные (вербальные)"],"correct":0},{"q":"Найдите устные или вербальные средства обучения.","answers":["дидактические карточки","учебники, научно-популярные книги","слово учителя, тесты, дидактические карточки","компьютерные программы, видеоматериалы"],"correct":0},{"q":"Я. Коменский недаром назвал вовлечение всех органов чувств ученика в обучение ... дидактики. Дополните предложение.","answers":["«Золотым правилом»","«Сокровищем»","«Наукой о книгах»","«Золотым правилом», «Сокровищем»"],"correct":0},{"q":"Гуманизация образования — это ... . Дополните предложение.","answers":["полное раскрытие способностей человека и удовлетворение его потребности в получении знаний, обеспечение приоритета национальных и общечеловеческих ценностей, гармонизация взаимоотношений человека, общества и окружающей среды","эффективная организация и развитие учебно-воспитательного процесса считается приоритетным направлением в нашем обществе","выбор методов обучения и воспитания, организация и управление учебно-воспитательным процессом основываются на сотрудничестве учителя и учащегося","формирование у обучающихся сознательной дисциплины, чувства человеческого достоинства, высокой духовности, поведения, основанного на социальных нормах, эстетического мировоззрения, логического и творческого мышления"],"correct":0},{"q":"Национальная направленность образования — это ... . Дополните предложение.","answers":["органическая связь образования с нашей национальной историей, народными традициями и обычаями, сохранение и обогащение культуры народов Узбекистана, признание образования важнейшим фактором национального развития, обеспечение уважения к истории и культуре других народов","выбор методов обучения и воспитания, организация и управление учебно-воспитательным процессом основываются на сотрудничестве учителя и учащегося","дифференциация и индивидуализация учебного процесса, создание условий для одарённых молодых людей для получения фундаментальных и специальных знаний на самом высоком уровне","формирование у обучающихся сознательной дисциплины, чувства человеческого достоинства, высокой духовности, поведения, основанного на социальных нормах, эстетического мировоззрения, логического и творческого мышления"],"correct":0},{"q":"Выявление одарённых молодых людей — это ... . Дополните предложение.","answers":["при выборе методов обучения и воспитания, организации и управлении учебно-воспитательным процессом основывается на сотрудничестве учителя и учащегося","органическая связь образования с нашей национальной историей, народными традициями и обычаями, сохранение и обогащение культуры народов Узбекистана, признание образования важнейшим фактором национального развития, обеспечение уважения к истории и культуре других народов","дифференциация и индивидуализация учебного процесса, создание условий для одарённых молодых людей для получения фундаментальных и специальных знаний на самом высоком уровне","формирование у обучающихся сознательной дисциплины, чувства человеческого достоинства, высокой духовности, поведения, основанного на социальных нормах, эстетического мировоззрения, логического и творческого мышления"],"correct":0},{"q":"Принцип наглядности — ... . Дополните предложение.","answers":["предусматривает использование натуральных, изобразительных, раздаточных, дидактических и динамических материалов, а также экранных средств при изучении строения и жизненных процессов живых организмов","в методическом обеспечении и управлении учебным процессом предусматривает достижение эффективности обучения, решение задач воспитания и развития учащихся","применение эффективных методов и средств обучения в учебном процессе создаёт условия для осознанного усвоения знаний учащимися","используется для предотвращения трудностей в усвоении знаний учащимися в процессе обучения"],"correct":0},{"q":"Принцип неразрывной связи обучения и воспитания — ... . Дополните предложение.","answers":["в методическом обеспечении и управлении учебным процессом предусматривает достижение эффективности обучения, решение задач воспитания и развития учащихся","при изучении строения и жизненных процессов живых организмов предусматривает использование натуральных, изобразительных, раздаточных, дидактических и динамических материалов, а также экранных средств","применение эффективных методов и средств обучения в учебном процессе создаёт условия для осознанного усвоения знаний учащимися","используется для предотвращения трудностей в усвоении знаний учащимися в процессе обучения"],"correct":0},{"q":"Принцип осознанности — ... . Дополните предложение.","answers":["применение эффективных методов и средств обучения в учебном процессе создаёт условия для осознанного усвоения знаний учащимися","при изучении строения и жизненных процессов живых организмов предусматривает использование натуральных, изобразительных, раздаточных, дидактических и динамических материалов, а также экранных средств","в методическом обеспечении и управлении учебным процессом предусматривает достижение эффективности обучения, решение задач воспитания и развития учащихся","используется для предотвращения трудностей в усвоении знаний учащимися в процессе обучения"],"correct":0}]};
+
+/* Build combined "all" pool with subject labels */
+var SN={anatomy:"Анатомия",botany:"Ботаника",zoology:"Зоология",biology:"Методика"};
+var L=["A","B","C","D"];
+var subj="",mode="count",ord="rand",cntN=0,cntSel=false;
+var qs=[],cur=0,ans={},revAll=false;
+
+/* ── RIPPLE ── */
+function addRipple(el,e){
+  var r=document.createElement("div");
+  r.className="rpl";
+  var rect=el.getBoundingClientRect();
+  var x=(e&&e.touches?e.touches[0].clientX:e?e.clientX:rect.left+rect.width/2)-rect.left;
+  var y=(e&&e.touches?e.touches[0].clientY:e?e.clientY:rect.top+rect.height/2)-rect.top;
+  r.style.left=x+"px";
+  r.style.top=y+"px";
+  el.appendChild(r);
+  setTimeout(function(){r.parentNode&&r.parentNode.removeChild(r);},600);
+}
+
+/* ── HOME ── */
+function pickS(s,e){
+  addRipple(document.getElementById("c-"+s),e);
+  subj=s;
+  var cards=document.querySelectorAll(".card");
+  for(var i=0;i<cards.length;i++) cards[i].classList.remove("sel");
+  document.getElementById("c-"+s).classList.add("sel");
+
+  /* All-mode: only count, no range, hide "Барча" count button */
+  var isAll=s==="all";
+  document.getElementById("mode-tabs-wrap").style.display=isAll?"none":"";
+  document.getElementById("cnt-all").style.display=isAll?"none":"";
+  if(isAll){
+    setMode("count",null);
+  }
+
+  /* Setup range limits */
+  if(!isAll){
+    var n=DB[s].length;
+    document.getElementById("rto").max=n;
+    document.getElementById("rfrom").max=n;
+    document.getElementById("rto").value=Math.min(20,n);
+    document.getElementById("rfrom").value=1;
+  }
+
+  /* Reset count selection */
+  cntSel=false; cntN=0;
+  var bs=document.querySelectorAll(".cnt");
+  for(var i=0;i<bs.length;i++) bs[i].classList.remove("sel");
+
+  document.getElementById("setup").style.display="block";
+  updateHint();
+  checkReady();
+}
+
+function setMode(m,e){
+  mode=m;
+  if(e) addRipple(document.getElementById("mt-"+m),e);
+  document.getElementById("mt-count").classList.toggle("sel",m==="count");
+  document.getElementById("mt-range").classList.toggle("sel",m==="range");
+  document.getElementById("panel-count").style.display=m==="count"?"":"none";
+  document.getElementById("panel-range").style.display=m==="range"?"":"none";
+  checkReady();
+}
+
+function pickN(n,e){
+  cntN=n; cntSel=true;
+  var bs=document.querySelectorAll(".cnt");
+  for(var i=0;i<bs.length;i++) bs[i].classList.remove("sel");
+  if(e) addRipple(e.currentTarget,e);
+  e.currentTarget.classList.add("sel");
+  checkReady();
+}
+
+function setOrd(o,e){
+  ord=o;
+  if(e) addRipple(document.getElementById("ot-"+o),e);
+  document.getElementById("ot-rand").classList.toggle("sel",o==="rand");
+  document.getElementById("ot-seq").classList.toggle("sel",o==="seq");
+}
+
+function updateHint(){
+  if(!subj||subj==="all") return;
+  var n=DB[subj].length;
+  var f=parseInt(document.getElementById("rfrom").value)||1;
+  var t=parseInt(document.getElementById("rto").value)||1;
+  f=Math.max(1,Math.min(f,n));
+  t=Math.max(f,Math.min(t,n));
+  document.getElementById("rhint").textContent="Жами: "+(t-f+1)+" та савол ("+f+"–"+t+")";
+  checkReady();
+}
+document.getElementById("rfrom").addEventListener("input",updateHint);
+document.getElementById("rto").addEventListener("input",updateHint);
+
+function checkReady(){
+  var ok=subj&&(mode==="range"||(mode==="count"&&cntSel));
+  document.getElementById("sbtn").disabled=!ok;
+}
+
+/* ── SHUFFLE ── */
+function shuf(a){
+  var b=a.slice();
+  for(var i=b.length-1;i>0;i--){
+    var j=Math.floor(Math.random()*(i+1));
+    var t=b[i]; b[i]=b[j]; b[j]=t;
+  }
+  return b;
+}
+
+/* ── START TEST ── */
+function startTest(e){
+  if(e) addRipple(document.getElementById("sbtn"),e);
+  var pool;
+  if(subj==="all"){
+    /* Combine all subjects */
+    pool=[];
+    var keys=["anatomy","botany","zoology","biology"];
+    for(var k=0;k<keys.length;k++){
+      var key=keys[k];
+      for(var qi=0;qi<DB[key].length;qi++){
+        var q=DB[key][qi];
+        pool.push({q:q.q,answers:q.answers,correct:q.correct,subj:SN[key]});
+      }
+    }
+    pool=shuf(pool);
+    var n=Math.min(cntN===0?100:cntN,pool.length);
+    pool=pool.slice(0,n);
+  } else {
+    pool=DB[subj];
+    if(mode==="count"){
+      var n=cntN===0?pool.length:Math.min(cntN,pool.length);
+      pool=shuf(pool).slice(0,n);
+    } else {
+      var f=Math.max(1,parseInt(document.getElementById("rfrom").value)||1)-1;
+      var t=Math.min(pool.length,parseInt(document.getElementById("rto").value)||pool.length)-1;
+      pool=pool.slice(f,t+1);
+      if(ord==="rand") pool=shuf(pool);
+    }
+  }
+  /* Shuffle answers within each question */
+  qs=pool.map(function(q){
+    var na=q.answers.length;
+    var idx=shuf([0,1,2,3].slice(0,na));
+    return{
+      q:q.q,
+      answers:idx.map(function(i){return q.answers[i];}),
+      correct:idx.indexOf(q.correct),
+      subj:q.subj||SN[subj]
+    };
+  });
+  cur=0; ans={}; revAll=false;
+  show("test"); renderQ();
+}
+
+/* ── SHOW SCREEN ── */
+function show(id){
+  var ss=document.querySelectorAll(".screen");
+  for(var i=0;i<ss.length;i++) ss[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+
+/* ── DOTS ── */
+function renderDots(){
+  var d=document.getElementById("dotrow");
+  var total=qs.length;
+  var max=40;
+  var half=Math.floor(max/2);
+  var start=Math.max(0,cur-half);
+  var end=Math.min(total-1,start+max-1);
+  start=Math.max(0,end-max+1);
+  var html="";
+  for(var i=start;i<=end;i++){
+    var cls="dot";
+    if(i===cur) cls+=" cur";
+    else if(ans[i]!==undefined) cls+=" filled";
+    html+="<div class='"+cls+"' onclick='go("+i+",event)'>"+(i+1)+"</div>";
+  }
+  d.innerHTML=html;
+}
+
+/* ── RENDER QUESTION ── */
+function renderQ(){
+  var q=qs[cur];
+  var done=Object.keys(ans).length;
+  var pct=Math.round((done/qs.length)*100);
+  document.getElementById("pbar").style.width=pct+"%";
+  document.getElementById("qn").textContent="Савол "+(cur+1)+" / "+qs.length;
+  document.getElementById("qsub").textContent=q.subj;
+  document.getElementById("qt").textContent=q.q;
+
+  /* Animate question card */
+  var qc=document.getElementById("qcard");
+  qc.style.animation="none";
+  qc.offsetHeight; /* reflow */
+  qc.style.animation="";
+
+  var al=document.getElementById("alist");
+  var userA=ans[cur];
+  var html="";
+  for(var i=0;i<q.answers.length;i++){
+    var cls="ans"+(userA===i?" pick":"");
+    html+="<button class='"+cls+"' onclick='pick("+i+",event)'><span class='L'>"+L[i]+"</span><span>"+escH(q.answers[i])+"</span></button>";
+  }
+  al.innerHTML=html;
+
+  document.getElementById("pb").disabled=(cur===0);
+  document.getElementById("nb2").style.display=(cur===qs.length-1)?"none":"";
+  document.getElementById("fb").style.display="";
+  renderDots();
+}
+
+function escH(s){
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+/* ── PICK ANSWER ── */
+function pick(i,e){
+  if(e) addRipple(e.currentTarget,e);
+  ans[cur]=i;
+  renderQ();
+}
+
+/* ── NAVIGATE ── */
+function go(n,e){
+  if(n<0||n>=qs.length) return;
+  cur=n; renderQ();
+  window.scrollTo(0,0);
+}
+
+/* ── FINISH ── */
+function finish(e){
+  if(e) addRipple(document.getElementById("fb"),e);
+  var ok=0,skip=0;
+  for(var i=0;i<qs.length;i++){
+    if(ans[i]===undefined) skip++;
+    else if(ans[i]===qs[i].correct) ok++;
+  }
+  var total=qs.length;
+  var pct=Math.round((ok/total)*100);
+  document.getElementById("rpct").textContent=pct+"%";
+  var col=pct>=70?"#3d7a3a":pct>=50?"#c8860a":"#c0392b";
+  document.getElementById("rcirc").style.borderColor=col;
+  document.getElementById("rpct").style.color=col;
+  document.getElementById("stot").textContent=total;
+  document.getElementById("sok").textContent=ok;
+  document.getElementById("serr").textContent=total-skip-ok;
+  document.getElementById("sskip").textContent=skip;
+  renderRev(false);
+  show("results");
+}
+
+/* ── REVIEW ── */
+function renderRev(all){
+  var rl=document.getElementById("revlist");
+  var lim=all?qs.length:Math.min(5,qs.length);
+  var html="";
+  for(var i=0;i<lim;i++){
+    var q=qs[i];
+    var ua=ans[i];
+    var isOk=ua===q.correct;
+    var isSkip=ua===undefined;
+    var delay=Math.min(i*0.04,.5);
+    html+="<div class='ritem' style='-webkit-animation-delay:"+delay+"s;animation-delay:"+delay+"s'>";
+    html+="<div class='rq'>"+(i+1)+". "+escH(q.q)+"</div>";
+    if(isSkip) html+="<div class='ra rskip'>— ўтказиб юборилди · Тўғри: "+escH(q.answers[q.correct])+"</div>";
+    else if(isOk) html+="<div class='ra rok'>✓ "+escH(q.answers[q.correct])+"</div>";
+    else html+="<div class='ra rerr'>✗ Сиз: "+escH(q.answers[ua])+" · Тўғри: "+escH(q.answers[q.correct])+"</div>";
+    html+="</div>";
+  }
+  rl.innerHTML=html;
+  var mb=document.getElementById("shmore");
+  if(qs.length>5&&!all){
+    mb.textContent="Барча "+qs.length+" та натижани кўриш";
+    mb.style.display="";
+  } else {
+    mb.style.display="none";
+  }
+}
+
+function showAllR(){renderRev(true);}
+
+/* ── RESTART ── */
+function restartTest(e){
+  if(e) addRipple(document.getElementById(e.currentTarget.className.indexOf("ghost")>-1?"goHome":"rcirc"),e);
+  ans={}; cur=0; revAll=false;
+  qs=qs.map(function(q){
+    var na=q.answers.length;
+    var idx=shuf([0,1,2,3].slice(0,na));
+    return{q:q.q,answers:idx.map(function(i){return q.answers[i];}),correct:idx.indexOf(q.correct),subj:q.subj};
+  });
+  show("test"); renderQ();
+}
+
+function goHome(e){
+  cntSel=false; cntN=0;
+  var bs=document.querySelectorAll(".cnt");
+  for(var i=0;i<bs.length;i++) bs[i].classList.remove("sel");
+  document.getElementById("setup").style.display="none";
+  var cards=document.querySelectorAll(".card");
+  for(var i=0;i<cards.length;i++) cards[i].classList.remove("sel");
+  show("home");
+}
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./service-worker.js").catch(function () {});
+  });
+}
+</script>
+</body>
+</html>
