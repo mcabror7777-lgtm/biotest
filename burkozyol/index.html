@@ -1,0 +1,1489 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0c1822">
+<meta name="description" content="Buxorocha qoidalar bilan Burkozyol: botlarga qarshi yoki do'stlar bilan onlayn.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Burkozyol">
+<meta property="og:title" content="Buxoro Burkozyoli">
+<meta property="og:description" content="Men bilan Burkozyol o'yna: 1×1, 3 kishi yoki 2×2.">
+<meta property="og:image" content="icon-512.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<script async src="https://telegram.org/js/telegram-web-app.js" onload="window.__tgReady&&window.__tgReady()"></script>
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%}
+body{touch-action:manipulation;overscroll-behavior:none;-webkit-user-select:none;user-select:none}
+input,select{-webkit-user-select:text;user-select:text}
+</style>
+<title>Buxoro Burkozyoli</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Philosopher:wght@400;700&family=Golos+Text:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one-screen card table at night. Penalty chips on top, felt table with seats around a centre (deck + trump card, trick stacked like real cards), the player's hand and actions docked below. Bukhara tile lattice lives only on card backs and the thin band under the header. */
+:root{
+  --night:#0c1822;
+  --night-2:#13232f;
+  --felt:#16504b;
+  --felt-deep:#0b2a2a;
+  --gold:#d8a646;
+  --gold-soft:rgba(216,166,70,.32);
+  --tile:#2e9d98;
+  --lapis:#183e63;
+  --ivory:#f1ece1;
+  --ink:#1c1b20;
+  --ruby:#b3271f;
+  --muted:#9db3b1;
+  --danger:#e0725f;
+  --f-display:"Philosopher", Georgia, "Times New Roman", serif;
+  --f-body:"Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --cw:clamp(38px, min(12.4vw, 8.4vh), 76px);
+  --ct:clamp(34px, min(11vw, 7.4vh), 66px);
+  --cws:clamp(28px, min(8vw, 5.4vh), 50px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--night);color:var(--ivory);font-family:var(--f-body);font-size:14px;line-height:1.4;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+button{font:inherit;color:inherit}
+.app{min-height:100%;display:flex;flex-direction:column;gap:10px;max-width:960px;margin:0 auto;padding-block:10px 14px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-family:var(--f-display);font-size:20px;font-weight:700;margin:0;text-wrap:balance}
+.band{height:6px;border-radius:3px;background:repeating-linear-gradient(90deg, var(--gold) 0 6px, var(--lapis) 6px 9px, var(--tile) 9px 15px, var(--lapis) 15px 18px);opacity:.85}
+.ghost{background:transparent;border:1px solid var(--gold-soft);border-radius:999px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer}
+.ghost:hover{border-color:var(--gold)}
+
+.score{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.team{background:var(--night-2);border:1px solid var(--gold-soft);border-radius:12px;padding:7px 10px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px 8px;min-width:0}
+.team .tname{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.team .pen{font-variant-numeric:tabular-nums;white-space:nowrap}
+.team .pen b{font-family:var(--f-display);font-size:20px}
+.team .pen span{color:var(--muted);font-size:12px}
+.team .bar{grid-column:1 / -1;height:4px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden}
+.team .bar i{display:block;height:100%;background:var(--danger);border-radius:2px;transition:width .4s}
+.team.t0{border-color:rgba(46,157,152,.55)}
+
+.felt{flex:1;min-height:min(360px, 50vh);border-radius:20px;border:1px solid var(--gold-soft);position:relative;overflow:hidden;
+  background:radial-gradient(120% 90% at 50% 35%, var(--felt) 0%, var(--felt-deep) 78%);
+  box-shadow:inset 0 0 0 6px rgba(0,0,0,.18), inset 0 0 40px rgba(0,0,0,.35);
+  display:flex;flex-direction:column;padding:calc(var(--cw) * .72 + 46px) 12px 14px}
+.felt.four{padding-left:calc(var(--cw) * .78 + 8px);padding-right:calc(var(--cw) * .78 + 8px)}
+.seat{display:contents}
+/* opponents hold their cards like a real hand: full-size backs, fanned, half of the hand past the table edge */
+.fan{position:absolute;display:flex;z-index:1;pointer-events:none}
+.fan .back{--w:var(--cw);margin-left:calc(var(--cw) * -.6);transform-origin:50% 165%;transform:rotate(var(--a));
+  box-shadow:inset 0 0 0 2px var(--gold), 0 2px 6px rgba(0,0,0,.45);transition:transform .3s}
+.fan .back:first-child{margin-left:0}
+.seat.top .fan{left:50%;top:0;transform:translate(-50%,-50%) rotate(180deg)}
+.seat.left .fan{left:0;top:50%;transform:translate(-50%,-50%) rotate(90deg)}
+.seat.right .fan{left:100%;top:50%;transform:translate(-50%,-50%) rotate(-90deg)}
+.seat .who{position:absolute;z-index:2;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:rgba(0,0,0,.35);border:1px solid transparent;white-space:nowrap;transition:border-color .2s, box-shadow .2s}
+.seat.top .who{left:50%;top:calc(var(--cw) * .72 + 8px);transform:translateX(-50%)}
+.seat.left .who{left:6px;top:calc(50% - var(--cw) * 1.9 - 28px)}
+.seat.right .who{right:6px;top:calc(50% - var(--cw) * 1.9 - 28px)}
+.seat.active .who{border-color:var(--gold);box-shadow:0 0 0 3px rgba(216,166,70,.2)}
+.seat .dot{width:7px;height:7px;border-radius:50%}
+.seat.mate .dot{background:var(--tile)}
+.seat.foe .dot{background:var(--danger)}
+.who .taken{margin:-8px -4px -8px 2px;transform:scale(.62)}
+
+.center{flex:1;display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0}
+.stock{display:flex;align-items:flex-end;justify-content:center;gap:14px}
+.deck{position:relative;width:calc(var(--cws) * 1.85);height:calc(var(--cws) * 1.4)}
+.deck .tcw{position:absolute;left:calc(var(--cws) * .55);top:0;transform:rotate(90deg)}
+.deck .tcw .card{--w:var(--cws)}
+.deck .stk{position:absolute;left:0;top:0;z-index:2;width:var(--cws);height:calc(var(--cws) * 1.4)}
+.deck .stk .back{--w:var(--cws);position:absolute;left:0;top:0;box-shadow:inset 0 0 0 2px var(--gold), 1px 1px 0 rgba(0,0,0,.35)}
+.tmini{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.tmini b{font-size:22px;line-height:1;width:30px;text-align:center;background:var(--ivory);border-radius:7px;padding:2px 0;color:var(--ink)}
+.tmini b.red{color:var(--ruby)}
+.seatcards{display:flex;align-items:center;gap:10px}
+.seat.left .seatcards,.seat.right .seatcards{flex-direction:column}
+.taken{position:relative;width:24px;height:34px}
+.taken .back{--w:24px;position:absolute;left:0;top:0;border-width:1px}
+.mypile{position:absolute;left:12px;bottom:12px}
+.flyer{position:fixed;z-index:15;pointer-events:none;transition:transform .42s cubic-bezier(.3,.7,.3,1), opacity .42s}
+.deck .num{z-index:3;position:absolute;left:0;right:auto;width:var(--cws);bottom:-2px;text-align:center;transform:translateY(50%);font-size:11px;font-weight:700;background:var(--night);border:1px solid var(--gold-soft);border-radius:999px;padding:0 7px;font-variant-numeric:tabular-nums}
+.trumpcard{display:flex;flex-direction:column;align-items:center;gap:3px}
+.trumpcard .tl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.trumpcard .card{--w:var(--cws)}
+.trumpcard .card.gone{opacity:.45}
+.trumpcard .card.flip{animation:flip .6s ease-out}
+@keyframes flip{0%{transform:rotateY(90deg)}100%{transform:none}}
+
+.trick{flex:1;width:100%;display:flex;align-items:center;justify-content:center;gap:18px;min-height:calc(var(--ct) * 1.4 + 60px)}
+.stack{display:flex;gap:10px}
+.col{position:relative;width:var(--ct)}
+.trick .col > *{position:absolute;left:0;top:0;transform:translate(var(--ox),var(--oy)) rotate(var(--r))}
+.col .card,.col .back{--w:var(--ct)}
+.col .back{box-shadow:inset 0 0 0 2px var(--gold), 0 2px 5px rgba(0,0,0,.35)}
+.col .card.hi{box-shadow:0 0 0 2px var(--gold), 0 4px 12px rgba(0,0,0,.45)}
+.aside{position:relative;width:var(--cws);height:calc(var(--cws) * 1.4)}
+.trick .aside > *{position:absolute;left:0;top:0;transform:translate(var(--ox),var(--oy)) rotate(var(--r))}
+.aside .back{--w:var(--cws)}
+.trick .fly{animation:fly .65s cubic-bezier(.2,.8,.3,1) both}
+@keyframes fly{from{transform:translate(var(--fx),var(--fy)) rotate(0deg) scale(.8);opacity:.15}to{transform:translate(var(--ox),var(--oy)) rotate(var(--r));opacity:1}}
+.trick.collect .col > *,.trick.collect .aside > *{animation:collect .6s ease-in 2.3s forwards}
+.trick.collect.now .col > *,.trick.collect.now .aside > *{animation:collect .35s ease-in 0s forwards}
+.felt.tap{cursor:pointer}
+@keyframes collect{to{transform:translate(var(--tx),var(--ty)) scale(.5);opacity:0}}
+
+.card{--w:var(--cw);width:var(--w);aspect-ratio:5/7;border-radius:calc(var(--w) * .12);background:var(--ivory);color:var(--ink);position:relative;flex:none;
+  box-shadow:0 1px 0 rgba(0,0,0,.4), 0 3px 8px rgba(0,0,0,.35);border:1px solid rgba(0,0,0,.25);font-family:var(--f-display);user-select:none;padding:0}
+.card.red{color:var(--ruby)}
+.card .cr{position:absolute;left:calc(var(--w) * .09);top:calc(var(--w) * .05);font-weight:700;font-size:calc(var(--w) * .3);line-height:1}
+.card .cs{position:absolute;left:calc(var(--w) * .1);top:calc(var(--w) * .36);font-size:calc(var(--w) * .22);line-height:1}
+.card .cc{position:absolute;right:calc(var(--w) * .1);bottom:calc(var(--w) * .08);font-size:calc(var(--w) * .56);line-height:1}
+.card.trump::after{content:"";position:absolute;right:calc(var(--w) * .08);top:calc(var(--w) * .08);width:calc(var(--w) * .12);height:calc(var(--w) * .12);border-radius:50%;background:var(--gold)}
+.back{--w:var(--cws);width:var(--w);aspect-ratio:5/7;border-radius:calc(var(--w) * .12);flex:none;border:2px solid var(--ivory);
+  background-color:var(--lapis);
+  background-image:
+    radial-gradient(circle, var(--gold) 0 1.4px, transparent 1.8px),
+    repeating-linear-gradient(45deg, rgba(46,157,152,.75) 0 1.5px, transparent 1.5px 8px),
+    repeating-linear-gradient(-45deg, rgba(46,157,152,.75) 0 1.5px, transparent 1.5px 8px);
+  background-size:8px 8px, auto, auto;background-position:4px 4px, 0 0, 0 0;
+  box-shadow:inset 0 0 0 2px var(--gold), 0 2px 5px rgba(0,0,0,.35)}
+
+.status{min-height:22px;text-align:center;font-size:14px;font-weight:600;color:var(--muted)}
+.status.mine{color:var(--gold)}
+.status .err{color:var(--danger)}
+.hand{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;min-height:calc(var(--cw) * 1.4 + 12px);padding-top:10px}
+.hand .card{cursor:pointer;transition:transform .15s ease, box-shadow .15s}
+.hand .card:hover{transform:translateY(-3px)}
+.hand .card[aria-pressed="true"]{transform:translateY(-14px);box-shadow:0 0 0 3px var(--tile), 0 8px 16px rgba(0,0,0,.45)}
+.hand .card:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.hand.wait .card{opacity:.85}
+.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;min-height:44px}
+.btn{border:0;border-radius:12px;padding:11px 18px;font-weight:700;font-size:14px;cursor:pointer;background:var(--gold);color:var(--ink);min-width:110px}
+.btn.alt{background:transparent;color:var(--ivory);border:1px solid var(--gold-soft)}
+.btn.bura{background:var(--ruby);color:var(--ivory);animation:pulse 1.1s infinite}
+.btn:disabled{opacity:.38;cursor:not-allowed}
+.btn:focus-visible,.ghost:focus-visible,.opt:focus-visible{outline:3px solid var(--ivory);outline-offset:2px}
+@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(179,39,31,.25)}}
+
+.ov{position:fixed;inset:0;background:rgba(4,10,15,.74);display:flex;align-items:center;justify-content:center;z-index:20;
+  padding-top:calc(16px + env(safe-area-inset-top, 0px));padding-bottom:calc(16px + env(safe-area-inset-bottom, 0px));
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.sheet{width:100%;max-width:440px;max-height:100%;overflow:auto;background:var(--night);border:1px solid var(--gold-soft);border-radius:18px;padding:20px;display:grid;gap:14px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.sheet h2{font-family:var(--f-display);font-size:26px;margin:0;line-height:1.1;text-wrap:balance}
+.sheet p{margin:0;color:var(--muted)}
+.sheet .lbl{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}
+.opt{border:1px solid var(--gold-soft);background:var(--night-2);border-radius:12px;padding:10px;cursor:pointer;text-align:left;display:grid;gap:2px}
+.opt b{font-family:var(--f-display);font-size:18px}
+.opt span{font-size:12px;color:var(--muted)}
+.opt[aria-pressed="true"]{border-color:var(--gold);box-shadow:0 0 0 2px rgba(216,166,70,.25)}
+.rules{font-size:13px;color:var(--muted);border-top:1px solid var(--gold-soft);padding-top:10px}
+.rules summary{cursor:pointer;color:var(--ivory);font-weight:600}
+.rules ul{padding-left:18px;margin:8px 0 0;display:grid;gap:4px}
+.reveal{display:flex;justify-content:center;padding:6px 0}
+.reveal .card{--w:84px}
+.res{display:grid;gap:6px}
+.res .row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:var(--night-2);font-variant-numeric:tabular-nums}
+.res .row.lose{outline:1px solid var(--danger)}
+.res .row b{font-family:var(--f-display);font-size:18px}
+.res small{color:var(--muted)}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px}
+.btnrow .btn{flex:1}
+
+
+.topbtns{display:flex;gap:8px}
+.menu{display:grid;gap:10px}
+.menu .btn{width:100%;padding:14px 18px;font-size:16px}
+.inp{width:100%;font:inherit;color:var(--ivory);background:var(--night-2);border:1px solid var(--gold-soft);border-radius:10px;padding:10px 12px}
+.inp:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+.joinrow{display:flex;gap:8px}
+.joinrow .inp{flex:1;min-width:0}
+.joinrow .btn{min-width:90px}
+.inp.code{text-transform:uppercase;letter-spacing:.3em;font-weight:700;text-align:center}
+.sheet .note{font-size:12px}
+.codebox{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:10px 14px;border:1px dashed var(--gold);border-radius:12px;background:rgba(216,166,70,.08)}
+.codebox span{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.bigcode{font-family:var(--f-display);font-size:34px;letter-spacing:.22em;color:var(--gold);font-variant-numeric:tabular-nums}
+.seats{display:grid;gap:8px}
+.seatpick{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);align-items:center;gap:10px}
+.seatpick span{color:var(--muted);font-size:13px}
+.seatpick b.me{color:var(--gold)}
+.members{margin:0;padding-left:18px;display:grid;gap:3px;color:var(--ivory)}
+.opt.sw{display:flex;align-items:center;gap:8px}
+.back.mini{--w:22px;border-width:1px}
+.chip{width:22px;height:22px;border-radius:6px;border:1px solid var(--gold-soft);flex:none}
+.chip[data-f="green"]{background:#16504b}.chip[data-f="blue"]{background:#1c4670}.chip[data-f="red"]{background:#5c1c25}.chip[data-f="wood"]{background:#6a4426}
+body[data-felt="blue"]{--felt:#1c4670;--felt-deep:#0b1f36}
+body[data-felt="red"]{--felt:#5c1c25;--felt-deep:#26090e}
+body[data-felt="wood"]{--felt:#6a4426;--felt-deep:#2b1a0d}
+body[data-back="red"] .back,.back.mini[data-k="red"]{background-color:#8a1f1b;background-image:repeating-linear-gradient(45deg, rgba(241,236,225,.24) 0 1.5px, transparent 1.5px 7px),repeating-linear-gradient(-45deg, rgba(241,236,225,.24) 0 1.5px, transparent 1.5px 7px);background-size:auto;background-position:0 0}
+body[data-back="navy"] .back,.back.mini[data-k="navy"]{background-color:#1f2d57;background-image:radial-gradient(circle, rgba(241,236,225,.55) 0 1px, transparent 1.4px),linear-gradient(135deg, rgba(255,255,255,.1), transparent 60%);background-size:6px 6px, auto;background-position:0 0}
+.back.mini[data-k="bukhara"]{background-color:var(--lapis);background-image:radial-gradient(circle, var(--gold) 0 1.4px, transparent 1.8px),repeating-linear-gradient(45deg, rgba(46,157,152,.75) 0 1.5px, transparent 1.5px 8px),repeating-linear-gradient(-45deg, rgba(46,157,152,.75) 0 1.5px, transparent 1.5px 8px);background-size:8px 8px, auto, auto;background-position:4px 4px, 0 0, 0 0}
+
+.flyer{box-shadow:inset 0 0 0 2px var(--gold), 0 12px 22px rgba(0,0,0,.55)}
+.fan .back.land{animation:landf .35s ease-out}
+@keyframes landf{from{filter:brightness(1.5)}to{filter:none}}
+.hand .card.land{animation:landh .32s cubic-bezier(.2,.8,.3,1.4)}
+@keyframes landh{from{transform:translateY(-18px) scale(1.08) rotate(-4deg)}to{transform:none}}
+.sheet.menu-sheet{position:relative;overflow:hidden;text-align:center;border-color:var(--gold);gap:12px;padding-top:26px;
+  background:radial-gradient(130% 80% at 50% 0%, var(--felt) 0%, var(--felt-deep) 62%, var(--night) 100%);
+  box-shadow:0 0 0 4px rgba(216,166,70,.12), 0 24px 60px rgba(0,0,0,.6)}
+.sheet.menu-sheet::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:repeating-linear-gradient(90deg, var(--gold) 0 6px, var(--lapis) 6px 9px, var(--tile) 9px 15px, var(--lapis) 15px 18px)}
+.hero{height:150px;display:flex;justify-content:center;align-items:flex-start}
+.herofan{position:relative;width:84px;height:118px;margin-top:6px}
+.herofan .card{--w:84px;position:absolute;left:0;top:0;transform-origin:50% 125%;transform:rotate(var(--a));box-shadow:0 8px 18px rgba(0,0,0,.5);animation:fanopen .75s cubic-bezier(.2,.8,.3,1) var(--d) both}
+@keyframes fanopen{from{transform:rotate(0deg) translateY(40px);opacity:0}to{transform:rotate(var(--a));opacity:1}}
+.sheet h2.mtitle{font-size:34px;letter-spacing:.01em}
+.sheet p.msub{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-top:-6px}
+.menu .btn.mbtn{display:flex;align-items:center;gap:14px;text-align:left;padding:11px 14px}
+.mbtn .ic{width:40px;height:40px;flex:none;border-radius:10px;background:var(--ivory);color:var(--ink);display:grid;place-items:center;font-size:24px;line-height:1;box-shadow:inset 0 0 0 2px rgba(0,0,0,.08)}
+.mbtn .ic.red{color:var(--ruby)}
+.mbtn b{display:block;font-size:16px}
+.mbtn small{display:block;font-size:12px;font-weight:500;opacity:.78}
+.menu .btn.alt.mbtn{background:rgba(0,0,0,.28)}
+.menu .btn.alt.mbtn:hover{border-color:var(--gold)}
+@media (max-width:420px){
+  .felt{border-radius:16px}
+  .stack{gap:6px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+
+.btn.tg{background:#2aabee;color:#fff}
+.linkbtn{background:none;border:0;color:var(--muted);font-size:12px;text-decoration:underline;cursor:pointer;padding:4px;justify-self:center}
+.steps{display:grid;gap:10px;text-align:left}
+.steps div{background:var(--night-2);border:1px solid var(--gold-soft);border-radius:12px;padding:10px 12px}
+.steps p{margin:4px 0 0;font-size:13px}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="top">
+    <h1 class="brand">Buxoro Burkozyoli</h1>
+    <div class="topbtns"><button class="ghost" id="fsBtn" type="button" aria-label="Toʻliq ekran" title="Toʻliq ekran">⛶</button><button class="ghost" id="menuBtn" type="button">Menyu</button></div>
+  </div>
+  <div class="band" aria-hidden="true"></div>
+  <div class="score" id="score"></div>
+  <div class="felt" id="felt">
+    <div class="seat top" id="seat-top"></div>
+    <div class="seat left" id="seat-left"></div>
+    <div class="seat right" id="seat-right"></div>
+    <div class="mypile" id="mypile"></div>
+    <div class="center">
+      <div class="stock" id="stock"></div>
+      <div class="trick" id="trick"></div>
+    </div>
+  </div>
+  <div class="status" id="status" role="status" aria-live="polite"></div>
+  <div class="hand" id="hand" aria-label="Sizning kartalaringiz"></div>
+  <div class="actions" id="actions"></div>
+</div>
+<div class="ov" id="ov" hidden><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+
+<script>
+/*ENGINE-START*/
+const RANKS=['6','7','8','9','J','Q','K','10','A'];
+const PTS={A:11,'10':10,K:4,Q:3,J:2};
+const SUITS=['S','C','H','D'];
+const SU={S:'♠',C:'♣',H:'♥',D:'♦'};
+const SUN={S:'pika',C:'kresti',H:'chervi',D:'bubna'};
+const RL={J:'V',Q:'D',K:'K',A:'T'};
+const str=c=>RANKS.indexOf(c.r);
+const pts=c=>PTS[c.r]||0;
+const isRed=s=>s==='H'||s==='D';
+const label=c=>(RL[c.r]||c.r)+SU[c.s];
+const sumPts=a=>a.reduce((s,c)=>s+pts(c),0);
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function freshDeck(){const d=[];for(const s of SUITS)for(const r of RANKS)d.push({s,r,id:s+r});return shuffle(d);}
+function combos(arr,k){const out=[],cur=[];(function rec(i){if(cur.length===k){out.push(cur.slice());return;}if(arr.length-i<k-cur.length)return;for(let j=i;j<arr.length;j++){cur.push(arr[j]);rec(j+1);cur.pop();}})(0);return out;}
+
+class Game{
+  constructor({n,target,names}){
+    this.n=n;this.target=target;
+    this.players=names.map((name,i)=>({name,hand:[],bot:i!==0}));
+    this.T=n===3?3:2;this.pen=new Array(this.T).fill(0);this.roundNo=0;this.log=[];this.phase='idle';
+    this.dealer=null;this.result=null;this.pile=[];this.deck=[];
+    this.taken=Array.from({length:this.T},()=>[]);this.tricks=new Array(this.T).fill(0);this.trump=null;this.top=null;this.k=0;this.turn=null;
+  }
+  team(p){return this.n===3?p:p%2}
+  nm(p){return this.players[p].name}
+  next(p){return (p+1)%this.n}
+  say(t){this.log.push(t);if(this.log.length>60)this.log.shift();}
+
+  colorGuess(g){
+    const c=freshDeck()[0];
+    const win=(g==='red')===isRed(c.s);
+    const leader=this.n===3?(win?0:1+Math.floor(Math.random()*2)):win?(this.n===2?0:2):(this.n===2?1:3);
+    return {card:c,win,leader};
+  }
+
+  startRound(leader,dealer){
+    this.roundNo++;
+    this.dealer=dealer!=null?dealer:(leader-1+this.n)%this.n;
+    const d=freshDeck();
+    this.players.forEach(p=>p.hand=[]);this.dealLog=[];
+    for(let r=0;r<6;r++)for(let i=0;i<this.n;i++){const p=(this.dealer+1+i)%this.n;this.players[p].hand.push(d.shift());this.dealLog.push(p);}
+    this.deck=d;const L=d.length;
+    this.openCard={...d[L-2]};this.hiddenCard={...d[L-1]};
+    this.openId=d[L-2].id;this.hiddenId=d[L-1].id;this.hiddenRevealed=false;this.trump=d[L-2].s;
+    this.taken=Array.from({length:this.T},()=>[]);this.tricks=new Array(this.T).fill(0);this.takenBy=new Array(this.n).fill(0);this.pile=[];this.top=null;this.k=0;this.result=null;this.resolveInfo=null;
+    this.firstLeader=leader;
+    this.say(`${this.roundNo}-oʻyin. ${this.nm(this.dealer)} tarqatdi. Kozir: ${label(this.openCard)}.`);
+    if(this.checkBura())return;
+    this.beginLead(leader);
+  }
+
+  isBura(p){const h=this.players[p].hand;return h.length===6&&h.every(c=>c.s===this.trump);}
+  checkBura(){
+    for(let i=0;i<this.n;i++){if(this.players[i].bot&&this.isBura(i)){this.declareBura(i,true);return true;}}
+    return false;
+  }
+  declareBura(p,auto){
+    if(!this.isBura(p))return 'Bura uchun 6 ta kozir kerak';
+    if(!auto&&!['lead','respond','counter'].includes(this.phase))return 'Hozir bura e’lon qilib boʻlmaydi';
+    this.say(`${this.nm(p)}: BURA!`);
+    this.endRound('bura',this.team(p),p);
+    return null;
+  }
+
+  nextWithCards(p){for(let i=0;i<this.n;i++){const q=(p+i)%this.n;if(this.players[q].hand.length)return q;}return null;}
+  beginLead(p){
+    const q=this.nextWithCards(p);
+    if(q===null){this.endRound('cards');return;}
+    this.phase='lead';this.turn=q;this.pile=[];this.top=null;this.k=0;
+  }
+
+  beats(a,b){if(a.s===b.s)return str(a)>str(b);return a.s===this.trump&&b.s!==this.trump;}
+  assign(cards,targets){
+    const k=targets.length;if(cards.length!==k)return null;
+    const used=new Array(k).fill(false),out=new Array(k);
+    const rec=i=>{if(i===k)return true;for(let j=0;j<k;j++){if(!used[j]&&this.beats(cards[j],targets[i])){used[j]=true;out[i]=cards[j];if(rec(i+1))return true;used[j]=false;}}return false;};
+    return rec(0)?out:null;
+  }
+  covers(cards,targets){return !!this.assign(cards,targets);}
+  owns(p,cards){const ids=new Set(this.players[p].hand.map(c=>c.id));return cards.every(c=>ids.has(c.id))&&new Set(cards.map(c=>c.id)).size===cards.length;}
+  take(p,cards){const h=this.players[p].hand;for(const c of cards){const i=h.findIndex(x=>x.id===c.id);h.splice(i,1);}}
+
+  act(p,type,cards){
+    cards=cards||[];
+    if(p!==this.turn)return 'Navbat sizda emas';
+    if(!this.owns(p,cards))return 'Bu kartalar qoʻlingizda yoʻq';
+    if(type==='lead'){
+      if(this.phase!=='lead')return 'Hozir yurish navbati emas';
+      if(cards.length<1)return 'Karta tanlang';
+      if(cards.length>6)return 'Koʻpi bilan 6 ta';
+      if(!cards.every(c=>c.s===cards[0].s))return 'Kartalar bir xil mastda boʻlsin';
+      this.doLead(p,cards);return null;
+    }
+    if(type==='beat'){
+      if(this.phase!=='respond'&&this.phase!=='counter')return 'Hozir bosish navbati emas';
+      if(this.phase==='counter'&&this.team(this.top.p)===this.team(p))return 'Sherigingiz bosgan kartani aylantirib boʻlmaydi';
+      if(cards.length!==this.k)return `${this.k} ta karta tanlang`;
+      if(!this.covers(cards,this.top.cards))return 'Bu kartalar bosa olmaydi';
+      this.doBeat(p,cards);return null;
+    }
+    if(type==='discard'){
+      if(this.phase!=='respond')return 'Hozir tashlash navbati emas';
+      const need=Math.min(this.k,this.players[p].hand.length);
+      if(cards.length!==need)return `${need} ta karta tanlang`;
+      this.doDiscard(p,cards);return null;
+    }
+    if(type==='pass'){
+      if(this.phase!=='counter')return 'Hozir oʻtkazib boʻlmaydi';
+      this.doPass(p);return null;
+    }
+    return 'Nomaʼlum harakat';
+  }
+
+  doLead(p,cards){
+    this.take(p,cards);this.k=cards.length;this.leader=p;this.trickNo=(this.trickNo||0)+1;
+    this.pile=[{p,cards,type:'lead'}];this.top={p,cards};
+    this.say(`${this.nm(p)} yurdi: ${cards.map(label).join(' ')}`);
+    this.startCircle(p);
+  }
+  /* everyone after p answers with k cards: beat, or give k cards */
+  startCircle(p){
+    this.queue=[];for(let i=1;i<this.n;i++)this.queue.push((p+i)%this.n);
+    this.phase='respond';this.advanceRespond();
+  }
+  advanceRespond(){
+    while(this.queue.length&&this.players[this.queue[0]].hand.length===0)this.queue.shift();
+    if(!this.queue.length){this.afterFirstPass();return;}
+    this.turn=this.queue[0];
+  }
+  doBeat(p,cards){
+    this.take(p,cards);
+    const counter=this.phase==='counter';
+    const ordered=this.assign(cards,this.top.cards)||cards;
+    this.pile.push({p,cards:ordered,type:counter?'counter':'beat'});this.top={p,cards:ordered};
+    this.say(`${this.nm(p)} ${counter?'aylantirdi':'bosdi'}: ${ordered.map(label).join(' ')}`);
+    if(counter){this.startCircle(p);}
+    else{this.queue.shift();this.advanceRespond();}
+  }
+  doDiscard(p,cards){
+    this.take(p,cards);this.pile.push({p,cards,type:'discard'});
+    this.say(`${this.nm(p)} ${cards.length} ta karta tashladi`);
+    this.queue.shift();this.advanceRespond();
+  }
+  afterFirstPass(){
+    const L=this.leader;
+    if(this.team(this.top.p)===this.team(L)||!this.canBeat(L)){this.finishTrick();return;}
+    this.phase='counter';this.turn=L;
+  }
+  canBeat(p){
+    const h=this.players[p].hand;
+    if(this.team(p)===this.team(this.top.p)||h.length<this.k)return false;
+    return !!this.bestBeat(h,this.top.cards);
+  }
+  stepCounter(){
+    for(let guard=0;guard<40;guard++){
+      if(this.passes>=this.n){this.finishTrick();return;}
+      const p=this.turn;
+      if(this.canBeat(p))return;
+      this.passes++;this.turn=this.next(p);
+    }
+    this.finishTrick();
+  }
+  doPass(p){this.say(`${this.nm(p)} aylantirmadi`);this.finishTrick();}
+  finishTrick(){
+    const t=this.top.p;const all=this.pile.flatMap(g=>g.cards);const pp=sumPts(all);
+    this.resolveInfo={taker:t,pts:pp,count:all.length};
+    this.phase='resolve';this.turn=null;
+    this.say(`${this.nm(t)} oldi: ${pp} ochko`);
+  }
+  afterResolve(){
+    const t=this.resolveInfo.taker;const tm=this.team(t);
+    const all=this.pile.flatMap(g=>g.cards);
+    this.taken[tm].push(...all);this.tricks[tm]++;
+    if(!this.takenBy)this.takenBy=new Array(this.n).fill(0);this.takenBy[t]+=all.length;
+    this.pile=[];this.top=null;this.resolveInfo=null;
+    this.dealLog=[];this.refill(t);
+    if(this.checkBura())return;
+    this.beginLead(t);
+  }
+  refill(first){
+    let drew=true;
+    while(drew&&this.deck.length){
+      drew=false;
+      for(let i=0;i<this.n&&this.deck.length;i++){const p=(first+i)%this.n;if(this.players[p].hand.length<6){this.draw(p);drew=true;}}
+    }
+  }
+  draw(p){
+    const c=this.deck.shift();this.players[p].hand.push(c);if(this.dealLog)this.dealLog.push(p);
+    if(c.id===this.openId&&!this.hiddenRevealed&&this.deck.length){
+      this.hiddenRevealed=true;this.trump=this.hiddenCard.s;
+      this.say(`Yashirin karta ochildi: ${label(this.hiddenCard)}. Endi kozir ${SU[this.trump]}.`);
+    }
+  }
+
+  endRound(reason,w,buraBy){
+    const T=this.T;
+    const P=[...Array(T)].map((_,t)=>sumPts(this.taken[t]));
+    let winners;
+    if(w!=null)winners=[w];
+    else{const mx=Math.max(...P);winners=P.map((v,t)=>v===mx?t:-1).filter(t=>t>=0);if(winners.length===T)winners=[];}
+    const pens=new Array(T).fill(0);
+    if(winners.length)for(let t=0;t<T;t++)if(!winners.includes(t)){pens[t]=P[t]>=31?2:(this.tricks[t]>0?4:6);this.pen[t]+=pens[t];}
+    const res={reason,winners,w:winners.length?winners[0]:null,pts:P,tricks:[...this.tricks],pens,
+      penalty:(T===2&&winners.length)?pens[1-winners[0]]:0,loser:(T===2&&winners.length)?1-winners[0]:null,
+      matchOver:this.pen.some(x=>x>=this.target),buraBy:buraBy??null};
+    if(res.matchOver)res.matchLoser=this.pen.indexOf(Math.max(...this.pen));
+    this.result=res;this.phase='roundOver';this.turn=null;
+  }
+  /* Next round: losing side deals, the winner (on the dealer's left) starts. */
+  nextPlan(dealerChoice){
+    const r=this.result;let dealer,leader;
+    const won=r.winners?r.winners.length>0:r.loser!=null;
+    if(!won){dealer=this.dealer;leader=this.firstLeader;}
+    else if(this.n===4){
+      const o=r.loser===0?[0,2]:[1,3];
+      dealer=(dealerChoice!=null&&o.includes(dealerChoice))?dealerChoice:o[Math.floor(Math.random()*2)];
+      leader=(dealer+1)%this.n;
+    }else{leader=r.w;dealer=(leader-1+this.n)%this.n;}
+    return {dealer,leader};
+  }
+  nextRound(dealerChoice){const {dealer,leader}=this.nextPlan(dealerChoice);this.startRound(leader,dealer);}
+
+  /* bot */
+  cost(c){return pts(c)+(c.s===this.trump?14+str(c)*1.5:str(c)*0.5);}
+  bestBeat(hand,T){
+    let best=null,bc=Infinity;
+    for(const cm of combos(hand,T.length)){if(this.covers(cm,T)){const c=cm.reduce((s,x)=>s+this.cost(x),0);if(c<bc){bc=c;best=cm;}}}
+    return best;
+  }
+  tablePts(){return this.pile.reduce((s,g)=>s+sumPts(g.cards),0);}
+  worthBeating(b){
+    const tu=b.filter(c=>c.s===this.trump).length;const tp=this.tablePts();
+    return tu===0||tp>=9*tu||this.deck.length===0||tp+sumPts(b)>=21;
+  }
+  botLeadCards(h){
+    const deckEmpty=this.deck.length===0;let best=null,bs=-Infinity;
+    for(const s of SUITS){
+      const g=h.filter(c=>c.s===s);const m=g.length;
+      for(let mask=1;mask<(1<<m);mask++){
+        const set=g.filter((_,i)=>mask&(1<<i));
+        let sc=(set.length-1)*1.2;
+        for(const c of set){
+          if(c.s===this.trump)sc+=deckEmpty?(pts(c)*0.3-1):-7;
+          else{sc+=pts(c)===0?2.2:-pts(c)*0.35;if(c.r==='A')sc+=1.5;}
+        }
+        sc+=Math.random()*0.3;
+        if(sc>bs){bs=sc;best=set;}
+      }
+    }
+    return best;
+  }
+  /* beat a partner's weak cards with strong ones when an opponent still has to answer */
+  coverPartner(p,b){
+    const oppLeft=(this.queue||[]).slice(1).some(q=>this.team(q)!==this.team(p)&&this.players[q].hand.length>=this.k);
+    if(!oppLeft)return false;
+    const weak=this.top.cards.some(c=>c.s!==this.trump&&c.r!=='A');
+    if(!weak)return false;
+    const strong=b.every(c=>c.s===this.trump||c.r==='A');
+    return strong&&(this.tablePts()>=10||this.deck.length===0);
+  }
+  dcost(c,partner){return (c.s===this.trump?30+str(c):0)+(partner?-pts(c)*0.4:pts(c))+str(c)*0.2;}
+  discardCards(p){
+    const h=this.players[p].hand;const need=Math.min(this.k,h.length);
+    const partner=this.top&&this.team(this.top.p)===this.team(p);
+    return [...h].sort((a,b)=>this.dcost(a,partner)-this.dcost(b,partner)).slice(0,need);
+  }
+  suggest(p){
+    const h=this.players[p].hand;
+    if(this.phase==='lead')return {type:'lead',cards:this.botLeadCards(h)};
+    if(this.phase==='respond'){
+      if(h.length>=this.k){
+        const b=this.bestBeat(h,this.top.cards);
+        if(b){
+          const partnerTop=this.team(this.top.p)===this.team(p);
+          if(!partnerTop&&this.worthBeating(b))return {type:'beat',cards:b};
+          if(partnerTop&&this.coverPartner(p,b))return {type:'beat',cards:b};
+        }
+      }
+      return {type:'discard',cards:this.discardCards(p)};
+    }
+    if(this.phase==='counter'){const b=this.bestBeat(h,this.top.cards);if(b&&this.worthBeating(b))return {type:'beat',cards:b};return {type:'pass',cards:[]};}
+    return null;
+  }
+  botTurn(){return ['lead','respond','counter'].includes(this.phase)&&this.turn!=null&&this.players[this.turn].bot;}
+  botMove(){const p=this.turn;const s=this.suggest(p);const err=this.act(p,s.type,s.cards);if(err)throw new Error(err);}
+}
+/*ENGINE-END*/
+</script>
+
+<script>
+(function(){
+  const $=s=>document.getElementById(s);
+  let G=null, ME=0, sel=new Set(), timer=null, msg='', ovKind=null;
+  let shown=0, shownTrick=-1, shownRevealed=false, dealing=null, dealTimer=null;
+  let takeTimer=null, soundTrick=-1, endSounded=-1;
+  const reduced=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){return false;}})();
+
+  /* ---------- settings ---------- */
+  const DEF={back:'bukhara',felt:'green',style:'paper',sDeal:true,sPlay:true,sTake:true,sEnd:true,name:''};
+  const SET=Object.assign({},DEF);
+  try{Object.assign(SET,JSON.parse(localStorage.getItem('burkozyol-settings')||'{}'));}catch(e){}
+  function saveSet(){try{localStorage.setItem('burkozyol-settings',JSON.stringify(SET));}catch(e){}}
+  function applySet(){document.body.dataset.back=SET.back;document.body.dataset.felt=SET.felt;}
+  applySet();
+  /* ---------- Telegram Mini App ---------- */
+  let TG=null;
+  function initTG(){
+    const W=window.Telegram&&window.Telegram.WebApp;
+    if(!W||!W.initData||TG)return;
+    TG=W;
+    try{TG.ready();TG.expand();if(TG.setHeaderColor)TG.setHeaderColor('#0c1822');if(TG.setBackgroundColor)TG.setBackgroundColor('#0c1822');if(TG.disableVerticalSwipes)TG.disableVerticalSwipes();}catch(e){}
+    const u=TG.initDataUnsafe&&TG.initDataUnsafe.user;
+    if(!SET.name&&u&&u.first_name){SET.name=String(u.first_name).slice(0,20);saveSet();}
+    if(TG.requestFullscreen){const fb=document.getElementById('fsBtn');if(fb)fb.hidden=false;}
+    const sp=TG.initDataUnsafe&&TG.initDataUnsafe.start_param;
+    if(sp&&/^[0-9]{4}$/.test(sp)&&!NET)openInvite(sp);
+  }
+  let deferredInstall=null;
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;});
+  let setup={n:2,target:12};
+  try{const s=JSON.parse(localStorage.getItem('burkozyol-setup')||'null');if(s&&[2,3,4].includes(s.n)&&[6,12,24].includes(s.target))setup=s;}catch(e){}
+
+  /* ---------- sound (generated, no files) ---------- */
+  const SND=(()=>{
+    let ctx=null,out=null;
+    function ac(){
+      if(!ctx){
+        try{
+          const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;ctx=new A();
+          const comp=ctx.createDynamicsCompressor();comp.threshold.value=-16;comp.knee.value=6;comp.ratio.value=6;comp.attack.value=0.002;comp.release.value=0.15;
+          out=ctx.createGain();out.gain.value=1.5;out.connect(comp);comp.connect(ctx.destination);
+        }catch(e){ctx=null;return null;}
+      }
+      if(ctx.state==='suspended')ctx.resume().catch(()=>{});
+      return ctx;
+    }
+    /* filtered noise burst: the paper/plastic part of a card sound */
+    function burst(c,t,dur,o){
+      const len=Math.max(1,Math.floor(c.sampleRate*dur));const buf=c.createBuffer(1,len,c.sampleRate);const d=buf.getChannelData(0);
+      const dec=o.decay||3;for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,dec);
+      const src=c.createBufferSource();src.buffer=buf;
+      const fl=c.createBiquadFilter();fl.type=o.type||'bandpass';fl.frequency.setValueAtTime(o.f,t);
+      if(o.sweep)fl.frequency.exponentialRampToValueAtTime(Math.max(100,o.f+o.sweep),t+dur);
+      fl.Q.value=o.q||1;const g=c.createGain();g.gain.value=o.gain;
+      src.connect(fl);fl.connect(g);g.connect(out);src.start(t);
+    }
+    /* low knock: the card hitting the table */
+    function thump(c,t,o){
+      const osc=c.createOscillator();osc.type='sine';osc.frequency.setValueAtTime(o.f0,t);osc.frequency.exponentialRampToValueAtTime(o.f1,t+o.dur);
+      const g=c.createGain();g.gain.setValueAtTime(o.gain,t);g.gain.exponentialRampToValueAtTime(0.001,t+o.dur);
+      osc.connect(g);g.connect(out);osc.start(t);osc.stop(t+o.dur+0.02);
+    }
+    function tones(fs,dur,gain){
+      const c=ac();if(!c)return;const t=c.currentTime;
+      fs.forEach((fq,i)=>{const st=t+i*0.12;
+        [['triangle',gain],['square',gain*0.22]].forEach(([ty,gg])=>{
+          const osc=c.createOscillator();osc.type=ty;osc.frequency.value=fq;const g=c.createGain();
+          g.gain.setValueAtTime(0.0001,st);g.gain.linearRampToValueAtTime(gg,st+0.015);g.gain.exponentialRampToValueAtTime(0.0001,st+dur);
+          osc.connect(g);g.connect(out);osc.start(st);osc.stop(st+dur+0.05);});});
+    }
+    const ST={
+      paper:{slap:{f:2400,q:.7,gain:1.15,decay:4.5},th:{f0:190,f1:58,dur:.09,gain:.85},swish:{f:5600,sweep:-4200,q:.9,gain:.8,decay:1.5},riffle:{f:3000,q:1.1,gain:.7,decay:5}},
+      plastic:{slap:{f:4300,q:1.7,gain:1.05,decay:5.5},th:{f0:260,f1:95,dur:.06,gain:.6},swish:{f:7400,sweep:-5000,q:1.6,gain:.7,decay:1.8},riffle:{f:4800,q:2,gain:.62,decay:6}},
+      felt:{slap:{f:1200,q:.6,gain:1.25,decay:3.2},th:{f0:150,f1:45,dur:.11,gain:1.1},swish:{f:3200,sweep:-2400,q:.7,gain:.85,decay:1.3},riffle:{f:1900,q:.8,gain:.8,decay:4}}
+    };
+    const P=()=>ST[SET.style]||ST.paper;
+    return {
+      unlock:()=>{ac();},
+      deal(){if(!SET.sDeal)return;const c=ac();if(!c)return;const t=c.currentTime,s=P();burst(c,t,.1,s.swish);burst(c,t+.08,.035,Object.assign({},s.slap,{gain:s.slap.gain*.5}));},
+      play(){if(!SET.sPlay)return;const c=ac();if(!c)return;const t=c.currentTime,s=P();burst(c,t,.075,s.slap);thump(c,t,s.th);},
+      take(){if(!SET.sTake)return;const c=ac();if(!c)return;const t=c.currentTime,s=P();for(let i=0;i<9;i++)burst(c,t+i*0.03,.028,s.riffle);burst(c,t+.3,.07,s.slap);thump(c,t+.3,s.th);},
+      win(){if(SET.sEnd)tones([523,659,784,1047],.6,.24);},
+      lose(){if(SET.sEnd)tones([440,349,294,220],.6,.22);}
+    };
+  })();
+  document.addEventListener('pointerdown',()=>SND.unlock(),{passive:true});
+
+  /* ---------- helpers ---------- */
+  function cardEl(c,o={}){
+    const el=document.createElement(o.button?'button':'div');
+    el.className='card '+(isRed(c.s)?'red':'black')+(G&&c.s===G.trump&&!o.plain?' trump':'');
+    if(o.button)el.type='button';
+    el.innerHTML=`<span class="cr">${RL[c.r]||c.r}</span><span class="cs">${SU[c.s]}</span><span class="cc" aria-hidden="true">${SU[c.s]}</span>`;
+    el.setAttribute('aria-label',label(c));
+    return el;
+  }
+  function backEl(){const d=document.createElement('div');d.className='back';return d;}
+  function sortHand(h){return [...h].sort((a,b)=>{const ta=a.s===G.trump,tb=b.s===G.trump;if(ta!==tb)return ta?1:-1;if(a.s!==b.s)return SUITS.indexOf(a.s)-SUITS.indexOf(b.s);return str(a)-str(b);});}
+  function myHand(){return G.players[ME].hand;}
+  function selCards(){return myHand().filter(c=>sel.has(c.id));}
+  function hydrate(json){return Object.assign(Object.create(Game.prototype),JSON.parse(json));}
+  function esc(t){return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  function who(p){return p===ME?'Siz':G.nm(p);}
+  function myTeam(){return G.team(ME);}
+  function rel(p){return (p-ME+G.n)%G.n;}
+  function posOf(p){const r=rel(p);if(G.n===2)return r===0?'me':'top';if(G.n===3)return ['me','left','right'][r];return ['me','left','top','right'][r];}
+  function teamName(t){
+    if(t===myTeam())return G.n===4?'Biz':'Siz';
+    if(G.n===4)return 'Raqiblar';
+    return G.nm(t);
+  }
+  function teamOrder(){const T=G.T||2;const o=[myTeam()];for(let i=1;i<T;i++)o.push((myTeam()+i)%T);return o;}
+  function dirOf(p){const D=180;return {me:[0,D],top:[0,-D],left:[-D,0],right:[D,0]}[posOf(p)];}
+  const isClient=()=>!!(NET&&!NET.host);
+
+  /* ---------- rendering ---------- */
+  function renderScore(){
+    const order=teamOrder();
+    $('score').style.gridTemplateColumns=`repeat(${order.length},minmax(0,1fr))`;
+    $('score').innerHTML=order.map((t,i)=>`<div class="team${i===0?' t0':''}">
+      <div class="tname">${esc(teamName(t))}</div>
+      <div class="pen"><b>${G.pen[t]}</b><span> / ${G.target}</span></div>
+      <div class="bar"><i style="width:${Math.min(100,G.pen[t]/G.target*100)}%"></i></div></div>`).join('');
+  }
+
+  function renderSeats(){
+    for(const pos of ['top','left','right']){
+      const el=$('seat-'+pos);el.innerHTML='';
+      let p=null;for(let i=0;i<G.n;i++)if(i!==ME&&posOf(i)===pos)p=i;
+      if(p==null){el.hidden=true;continue;}
+      el.hidden=false;
+      const mate=G.team(p)===myTeam();
+      el.className=`seat ${pos} ${mate?'mate':'foe'}${G.turn===p?' active':''}`;
+      const fan=document.createElement('div');fan.className='fan';
+      const cnt=dealing?dealing.counts[p]:G.players[p].hand.length;
+      const mid=(cnt-1)/2;
+      for(let i=0;i<cnt;i++){const b=backEl();b.style.setProperty('--a',`${(i-mid)*7}deg`);if(dealing&&dealing.lastP===p&&i===cnt-1)b.classList.add('land');fan.appendChild(b);}
+      const w=document.createElement('div');w.className='who';
+      const dot=document.createElement('span');dot.className='dot';
+      const nm=document.createElement('span');nm.textContent=G.players[p].name;
+      w.append(dot,nm);
+      const tk=(G.takenBy||[])[p]||0;
+      if(tk)w.appendChild(takenEl(tk));
+      el.append(fan,w);
+    }
+    $('felt').classList.toggle('four',G.n>=3);
+    const mp=$('mypile');mp.innerHTML='';mp.appendChild(takenEl((G.takenBy||[])[ME]||0));
+  }
+  function takenEl(cnt){
+    const d=document.createElement('div');d.className='taken';
+    if(!cnt){d.style.visibility='hidden';return d;}
+    const layers=Math.min(6,Math.ceil(cnt/3));
+    for(let i=0;i<layers;i++){const b=backEl();b.style.left=`${i*1.5}px`;b.style.top=`${-i*1.5}px`;b.style.transform=`rotate(${i%2?5:-4}deg)`;d.appendChild(b);}
+    return d;
+  }
+
+  function renderStock(){
+    const st=$('stock');st.innerHTML='';
+    const pend=dealing?dealing.left:0;
+    const L=G.deck.length+pend;
+    const revealed=G.hiddenRevealed&&!(dealing&&dealing.revealPending);
+    const tcard=revealed?G.hiddenCard:G.openCard;
+    if(L>0){
+      const dk=document.createElement('div');dk.className='deck';
+      const tw=document.createElement('div');tw.className='tcw';
+      const ce=cardEl(tcard,{plain:true});
+      if(revealed&&!shownRevealed)ce.classList.add('flip');
+      tw.appendChild(ce);dk.appendChild(tw);
+      const backs=Math.max(0,L-(revealed?1:2));
+      if(backs>0){
+        const sk=document.createElement('div');sk.className='stk';
+        const nb=Math.min(3,Math.ceil(backs/6));
+        for(let i=0;i<nb;i++){const b=backEl();b.style.left=`${i*2}px`;b.style.top=`${-i*2}px`;sk.appendChild(b);}
+        dk.appendChild(sk);
+      }
+      const n=document.createElement('div');n.className='num';n.textContent=L;dk.appendChild(n);
+      st.appendChild(dk);
+    }else{
+      const m=document.createElement('div');m.className='tmini';
+      m.innerHTML=`<b class="${isRed(G.trump)?'red':''}">${SU[G.trump]}</b>Kozir`;
+      st.appendChild(m);
+    }
+    shownRevealed=revealed;
+  }
+
+  function seatTarget(p){
+    if(p===ME)return $('hand');
+    const el=$('seat-'+posOf(p));return el.querySelector('.fan')||el.querySelector('.who')||$('felt');
+  }
+  function flyBack(p,onArrive){
+    const from=document.querySelector('#stock .deck .stk')||document.querySelector('#stock .deck')||$('stock');
+    const to=seatTarget(p);
+    const a=from.getBoundingClientRect(), b=to.getBoundingClientRect();
+    const f=backEl();f.classList.add('flyer');
+    f.style.left=a.left+'px';f.style.top=a.top+'px';
+    document.body.appendChild(f);
+    const fr=f.getBoundingClientRect();
+    const dx=b.left+b.width/2-(a.left+fr.width/2), dy=b.top+b.height/2-(a.top+fr.height/2);
+    const smp=to.querySelector('.card,.back');let tw=fr.width*1.5;
+    if(smp){const r=smp.getBoundingClientRect();tw=Math.min(r.width,r.height);}
+    const sc=Math.max(.6,Math.min(2.4,tw/fr.width));
+    const rot=({me:0,top:180,left:90,right:-90}[posOf(p)])+(Math.random()*14-7);
+    let once=false;
+    const fin=()=>{if(once)return;once=true;f.remove();onArrive();};
+    SND.deal();
+    if(f.animate&&!reduced){
+      const spin=Math.random()*60-30;
+      const an=f.animate([
+        {transform:'translate(0px,0px) rotate(0deg) scale(1)',filter:'brightness(1)'},
+        {transform:`translate(${dx*.5}px,${dy*.5-52}px) rotate(${rot*.5+spin}deg) scale(${(1+sc)/2*1.15})`,filter:'brightness(1.15)',offset:.45},
+        {transform:`translate(${dx}px,${dy}px) rotate(${rot}deg) scale(${sc})`,filter:'brightness(1)'}
+      ],{duration:540,easing:'cubic-bezier(.25,.7,.25,1)',fill:'forwards'});
+      an.onfinish=fin;setTimeout(fin,900);
+    }else{
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{f.style.transform=`translate(${dx}px,${dy}px) scale(${sc})`;}));
+      f.addEventListener('transitionend',fin);setTimeout(fin,600);
+    }
+  }
+  function runDeal(seq,done){
+    if(!seq.length||reduced){done();return;}
+    const counts=G.players.map(p=>p.hand.length);seq.forEach(p=>counts[p]--);
+    dealing={counts,left:seq.length,revealPending:G.hiddenRevealed&&!shownRevealed};
+    render();
+    let i=0;const d=dealing;
+    const step=()=>{
+      if(dealing!==d||i>=seq.length)return;
+      const p=seq[i++];
+      flyBack(p,()=>{
+        if(dealing!==d)return;
+        d.counts[p]++;d.left--;d.lastP=p;
+        if(d.left===0){dealing=null;done();}
+        else{renderSeats();renderHand();renderStock();}
+      });
+      if(i<seq.length)dealTimer=setTimeout(step,130);
+    };
+    step();
+  }
+
+  function anim(el,fresh,delay){
+    const parts=[];
+    if(fresh)parts.push(`fly .48s cubic-bezier(.2,.8,.3,1) ${delay}ms both`);
+    if(G.phase==='resolve')parts.push(`collect .6s ease-in ${2600+(fresh?delay:0)}ms forwards`);
+    el.style.animation=parts.join(', ');
+  }
+  function renderTrick(){
+    const tr=$('trick');tr.innerHTML='';
+    if(!G.pile.length){shown=0;return;}
+    if(G.trickNo!==shownTrick){shown=0;shownTrick=G.trickNo;}
+    const k=G.pile[0].cards.length;
+    const stack=document.createElement('div');stack.className='stack';
+    const cols=[];for(let j=0;j<k;j++){const c=document.createElement('div');c.className='col';stack.appendChild(c);cols.push(c);}
+    const aside=document.createElement('div');aside.className='aside';
+    let layer=0,discards=0,lastBeat=-1;
+    for(let i=G.pile.length-1;i>=0;i--)if(G.pile[i].type!=='discard'){lastBeat=i;break;}
+    const [tx,ty]=G.phase==='resolve'?dirOf(G.resolveInfo.taker):[0,0];
+    let freshCount=0;
+    G.pile.forEach((g,gi)=>{
+      const fresh=gi>=shown;if(fresh)freshCount+=g.cards.length;
+      const [fx,fy]=dirOf(g.p);
+      if(g.type==='discard'){
+        g.cards.forEach(()=>{
+          const b=backEl();
+          b.style.setProperty('--ox',`${discards*3}px`);b.style.setProperty('--oy',`${discards*2}px`);b.style.setProperty('--r',`${(discards%3-1)*6}deg`);
+          b.style.setProperty('--fx',`${fx}px`);b.style.setProperty('--fy',`${fy}px`);
+          b.style.setProperty('--tx',`${tx}px`);b.style.setProperty('--ty',`${ty}px`);
+          anim(b,fresh,discards*75);
+          aside.appendChild(b);discards++;
+        });
+        return;
+      }
+      const ox=layer*7, oy=layer*16, r=layer===0?0:(layer%2?5:-4);
+      g.cards.forEach((c,j)=>{
+        const e=cardEl(c);
+        if(gi===lastBeat&&G.phase!=='resolve'&&layer>0)e.classList.add('hi');
+        e.style.setProperty('--ox',`${ox}px`);e.style.setProperty('--oy',`${oy}px`);e.style.setProperty('--r',`${r}deg`);
+        e.style.setProperty('--fx',`${fx}px`);e.style.setProperty('--fy',`${fy}px`);
+        e.style.setProperty('--tx',`${tx}px`);e.style.setProperty('--ty',`${ty}px`);
+        anim(e,fresh,j*75);
+        cols[j].appendChild(e);
+      });
+      layer++;
+    });
+    const h=`calc(var(--ct) * 1.4 + ${(layer-1)*16+6}px)`;
+    cols.forEach(c=>{c.style.height=h;c.style.width=`calc(var(--ct) + ${(layer-1)*7+4}px)`;});
+    tr.appendChild(stack);
+    if(discards)tr.appendChild(aside);
+    for(let i=0;i<Math.min(6,freshCount);i++)setTimeout(()=>SND.play(),330+i*75);
+    if(G.phase==='resolve'&&soundTrick!==G.trickNo){soundTrick=G.trickNo;clearTimeout(takeTimer);takeTimer=setTimeout(()=>SND.take(),2600);}
+    shown=G.pile.length;
+  }
+
+  function statusText(){
+    if(msg)return `<span class="err">${esc(msg)}</span>`;
+    if(G.phase==='resolve'){const r=G.resolveInfo;return `${esc(who(r.taker))} oldi · +${r.pts}`;}
+    if(dealing||G.turn==null)return '';
+    if(G.turn!==ME)return `${esc(G.nm(G.turn))}…`;
+    if(NET&&NET.waiting)return 'Yuborildi…';
+    if(G.phase==='lead')return 'Sizning yurishingiz';
+    if(G.phase==='respond'){
+      if(myHand().length<G.k)return 'Tashlang';
+      return `Bosing yoki tashlang · ${G.k} ta`;
+    }
+    if(G.phase==='counter')return `Aylantirasizmi? · ${G.k} ta`;
+    return '';
+  }
+
+  function onCard(c){
+    msg='';
+    if(G.phase==='lead'&&G.turn===ME){
+      const cur=selCards();
+      if(!cur.length||cur[0].s!==c.s){sel=new Set(myHand().filter(x=>x.s===c.s).map(x=>x.id));}
+      else if(sel.has(c.id))sel.delete(c.id);
+      else sel.add(c.id);
+    }else{
+      if(sel.has(c.id))sel.delete(c.id);else sel.add(c.id);
+    }
+    render();
+  }
+
+  function renderHand(){
+    const hd=$('hand');hd.innerHTML='';
+    const mine=G.turn===ME&&['lead','respond','counter'].includes(G.phase);
+    hd.classList.toggle('wait',!mine);
+    if(dealing){const cs=myHand().slice(0,dealing.counts[ME]);cs.forEach((c,i)=>{const e=cardEl(c);if(dealing.lastP===ME&&i===cs.length-1)e.classList.add('land');hd.appendChild(e);});return;}
+    const ids=new Set(myHand().map(c=>c.id));
+    for(const id of [...sel])if(!ids.has(id))sel.delete(id);
+    sortHand(myHand()).forEach(c=>{
+      const b=cardEl(c,{button:true});
+      b.setAttribute('aria-pressed',sel.has(c.id)?'true':'false');
+      b.addEventListener('click',()=>onCard(c));
+      hd.appendChild(b);
+    });
+  }
+
+  function mkBtn(text,cls,fn,disabled){const b=document.createElement('button');b.type='button';b.className='btn'+(cls?' '+cls:'');b.textContent=text;b.disabled=!!disabled;b.addEventListener('click',fn);return b;}
+
+  function renderActions(){
+    const a=$('actions');a.innerHTML='';
+    const active=['lead','respond','counter'].includes(G.phase);
+    if(dealing||(NET&&NET.waiting))return;
+    if(active&&G.isBura(ME))a.appendChild(mkBtn('BURA!','bura',()=>doBura()));
+    if(!(active&&G.turn===ME))return;
+    const cs=selCards(), k=G.k, h=myHand().length;
+    if(G.phase==='lead'){
+      const ok=cs.length>=1&&cs.length<=6&&cs.every(c=>c.s===cs[0].s);
+      a.appendChild(mkBtn(cs.length>1?`Yurish · ${cs.length}`:'Yurish','',()=>doAct('lead',cs),!ok));
+    }else if(G.phase==='respond'){
+      if(h>=k){const ok=cs.length===k&&G.covers(cs,G.top.cards);a.appendChild(mkBtn('Bosish','',()=>doAct('beat',cs),!ok));}
+      const need=Math.min(k,h);const all=h<=k;
+      a.appendChild(mkBtn(`Tashlash · ${need}`,'alt',()=>doAct('discard',all?myHand().slice():cs),!(all||cs.length===need)));
+    }else if(G.phase==='counter'){
+      const ok=cs.length===k&&G.covers(cs,G.top.cards);
+      a.appendChild(mkBtn('Aylantirish','',()=>doAct('beat',cs),!ok));
+      a.appendChild(mkBtn('Oʻtkazish','alt',()=>doAct('pass',[])));
+    }
+    a.appendChild(mkBtn('Maslahat','alt',()=>{const s=G.suggest(ME);sel=new Set(s.cards.map(c=>c.id));msg='';render();
+      if(s.type==='pass')$('status').textContent='Maslahat: oʻtkazing';}));
+  }
+
+  function render(){
+    if(!G)return;
+    renderScore();renderSeats();renderStock();renderTrick();renderHand();renderActions();
+    const st=$('status');st.innerHTML=statusText();st.classList.toggle('mine',G.turn===ME);
+    $('felt').classList.toggle('tap',G.phase==='resolve'||tableAction()!==null);
+  }
+
+  function tableAction(){
+    if(!G||dealing||G.turn!==ME||(NET&&NET.waiting))return null;
+    const cs=selCards();const h=myHand();
+    if(!cs.length&&!(G.phase==='respond'&&h.length<=G.k))return null;
+    if(G.phase==='lead'&&cs.length&&cs.length<=6&&cs.every(c=>c.s===cs[0].s))return {type:'lead',cards:cs};
+    if((G.phase==='respond'||(G.phase==='counter'&&G.team(G.top.p)!==myTeam()))&&cs.length===G.k&&G.covers(cs,G.top.cards))return {type:'beat',cards:cs};
+    if(G.phase==='respond'){
+      const canBeat=h.length>=G.k&&!!G.bestBeat(h,G.top.cards);
+      if(!canBeat){
+        if(h.length<=G.k)return {type:'discard',cards:h.slice()};
+        if(cs.length===G.k)return {type:'discard',cards:cs};
+      }
+    }
+    return null;
+  }
+
+  /* ---------- acting ---------- */
+  function doAct(type,cards){
+    if(isClient()){
+      const g2=hydrate(JSON.stringify(G));
+      const e=g2.act(ME,type,cards);
+      if(e){msg=e;render();return;}
+      msg='';sel.clear();NET.waiting=true;
+      sendMove({type,ids:cards.map(c=>c.id)});render();return;
+    }
+    const e=G.act(ME,type,cards);
+    if(e){msg=e;render();return;}
+    msg='';sel.clear();changed();
+  }
+  function doBura(){
+    if(isClient()){if(!G.isBura(ME))return;NET.waiting=true;sendMove({type:'bura'});render();return;}
+    const e=G.declareBura(ME);if(e){msg=e;render();return;}
+    changed();
+  }
+  /* engine state moved on: publish it when hosting, then animate any dealt cards */
+  function changed(){
+    if(NET&&NET.host){G.log=[];NET.state=JSON.stringify(G);NET.status='playing';NET.rev++;pushRoom();}
+    afterEngine();
+  }
+  function afterEngine(){
+    const seq=(G.dealLog||[]).slice();G.dealLog=[];
+    if(seq.length)runDeal(seq,()=>{render();loop();});
+    else{render();loop();}
+  }
+  function after(){render();loop();}
+  function loop(){
+    clearTimeout(timer);
+    if(!G||dealing||isClient())return;
+    if(G.phase==='resolve'){timer=setTimeout(()=>{G.afterResolve();changed();},3400);return;}
+    if(G.phase==='roundOver'){timer=setTimeout(showRound,600);return;}
+    if(G.botTurn()){timer=setTimeout(()=>{try{G.botMove();}catch(e){console.error(e);}changed();},1000);}
+  }
+  function collectNow(){
+    clearTimeout(timer);clearTimeout(takeTimer);SND.take();
+    document.querySelectorAll('#trick .col > *, #trick .aside > *').forEach(x=>x.style.animation='collect .35s ease-in 0s forwards');
+    if(isClient()){sendMove({type:'collect'});return;}
+    timer=setTimeout(()=>{if(G.phase==='resolve'){G.afterResolve();changed();}},380);
+  }
+
+  /* ---------- overlays ---------- */
+  function openOv(kind,html){ovKind=kind;$('sheet').className='sheet'+(kind==='menu'?' menu-sheet':'');$('sheet').innerHTML=html;$('ov').hidden=false;const f=$('sheet').querySelector('button,input');if(f&&kind!=='lobby')f.focus();}
+  function closeOv(){ovKind=null;$('ov').hidden=true;}
+  function bindOpts(id,fn){const box=$(id);if(!box)return;box.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{box.querySelectorAll('.opt').forEach(x=>x.setAttribute('aria-pressed',x===b));fn(b.dataset.v);}));}
+  function optRow(id,items,cur){return `<div class="opts" id="${id}">${items.map(([v,t,sub])=>`<button type="button" class="opt" data-v="${v}" aria-pressed="${String(v)===String(cur)}"><b>${t}</b>${sub?`<span>${sub}</span>`:''}</button>`).join('')}</div>`;}
+
+  function gameActive(){return G&&G.phase!=='idle'&&!(G.result&&G.result.matchOver&&G.phase==='roundOver');}
+
+  function showMenu(){
+    const cont=gameActive()?`<button type="button" class="btn alt mbtn" id="m-cont"><span class="ic red">♦</span><span><b>Davom etish</b><small>Oʻyinga qaytish</small></span></button>`:'';
+    openOv('menu',`<div class="hero" aria-hidden="true"><div class="herofan" id="herofan"></div></div>
+      <h2 class="mtitle">Buxoro Burkozyoli</h2>
+      <p class="msub">Bura · aylantirish · yashirin kozir</p>
+      <div class="menu">
+        <button type="button" class="btn mbtn" id="m-play"><span class="ic">♠</span><span><b>Oʻynash</b><small>Botlarga qarshi, 1 × 1 yoki 2 × 2</small></span></button>
+        <button type="button" class="btn alt mbtn" id="m-friends"><span class="ic red">♥</span><span><b>Doʻstlar bilan</b><small>Xona kodi orqali onlayn</small></span></button>
+        <button type="button" class="btn alt mbtn" id="m-settings"><span class="ic">♣</span><span><b>Sozlamalar</b><small>Karta, stol rangi, ovozlar</small></span></button>
+        ${cont}
+      </div>
+      <button type="button" class="linkbtn" id="m-install">Telefonga ilova qilib oʻrnatish</button>`);
+    $('m-install').addEventListener('click',showInstall);
+    const fan=$('herofan');
+    [{s:'D',r:'10'},{s:'C',r:'K'},{s:'S',r:'A'},{s:'H',r:'A'},{s:'D',r:'A'}].forEach((c,i)=>{
+      const e=cardEl(Object.assign({id:'hero'+i},c),{plain:true});
+      e.style.setProperty('--a',`${(i-2)*15}deg`);e.style.setProperty('--d',`${120+i*80}ms`);
+      fan.appendChild(e);
+    });
+    $('m-play').addEventListener('click',()=>showSetup());
+    $('m-friends').addEventListener('click',()=>showFriends());
+    $('m-settings').addEventListener('click',()=>showSettings());
+    if($('m-cont'))$('m-cont').addEventListener('click',()=>{closeOv();if(G&&G.phase==='roundOver')showRound();});
+  }
+
+  function showInstall(){
+    const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+    const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+    openOv('install',`<h2>Ilova qilib oʻrnatish</h2>
+      ${standalone?'<p>Oʻyin allaqachon ilova sifatida ochilgan.</p>':''}
+      ${deferredInstall?'<button type="button" class="btn" id="i-go">Oʻrnatish</button>':''}
+      <div class="steps">
+        <div><b>iPhone (Safari)</b><p>Pastdagi “Ulashish” tugmasi → “Bosh ekranga qoʻshish” (Add to Home Screen) → “Qoʻshish”.</p></div>
+        <div><b>Android (Chrome)</b><p>Yuqoridagi ⋮ menyu → “Bosh ekranga qoʻshish” yoki “Ilovani oʻrnatish”.</p></div>
+        <div><b>Telegram</b><p>Havolani Telegram'da ochsangiz ham boʻladi. Bot orqali ochilsa, oʻyin Telegram ichida ilovadek toʻliq ekranda ishlaydi.</p></div>
+      </div>
+      ${ios&&!standalone?'<p class="note">iPhone’da Telegram ichidan emas, Safari’da oching.</p>':''}
+      <div class="btnrow"><button type="button" class="btn alt" id="i-back">Orqaga</button></div>`);
+    if($('i-go'))$('i-go').addEventListener('click',async()=>{try{deferredInstall.prompt();await deferredInstall.userChoice;}catch(e){}deferredInstall=null;showMenu();});
+    $('i-back').addEventListener('click',showMenu);
+  }
+  function openInvite(code){
+    if(SET.name&&SET.name.trim()){joinRoom(code);return;}
+    showFriends('Ismingizni yozib, “Kirish” ni bosing.',code);
+  }
+  function rulesHtml(){return `<details class="rules"><summary>Qoidalar</summary><ul>
+        <li>36 ta karta, har kimga 6 tadan. Tuz 11, oʻntalik 10, korol 4, dama 3, valet 2.</li>
+        <li>Ochiq karta olinguncha uning masti kozir, keyin tagidagi yashirin karta ochiladi va kozir oʻshanga oʻtadi.</li>
+        <li>Bir xil mastdagi 1–6 ta karta bilan yuriladi, qolganlar shuncha karta bilan bosadi yoki tashlaydi.</li>
+        <li>Yurgan oʻyinchi raqib bosgan kartani ustidan bosib aylantirishi mumkin. Shunda qolganlar yana shuncha karta bilan bosadi yoki shuncha karta tashlaydi. Oxirgi bosgan hammasini oladi. Sherigingiz kartasini bosib olish mumkin, lekin aylantirish faqat raqib bosganda boʻladi.</li>
+        <li>Har yurishdan keyin 6 tagacha olinadi: avval olgan oʻyinchi, keyin chapga qarab.</li>
+        <li>Bura: qoʻldagi 6 ta kartaning hammasi kozir.</li>
+        <li>Koʻp ochko olgan yutadi. Yutqazgan: 31+ ochko — 2, karta olib 31 ga yetmasa — 4, karta olmasa — 6 shtraf.</li>
+        <li>Yutqazgan tarqatadi, yutgan boshlaydi.</li>
+      </ul></details>`;}
+
+  function showSetup(){
+    openOv('setup',`<h2>Kompyuterga qarshi</h2>
+      <div class="lbl">Rejim</div>
+      ${optRow('o-mode',[[2,'1 × 1','Siz va Bot 1'],[3,'3 kishi','har kim oʻzi uchun'],[4,'2 × 2','Siz va Sherik, Bot 1 va Bot 2 ga qarshi']],setup.n)}
+      <div class="lbl">Necha shtrafgacha</div>
+      ${optRow('o-target',[[6,'6'],[12,'12'],[24,'24']],setup.target)}
+      <div class="btnrow"><button type="button" class="btn" id="go">Boshlash</button><button type="button" class="btn alt" id="back">Orqaga</button></div>
+      ${rulesHtml()}`);
+    bindOpts('o-mode',v=>setup.n=+v);bindOpts('o-target',v=>setup.target=+v);
+    $('back').addEventListener('click',showMenu);
+    $('go').addEventListener('click',()=>{
+      try{localStorage.setItem('burkozyol-setup',JSON.stringify(setup));}catch(e){}
+      leaveNet();
+      stopAll();
+      ME=0;
+      G=new Game({n:setup.n,target:setup.target,names:{2:['Siz','Bot 1'],3:['Siz','Bot 1','Bot 2'],4:['Siz','Bot 1','Sherik','Bot 2']}[setup.n]});
+      showColor();
+    });
+  }
+  function stopAll(){clearTimeout(timer);clearTimeout(dealTimer);clearTimeout(takeTimer);dealing=null;sel.clear();msg='';shown=0;shownTrick=-1;shownRevealed=false;}
+
+  function showColor(){
+    openOv('color',`<h2>Qizilmi, qorami?</h2>
+      <div class="btnrow"><button type="button" class="btn" id="red" style="background:var(--ruby);color:var(--ivory)">Qizil ♥ ♦</button><button type="button" class="btn alt" id="black">Qora ♠ ♣</button></div>`);
+    const pick=g=>{
+      const r=G.colorGuess(g);
+      openOv('color2',`<h2>${r.win?'Topdingiz':'Topolmadingiz'}</h2><div class="reveal" id="rv"></div><p>Birinchi yuradi: <b style="color:var(--ivory)">${esc(who(r.leader))}</b></p>
+        <div class="btnrow"><button type="button" class="btn" id="st">Tarqatish</button></div>`);
+      $('rv').appendChild(cardEl(r.card,{plain:true}));
+      $('st').addEventListener('click',()=>{closeOv();shown=0;shownRevealed=false;G.startRound(r.leader);changed();});
+    };
+    $('red').addEventListener('click',()=>pick('red'));
+    $('black').addEventListener('click',()=>pick('black'));
+  }
+
+  function showSettings(){
+    openOv('settings',`<h2>Sozlamalar</h2>
+      <div class="lbl">Karta orqasi</div>
+      <div class="opts" id="s-back">${[['bukhara','Buxoro'],['red','Qizil'],['navy','Koʻk']].map(([v,t])=>`<button type="button" class="opt sw" data-v="${v}" aria-pressed="${SET.back===v}"><span class="back mini" data-k="${v}"></span><b>${t}</b></button>`).join('')}</div>
+      <div class="lbl">Stol rangi</div>
+      <div class="opts" id="s-felt">${[['green','Yashil'],['blue','Koʻk'],['red','Toʻq qizil'],['wood','Yogʻoch']].map(([v,t])=>`<button type="button" class="opt sw" data-v="${v}" aria-pressed="${SET.felt===v}"><span class="chip" data-f="${v}"></span><b>${t}</b></button>`).join('')}</div>
+      <div class="lbl">Ovoz turi</div>
+      ${optRow('s-style',[['paper','Qogʻoz'],['plastic','Plastik'],['felt','Movut']],SET.style)}
+      <div class="lbl">Ovozlar</div>
+      <div class="opts" id="s-snd">${[['sDeal','Tarqatish'],['sPlay','Karta tashlash'],['sTake','Yigʻish'],['sEnd','Oʻyin oxiri']].map(([k,t])=>`<button type="button" class="opt" data-k="${k}" aria-pressed="${!!SET[k]}"><b>${t}</b><span>${SET[k]?'yoqilgan':'oʻchirilgan'}</span></button>`).join('')}</div>
+      <div class="btnrow"><button type="button" class="btn" id="s-done">Tayyor</button></div>`);
+    $('s-back').querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{SET.back=b.dataset.v;saveSet();applySet();$('s-back').querySelectorAll('.opt').forEach(x=>x.setAttribute('aria-pressed',x===b));}));
+    $('s-felt').querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{SET.felt=b.dataset.v;saveSet();applySet();$('s-felt').querySelectorAll('.opt').forEach(x=>x.setAttribute('aria-pressed',x===b));}));
+    bindOpts('s-style',v=>{SET.style=v;saveSet();const keep=SET.sPlay;SET.sPlay=true;SND.play();SET.sPlay=keep;});
+    $('s-snd').querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.k;SET[k]=!SET[k];saveSet();b.setAttribute('aria-pressed',SET[k]);b.querySelector('span').textContent=SET[k]?'yoqilgan':'oʻchirilgan';
+      if(SET[k]){({sDeal:()=>SND.deal(),sPlay:()=>SND.play(),sTake:()=>SND.take(),sEnd:()=>SND.win()})[k]();}}));
+    $('s-done').addEventListener('click',()=>{if(G&&gameActive()){closeOv();render();if(G.phase==='roundOver')showRound();}else showMenu();});
+  }
+
+  function showRound(){
+    if(!G||G.phase!=='roundOver')return;
+    const r=G.result;
+    let title, line='';
+    const winners=r.winners||(r.w!=null?[r.w]:[]);
+    const pens=r.pens||[0,0];
+    const mineWon=winners.includes(myTeam());
+    if(endSounded!==G.roundNo){endSounded=G.roundNo;if(winners.length)(mineWon?SND.win():SND.lose());}
+    const solo=G.n!==4;
+    if(r.reason==='bura')title=`BURA — ${who(r.buraBy)}`;
+    else if(!winners.length)title='Durrang';
+    else title=mineWon?(solo?'Siz yutdingiz':'Jamoangiz yutdi'):(solo?'Siz yutqazdingiz':'Jamoangiz yutqazdi');
+    const order=teamOrder();
+    line=order.filter(t=>pens[t]>0).map(t=>`${esc(teamName(t))}: +${pens[t]} shtraf`).join(' · ');
+    const rows=order.map(t=>`<div class="row${pens[t]>0?' lose':''}"><span>${esc(teamName(t))}<br><small>${r.pts[t]} ochko</small></span><b>${G.pen[t]} / ${G.target}</b></div>`).join('');
+    let btns='';
+    if(r.matchOver){
+      const ml=r.matchLoser!=null?r.matchLoser:r.loser;
+      title=ml===myTeam()?'Partiyani yutqazdingiz':(G.n===3?`Partiya tugadi: ${esc(teamName(ml))} yutqazdi`:'Partiyani yutdingiz!');
+      if(NET&&NET.host)btns=`<button type="button" class="btn" id="lobbyBack">Xonaga qaytish</button>`;
+      else if(NET)btns=`<p style="width:100%">Xost yangi partiya boshlashini kuting</p><button type="button" class="btn alt" id="toMenu">Menyu</button>`;
+      else btns=`<button type="button" class="btn" id="again">Yangi partiya</button><button type="button" class="btn alt" id="toMenu">Menyu</button>`;
+    }else if(!NET&&G.n===4&&r.loser===0){
+      btns=`<button type="button" class="btn" id="d0">Men tarqataman</button><button type="button" class="btn alt" id="d2">${esc(G.nm(2))} tarqatsin</button>`;
+    }else{
+      if(!NET){const plan=G.nextPlan(null);showRound.plan=plan;line+=(line?' · ':'')+`Boshlaydi: ${esc(who(plan.leader))}`;}
+      btns=`<button type="button" class="btn" id="nx">Keyingi oʻyin</button>`;
+    }
+    openOv('round',`<h2>${title}</h2>${line?`<p>${line}</p>`:''}<div class="res">${rows}</div><div class="btnrow">${btns}</div>`);
+    const go=d=>{
+      closeOv();sel.clear();shown=0;shownRevealed=false;
+      if(isClient()){sendMove({type:'next'});return;}
+      if(d==='plan'&&!NET){const p=showRound.plan;G.startRound(p.leader,p.dealer);}else G.nextRound(d==='plan'?null:d);
+      changed();
+    };
+    if($('again'))$('again').addEventListener('click',()=>showSetup());
+    if($('toMenu'))$('toMenu').addEventListener('click',()=>{leaveNet();G=null;clearBoard();showMenu();});
+    if($('lobbyBack'))$('lobbyBack').addEventListener('click',()=>{NET.status='lobby';NET.state=null;NET.rev++;pushRoom();G=null;clearBoard();showLobby();});
+    if($('nx'))$('nx').addEventListener('click',()=>go('plan'));
+    if($('d0'))$('d0').addEventListener('click',()=>go(0));
+    if($('d2'))$('d2').addEventListener('click',()=>go(2));
+  }
+  function clearBoard(){
+    ['score','stock','trick','hand','actions','status','mypile','seat-top','seat-left','seat-right'].forEach(id=>{$(id).innerHTML='';});
+  }
+
+  /* ---------- playing with friends (direct peer-to-peer) ---------- */
+  /* The host's browser runs the game; friends connect to it by room code and send their moves. */
+  let NET=null, PID=null, peerLib=null;
+  const PEER_PREFIX='bzbux-v1-';
+  function loadPeer(){
+    if(window.Peer)return Promise.resolve(window.Peer);
+    if(!peerLib)peerLib=new Promise((res,rej)=>{
+      const sc=document.createElement('script');
+      sc.src='https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js';
+      sc.onload=()=>window.Peer?res(window.Peer):rej(new Error('peer'));
+      sc.onerror=()=>{peerLib=null;rej(new Error('peer'));};
+      document.head.appendChild(sc);
+    });
+    return peerLib;
+  }
+  function myPid(){
+    if(PID)return PID;
+    try{PID=localStorage.getItem('burkozyol-pid');}catch(e){}
+    if(!PID){PID='p'+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);try{localStorage.setItem('burkozyol-pid',PID);}catch(e){}}
+    return PID;
+  }
+  function genCode(){return String(1000+Math.floor(Math.random()*9000));}
+  function myName(){return (SET.name||'').trim().slice(0,20)||'Oʻyinchi';}
+  function siteUrl(){return location.origin+location.pathname;}
+  function inviteUrl(code){return siteUrl()+'?room='+code;}
+
+  function showFriends(note,prefill){
+    openOv('friends',`<h2>Doʻstlar bilan</h2>
+      <label class="lbl" for="f-name">Ismingiz</label>
+      <input id="f-name" class="inp" maxlength="20" autocomplete="nickname" value="${esc(SET.name||'')}" placeholder="Masalan, Abdumumin">
+      <div class="lbl">Yangi xona</div>
+      ${optRow('f-mode',[[2,'1 × 1','ikki kishi'],[3,'3 kishi','har kim oʻzi uchun'],[4,'2 × 2','toʻrt kishi']],setup.n)}
+      ${optRow('f-target',[[6,'6'],[12,'12'],[24,'24']],setup.target)}
+      <button type="button" class="btn" id="f-create">Xona ochish</button>
+      <div class="lbl">Doʻstingiz xonasiga kirish</div>
+      <div class="joinrow"><input id="f-code" class="inp code" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="1234" aria-label="Xona kodi" value="${esc(prefill||'')}"><button type="button" class="btn alt" id="f-join">Kirish</button></div>
+      <p class="note" id="f-note">${note?esc(note):'Xona ochgan odam kodni yoki taklif havolasini Telegram orqali yuboradi. Internet kerak.'}</p>
+      <div class="btnrow"><button type="button" class="btn alt" id="f-back">Orqaga</button></div>`);
+    bindOpts('f-mode',v=>setup.n=+v);bindOpts('f-target',v=>setup.target=+v);
+    const nameIn=$('f-name');nameIn.addEventListener('input',()=>{SET.name=nameIn.value;saveSet();});
+    $('f-back').addEventListener('click',showMenu);
+    const codeIn=$('f-code');codeIn.addEventListener('input',()=>{codeIn.value=codeIn.value.replace(/[^0-9]/g,'');});
+    $('f-create').addEventListener('click',()=>{$('f-create').disabled=true;$('f-note').textContent='Xona ochilmoqda…';hostCreate();});
+    $('f-join').addEventListener('click',()=>{const c=codeIn.value.trim();if(!/^[0-9]{4}$/.test(c)){$('f-note').textContent='4 xonali raqamli kodni kiriting.';return;}joinRoom(c);});
+    if(prefill&&!SET.name)nameIn.focus();
+  }
+
+  function leaveNet(){
+    if(!NET)return;
+    const n=NET;NET=null;
+    try{
+      if(n.host){Object.values(n.conns||{}).forEach(c=>{try{c.send({t:'closed'});}catch(e){}});}
+      else if(n.conn){n.conn.close();}
+    }catch(e){}
+    setTimeout(()=>{try{n.peer&&n.peer.destroy();}catch(e){}},300);
+  }
+
+  function roomBody(){return {code:NET.code,host:NET.pid,n:NET.n,target:NET.target,status:NET.status,members:NET.members,seats:NET.seats,state:NET.state||null,rev:NET.rev};}
+  function pushRoom(){
+    if(!NET||!NET.host)return;
+    const m={t:'room',room:roomBody()};
+    Object.values(NET.conns).forEach(c=>{try{if(c.open)c.send(m);}catch(e){}});
+  }
+
+  function openPeer(Peer,id){
+    return new Promise(res=>{
+      let done=false;
+      const peer=id?new Peer(id,{debug:0}):new Peer({debug:0});
+      const fin=v=>{if(done)return;done=true;res(v);};
+      peer.on('open',()=>fin({peer}));
+      peer.on('error',e=>fin({peer,err:e&&e.type||'error'}));
+      setTimeout(()=>fin({peer,err:'timeout'}),15000);
+    });
+  }
+
+  async function hostCreate(){
+    leaveNet();stopAll();G=null;clearBoard();
+    let Peer;try{Peer=await loadPeer();}catch(e){showFriends('Internetga ulanib boʻlmadi. Ulanishni tekshirib, qayta urinib koʻring.');return;}
+    const me=myPid();
+    for(let i=0;i<6;i++){
+      const code=genCode();
+      const r=await openPeer(Peer,PEER_PREFIX+code);
+      if(!r.err){
+        NET={peer:r.peer,host:true,code,pid:me,n:setup.n,target:setup.target,status:'lobby',members:{[me]:{name:myName(),online:true}},seats:new Array(setup.n).fill('bot'),state:null,rev:0,lastSeq:{},conns:{}};
+        NET.seats[0]=me;
+        const n=NET;
+        r.peer.on('connection',c=>{if(NET===n)hostConn(c);});
+        r.peer.on('disconnected',()=>{if(NET===n){try{r.peer.reconnect();}catch(e){}}});
+        showLobby();return;
+      }
+      try{r.peer.destroy();}catch(e){}
+      if(r.err!=='unavailable-id'){showFriends('Xona ochilmadi: ulanish serveriga yetib boʻlmadi. Qayta urinib koʻring.');return;}
+    }
+    showFriends('Xona ochilmadi. Qayta urinib koʻring.');
+  }
+
+  function hostConn(conn){
+    const n=NET;
+    conn.on('data',m=>{
+      if(NET!==n||!m||typeof m!=='object')return;
+      if(m.t==='hello'&&typeof m.pid==='string'){
+        const p=m.pid.slice(0,40);conn.pid=p;
+        const old=n.conns[p];if(old&&old!==conn){try{old.close();}catch(e){}}
+        n.conns[p]=conn;
+        const nm=String(m.name||'Mehmon').slice(0,20);
+        n.members[p]=Object.assign(n.members[p]||{},{name:nm,online:true});
+        if(n.status==='playing'&&G){const seat=n.seats.indexOf(p);if(seat>0)G.players[seat].name=nm;}
+        try{conn.send({t:'room',room:roomBody()});}catch(e){}
+        pushRoom();if(ovKind==='lobby')showLobby();
+      }else if(m.t==='move'&&conn.pid){
+        const seq=+m.seq||0;
+        if(seq>(n.lastSeq[conn.pid]||0)){n.lastSeq[conn.pid]=seq;if(m.move)applyRemote(conn.pid,m.move);}
+      }
+    });
+    const gone=()=>{
+      if(NET!==n||!conn.pid||n.conns[conn.pid]!==conn)return;
+      delete n.conns[conn.pid];
+      if(n.status==='lobby'&&!n.seats.includes(conn.pid))delete n.members[conn.pid];
+      else if(n.members[conn.pid])n.members[conn.pid].online=false;
+      pushRoom();if(ovKind==='lobby')showLobby();
+    };
+    conn.on('close',gone);conn.on('error',gone);
+  }
+
+  function applyRemote(p,mv){
+    if(!G||NET.status!=='playing')return;
+    const seat=NET.seats.indexOf(p);if(seat<0)return;
+    const t=mv.type;
+    if(['lead','beat','discard','pass'].includes(t)){
+      const ids=Array.isArray(mv.ids)?mv.ids:[];
+      const cards=ids.map(id=>G.players[seat].hand.find(c=>c.id===id)).filter(Boolean);
+      if(cards.length!==ids.length){pushRoom();return;}
+      if(!G.act(seat,t,cards))changed();else pushRoom();
+    }else if(t==='bura'){
+      if(!G.declareBura(seat))changed();else pushRoom();
+    }else if(t==='collect'){
+      if(G.phase==='resolve')collectNow();
+    }else if(t==='next'){
+      if(G.phase==='roundOver'&&!G.result.matchOver){if(ovKind==='round')closeOv();G.nextRound(null);changed();}
+    }
+  }
+
+  function seatRoles(n){if(n===2)return [[1,'Raqib']];if(n===3)return [[1,'Raqib 1 (chapda)'],[2,'Raqib 2 (oʻngda)']];return [[2,'Sherik'],[1,'Raqib 1 (chapda)'],[3,'Raqib 2 (oʻngda)']];}
+
+  function shareInvite(code){
+    const url=inviteUrl(code);
+    const text=`Buxoro Burkozyoli: men bilan oʻyna! Xona kodi ${code}`;
+    const tgLink=`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+    if(TG&&TG.openTelegramLink){try{TG.openTelegramLink(tgLink);return;}catch(e){}}
+    window.open(tgLink,'_blank');
+  }
+  function copyInvite(code,btn){
+    const url=inviteUrl(code);
+    const ok=()=>{btn.textContent='Nusxalandi';setTimeout(()=>{btn.textContent='Havolani nusxalash';},1600);};
+    const fail=()=>{const nt=$('l-note');if(nt){nt.textContent=url;}btn.textContent='Havola pastda';};
+    try{navigator.clipboard.writeText(url).then(ok,fail);}catch(e){fail();}
+  }
+
+  function showLobby(){
+    if(!NET)return;
+    const host=NET.host;
+    const R=host?{n:NET.n,target:NET.target,members:NET.members,seats:NET.seats,host:NET.pid}:(NET.room||null);
+    if(!R){openOv('lobby',`<h2>Xonaga ulanmoqda…</h2><div class="codebox"><span>Kodi</span><b class="bigcode">${esc(NET.code)}</b></div><div class="btnrow"><button type="button" class="btn alt" id="l-leave">Chiqish</button></div>`);$('l-leave').addEventListener('click',()=>{leaveNet();showFriends();});return;}
+    const mem=R.members||{};
+    const nameOf=id=>id==='bot'?'Bot':(mem[id]?mem[id].name:'?');
+    const others=Object.keys(mem).filter(id=>id!==R.host);
+    let seatsHtml='';
+    for(const [s,role] of seatRoles(R.n)){
+      const cur=R.seats[s];
+      if(host){
+        seatsHtml+=`<label class="seatpick"><span>${role}</span><select data-s="${s}" class="inp">
+          <option value="bot"${cur==='bot'?' selected':''}>Bot</option>
+          ${others.map(id=>`<option value="${esc(id)}"${cur===id?' selected':''}>${esc(nameOf(id))}</option>`).join('')}
+        </select></label>`;
+      }else{
+        const mine=cur===NET.pid;
+        seatsHtml+=`<div class="seatpick"><span>${role}</span><b${mine?' class="me"':''}>${esc(nameOf(cur))}${mine?' (siz)':''}</b></div>`;
+      }
+    }
+    const list=Object.keys(mem).map(id=>`<li>${esc(mem[id].name)}${id===R.host?' · xost':''}${id===NET.pid?' (siz)':''}${mem[id].online===false?' · aloqa yoʻq':''}</li>`).join('');
+    const mySeat=R.seats.indexOf(NET.pid);
+    openOv('lobby',`<h2>Xona</h2>
+      <div class="codebox"><span>Kodi</span><b class="bigcode">${esc(NET.code)}</b></div>
+      ${host?`<div class="btnrow"><button type="button" class="btn tg" id="l-tg">Telegram orqali taklif qilish</button><button type="button" class="btn alt" id="l-copy">Havolani nusxalash</button></div>`:''}
+      <p id="l-note">${host?'Doʻstlaringiz havolani ochsa, xonaga oʻzi kiradi. Yoki “Doʻstlar bilan” boʻlimida kodni kiritadi.':'Xost oʻrinlarni belgilab, oʻyinni boshlaydi.'}</p>
+      <div class="lbl">${({2:'1 × 1',3:'3 kishi, har kim oʻzi uchun',4:'2 × 2'})[R.n]} · ${R.target} shtrafgacha</div>
+      <div class="seats">${seatsHtml}</div>
+      <div class="lbl">Xonada</div><ul class="members">${list}</ul>
+      ${!host&&mySeat<0?'<p class="note">Xost sizni hali oʻringa qoʻymadi.</p>':''}
+      <div class="btnrow">${host?'<button type="button" class="btn" id="l-start">Boshlash</button>':''}<button type="button" class="btn alt" id="l-leave">Chiqish</button></div>`);
+    if(host){
+      $('sheet').querySelectorAll('select[data-s]').forEach(sl=>sl.addEventListener('change',()=>{
+        const s=+sl.dataset.s,v=sl.value;
+        for(let i=1;i<NET.seats.length;i++)if(i!==s&&NET.seats[i]===v&&v!=='bot')NET.seats[i]='bot';
+        NET.seats[s]=v;pushRoom();showLobby();
+      }));
+      $('l-start').addEventListener('click',hostStart);
+      $('l-tg').addEventListener('click',()=>shareInvite(NET.code));
+      $('l-copy').addEventListener('click',e=>copyInvite(NET.code,e.currentTarget));
+    }
+    $('l-leave').addEventListener('click',()=>{leaveNet();G=null;clearBoard();showFriends();});
+  }
+
+  function hostStart(){
+    let b=0;
+    const names=NET.seats.map((id,i)=>i===0?NET.members[id].name:(id==='bot'?`Bot ${++b}`:NET.members[id].name));
+    stopAll();ME=0;
+    G=new Game({n:NET.n,target:NET.target,names});
+    G.players.forEach((pl,i)=>pl.bot=NET.seats[i]==='bot');
+    showColor();
+  }
+
+  async function joinRoom(code){
+    leaveNet();stopAll();G=null;clearBoard();
+    let Peer;try{Peer=await loadPeer();}catch(e){showFriends('Internetga ulanib boʻlmadi. Ulanishni tekshirib, qayta urinib koʻring.',code);return;}
+    NET={host:false,code,pid:myPid(),room:null,lastRev:-1,waiting:false,tries:0};
+    const n=NET;
+    showLobby();
+    const r=await openPeer(Peer);
+    if(NET!==n){try{r.peer.destroy();}catch(e){}return;}
+    if(r.err){leaveNet();showFriends('Ulanish serveriga yetib boʻlmadi. Qayta urinib koʻring.',code);return;}
+    n.peer=r.peer;
+    r.peer.on('error',e=>{
+      if(NET!==n)return;
+      if(e&&e.type==='peer-unavailable'&&!n.room){leaveNet();showFriends(`${code} kodli xona topilmadi. Kodni tekshiring.`,code);}
+    });
+    r.peer.on('disconnected',()=>{if(NET===n){try{r.peer.reconnect();}catch(e){}}});
+    connectHost(n);
+    setTimeout(()=>{if(NET===n&&!n.room){leaveNet();showFriends('Xonaga ulanib boʻlmadi. Kodni tekshiring yoki boshqa internetdan (Wi-Fi) urinib koʻring.',code);}},20000);
+  }
+  function connectHost(n){
+    const conn=n.peer.connect(PEER_PREFIX+n.code,{reliable:true,serialization:'json'});
+    n.conn=conn;
+    conn.on('open',()=>{n.tries=0;conn.send({t:'hello',pid:n.pid,name:myName()});if(msg==='Xost bilan aloqa uzildi'){msg='';if(G)render();}});
+    conn.on('data',m=>{
+      if(NET!==n||!m)return;
+      if(m.t==='room'&&m.room)onRoom(m.room);
+      else if(m.t==='closed'){leaveNet();G=null;clearBoard();showFriends('Xost xonani yopdi.');}
+    });
+    conn.on('close',()=>{
+      if(NET!==n||n.conn!==conn)return;
+      if(n.tries++<6){msg='Xost bilan aloqa uzildi';if(G)render();setTimeout(()=>{if(NET===n)connectHost(n);},2000);}
+      else{leaveNet();G=null;clearBoard();showFriends('Xost bilan aloqa uzildi.');}
+    });
+  }
+  function sendMove(move){
+    const n=NET;if(!n)return;
+    if(!n.conn||!n.conn.open){n.waiting=false;msg='Aloqa yoʻq, biroz kuting';if(G)render();return;}
+    try{n.conn.send({t:'move',seq:Date.now(),move});}catch(e){n.waiting=false;msg='Yuborilmadi, qayta urinib koʻring';if(G)render();}
+  }
+
+  function onRoom(r){
+    NET.room=r;
+    if(r.status==='lobby'||!r.state){
+      if(G){G=null;stopAll();clearBoard();}
+      if(['lobby','round'].includes(ovKind)||!ovKind)showLobby();
+      return;
+    }
+    if(r.rev!==NET.lastRev){
+      if(dealing){NET.pending=true;return;}
+      applyRoomState(r);
+    }
+  }
+  function applyRoomState(r){
+    NET.lastRev=r.rev;NET.waiting=false;
+    const seat=r.seats.indexOf(NET.pid);
+    ME=seat<0?0:seat;
+    G=hydrate(r.state);
+    const seq=(G.dealLog||[]).slice();G.dealLog=[];
+    if(['lobby','color','color2','friends'].includes(ovKind))closeOv();
+    const done=()=>{
+      render();
+      if(G.phase==='roundOver')showRound();
+      else if(ovKind==='round')closeOv();
+      if(NET&&NET.pending){NET.pending=false;if(NET.room&&NET.room.rev!==NET.lastRev)applyRoomState(NET.room);}
+    };
+    if(seq.length)runDeal(seq,done);else done();
+  }
+
+  /* ---------- wiring ---------- */
+  $('menuBtn').addEventListener('click',showMenu);
+  const fsBtn=$('fsBtn');
+  if(!document.documentElement.requestFullscreen)fsBtn.hidden=true;
+  fsBtn.addEventListener('click',()=>{
+    if(TG&&TG.requestFullscreen){try{TG.isFullscreen?TG.exitFullscreen():TG.requestFullscreen();}catch(e){}return;}
+    try{
+      if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});
+      else document.documentElement.requestFullscreen().catch(()=>{fsBtn.hidden=true;});
+    }catch(e){fsBtn.hidden=true;}
+  });
+  $('felt').addEventListener('click',()=>{
+    if(!G)return;
+    if(G.phase==='resolve'){collectNow();return;}
+    const a=tableAction();
+    if(a)doAct(a.type,a.cards);
+  });
+  window.addEventListener('resize',()=>{if(G&&!dealing)render();});
+
+  function snapshot(){return (G&&!NET)?{g:JSON.parse(JSON.stringify(G))}:{};}
+  try{window.claude?.hot?.snapshot?.(snapshot);}catch(e){}
+  function start(data){
+    if(data&&data.g){
+      G=Object.assign(Object.create(Game.prototype),data.g);
+      if(G.phase==='idle'||!G.openCard){G=null;showMenu();return;}
+      G.dealLog=[];shown=G.pile.length;shownTrick=G.trickNo;shownRevealed=G.hiddenRevealed;
+      after();return;
+    }
+    showMenu();
+    const q=new URLSearchParams(location.search).get('room');
+    if(q&&/^[0-9]{4}$/.test(q))openInvite(q);
+  }
+  if(window.Telegram&&window.Telegram.WebApp)setTimeout(initTG,0);else window.__tgReady=()=>initTG();
+  if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+  const hot=window.claude?.hot;
+  try{if(hot?.ready)hot.ready(start);else start(hot?.data??{});}catch(e){start({});}
+})();
+</script>
+
+</body>
+</html>
