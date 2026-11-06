@@ -1,0 +1,17 @@
+{
+  "name": "Kelime — Turk tili A1 so'zlari",
+  "short_name": "Kelime",
+  "description": "Turk tili A1 lug'atidagi so'zlarni test, kartochka va o'yinlar orqali yodlang",
+  "lang": "uz",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f4fa",
+  "theme_color": "#ff4d5a",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kelime — Turk tili A1 so'zlari</title>
+<meta name="description" content="Turk tili A1 lug'atidagi 927 ta so'zni test, kartochka va o'yinlar orqali yodlang.">
+<meta name="theme-color" content="#f5f4fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d0d18" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Kelime">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f4fa; --surface:#ffffff; --surface-2:#efeef7; --surface-3:#e6e4f2;
+  --text:#15142a; --muted:#6b6a85; --line:rgba(21,20,42,.08);
+  --accent:#ff4d5a; --accent-2:#ff8a3d; --violet:#6d5dfc; --teal:#0ea5a4; --amber:#f59e0b;
+  --ok:#16a34a; --ok-bg:#dcfce7; --ok-line:#86efac;
+  --bad:#e11d48; --bad-bg:#ffe4e6; --bad-line:#fda4af;
+  --soft-red:#ffe8ea; --soft-violet:#ecebff; --soft-teal:#d9f4f3; --soft-amber:#fff1d6;
+  --shadow:0 1px 2px rgba(21,20,42,.05),0 10px 30px -12px rgba(21,20,42,.14);
+  --shadow-lg:0 20px 50px -20px rgba(21,20,42,.35);
+  --r:22px; --r-sm:14px;
+  --grad:linear-gradient(135deg,#ff4d5a 0%,#ff8a3d 100%);
+  --grad-2:linear-gradient(135deg,#6d5dfc 0%,#a46bff 100%);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d0d18; --surface:#17172a; --surface-2:#202038; --surface-3:#2a2a46;
+    --text:#f1f0ff; --muted:#9d9cbc; --line:rgba(255,255,255,.08);
+    --ok:#4ade80; --ok-bg:rgba(34,197,94,.14); --ok-line:rgba(74,222,128,.45);
+    --bad:#fb7185; --bad-bg:rgba(244,63,94,.14); --bad-line:rgba(251,113,133,.45);
+    --soft-red:rgba(255,77,90,.16); --soft-violet:rgba(109,93,252,.2); --soft-teal:rgba(14,165,164,.18); --soft-amber:rgba(245,158,11,.16);
+    --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 30px -14px rgba(0,0,0,.6);
+    --shadow-lg:0 20px 50px -20px rgba(0,0,0,.8);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d0d18; --surface:#17172a; --surface-2:#202038; --surface-3:#2a2a46;
+  --text:#f1f0ff; --muted:#9d9cbc; --line:rgba(255,255,255,.08);
+  --ok:#4ade80; --ok-bg:rgba(34,197,94,.14); --ok-line:rgba(74,222,128,.45);
+  --bad:#fb7185; --bad-bg:rgba(244,63,94,.14); --bad-line:rgba(251,113,133,.45);
+  --soft-red:rgba(255,77,90,.16); --soft-violet:rgba(109,93,252,.2); --soft-teal:rgba(14,165,164,.18); --soft-amber:rgba(245,158,11,.16);
+  --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 30px -14px rgba(0,0,0,.6);
+  --shadow-lg:0 20px 50px -20px rgba(0,0,0,.8);
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:-20% -10% auto -10%;height:520px;z-index:-1;pointer-events:none;
+  background:radial-gradient(40% 60% at 15% 30%,rgba(255,77,90,.16),transparent 70%),
+             radial-gradient(35% 55% at 85% 10%,rgba(109,93,252,.16),transparent 70%);
+  filter:blur(10px);
+}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var(--violet) 55%,transparent);outline-offset:2px}
+input{font:inherit;color:inherit}
+svg{display:block}
+.wrap{max-width:1180px;margin:0 auto;padding:max(14px,env(safe-area-inset-top)) 16px calc(28px + env(safe-area-inset-bottom))}
+.screen{animation:enter .35s cubic-bezier(.2,.8,.2,1);max-width:600px;margin:0 auto}
+.home-grid{display:grid;grid-template-columns:minmax(0,1fr)}
+.area-modes .h2,.area-units .h2{margin-top:26px}
+.kbd-hint{display:none;text-align:center;color:var(--muted);font-size:13px;margin-top:16px}
+.kbd-hint kbd{font-family:inherit;font-weight:700;background:var(--surface);box-shadow:var(--shadow);border-radius:6px;padding:2px 7px;margin:0 2px;color:var(--text)}
+.recs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.recs div{background:var(--surface);border-radius:16px;padding:12px 10px;box-shadow:var(--shadow)}
+.recs b{display:block;font-size:18px;letter-spacing:-.02em}
+.recs span{display:block;font-size:11.5px;color:var(--muted);font-weight:600;line-height:1.3}
+@keyframes enter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:10px;margin:4px 0 18px}
+.brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.logo{width:40px;height:40px;border-radius:13px;background:var(--grad);display:grid;place-items:center;color:#fff;font-weight:800;font-size:20px;box-shadow:0 8px 20px -8px rgba(255,77,90,.7)}
+.brand b{display:block;font-size:19px;letter-spacing:-.02em;line-height:1.1}
+.brand small{color:var(--muted);font-size:12.5px;font-weight:500}
+.pill{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 12px;border-radius:999px;background:var(--surface);box-shadow:var(--shadow);font-weight:700;font-size:14px}
+.pill svg{width:18px;height:18px}
+.icon-btn{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:var(--surface);box-shadow:var(--shadow);transition:transform .15s}
+.icon-btn:active{transform:scale(.93)}
+.icon-btn svg{width:20px;height:20px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-radius:26px;padding:20px;color:#fff;background:var(--grad);box-shadow:0 18px 40px -18px rgba(255,77,90,.75)}
+.hero::after{content:"";position:absolute;width:220px;height:220px;right:-70px;top:-90px;border-radius:50%;background:rgba(255,255,255,.14)}
+.hero::before{content:"";position:absolute;width:140px;height:140px;right:40px;bottom:-80px;border-radius:50%;background:rgba(255,255,255,.1)}
+.hero-row{display:flex;align-items:center;gap:16px;position:relative;z-index:1}
+.hero h1{margin:0 0 4px;font-size:22px;letter-spacing:-.02em;line-height:1.2}
+.hero p{margin:0;opacity:.92;font-size:14px}
+.ring{width:84px;height:84px;flex:none;position:relative}
+.ring svg{width:84px;height:84px;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-weight:800;font-size:18px;line-height:1}
+.ring .v small{display:block;font-size:10.5px;font-weight:600;opacity:.85;margin-top:2px}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;position:relative;z-index:1}
+.hero-stats div{background:rgba(255,255,255,.16);border-radius:14px;padding:9px 10px;backdrop-filter:blur(6px)}
+.hero-stats b{display:block;font-size:17px;letter-spacing:-.01em}
+.hero-stats span{font-size:11.5px;opacity:.9}
+
+.h2{display:flex;align-items:baseline;justify-content:space-between;margin:26px 2px 12px}
+.h2 h2{margin:0;font-size:17px;letter-spacing:-.01em}
+.h2 span{color:var(--muted);font-size:13px}
+
+/* mode cards */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mode{position:relative;text-align:left;background:var(--surface);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);transition:transform .18s,box-shadow .18s;display:flex;flex-direction:column;gap:12px;min-height:138px}
+.mode:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.mode:active{transform:scale(.97)}
+.mode .ic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center}
+.mode .ic svg{width:22px;height:22px}
+.mode b{display:block;font-size:15.5px;letter-spacing:-.01em}
+.mode small{display:block;color:var(--muted);font-size:12.5px;line-height:1.35;margin-top:2px}
+.mode .rec{position:absolute;top:14px;right:14px;font-size:11.5px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:4px}
+.mode .rec svg{width:13px;height:13px}
+.c-red .ic{background:var(--soft-red);color:var(--accent)}
+.c-violet .ic{background:var(--soft-violet);color:var(--violet)}
+.c-teal .ic{background:var(--soft-teal);color:var(--teal)}
+.c-amber .ic{background:var(--soft-amber);color:var(--amber)}
+.wide{grid-column:1/-1;flex-direction:row;align-items:center;min-height:0}
+.wide .txt{flex:1}
+.wide .go{width:36px;height:36px;border-radius:12px;background:var(--surface-2);display:grid;place-items:center;flex:none}
+.wide .go svg{width:18px;height:18px}
+.blitz{background:var(--grad-2);color:#fff;box-shadow:0 16px 36px -18px rgba(109,93,252,.8)}
+.blitz .ic{background:rgba(255,255,255,.18);color:#fff}
+.blitz small{color:rgba(255,255,255,.85)}
+.blitz .go{background:rgba(255,255,255,.18)}
+.badge{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 7px;border-radius:999px;background:var(--accent);color:#fff;font-size:12px;font-weight:800}
+.mode[disabled]{opacity:.55;pointer-events:none}
+
+/* units */
+.units{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.unit{background:var(--surface);border-radius:18px;padding:13px 12px;text-align:left;box-shadow:var(--shadow);transition:transform .15s}
+.unit:active{transform:scale(.96)}
+.unit b{display:block;font-size:15px}
+.unit small{color:var(--muted);font-size:12px}
+.prog{height:6px;border-radius:9px;background:var(--surface-3);overflow:hidden;margin-top:9px}
+.prog i{display:block;height:100%;border-radius:9px;background:var(--grad);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.foot{text-align:center;color:var(--muted);font-size:12.5px;margin-top:26px}
+
+/* setup */
+.head{display:flex;align-items:center;gap:12px;margin:4px 0 20px}
+.head h1{margin:0;font-size:21px;letter-spacing:-.02em;line-height:1.2}
+.head p{margin:2px 0 0;color:var(--muted);font-size:13.5px}
+.panel{background:var(--surface);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);margin-bottom:12px}
+.panel h3{margin:0 0 12px;font-size:14px;letter-spacing:.01em;color:var(--muted);font-weight:700;text-transform:uppercase}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{height:40px;padding:0 14px;border-radius:12px;background:var(--surface-2);font-weight:650;font-size:14.5px;display:inline-flex;align-items:center;gap:6px;transition:background .15s,color .15s,transform .12s;border:1.5px solid transparent}
+.chip:active{transform:scale(.95)}
+.chip small{font-weight:600;color:var(--muted);font-size:12px}
+.chip.on{background:var(--text);color:var(--bg)}
+.chip.on small{color:inherit;opacity:.7}
+.chip[disabled]{opacity:.4;pointer-events:none}
+.range{display:flex;align-items:center;gap:10px}
+.range input{width:100%;height:46px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface-2);padding:0 14px;font-weight:700;font-size:16px}
+.range span{color:var(--muted);font-weight:700}
+.hint{color:var(--muted);font-size:13px;margin:10px 0 0}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--surface-2);border-radius:14px;padding:4px;gap:4px}
+.seg button{height:40px;border-radius:11px;font-weight:700;font-size:14.5px;color:var(--muted);transition:all .15s}
+.seg button.on{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+.sticky{position:sticky;bottom:0;padding:14px 0 calc(6px + env(safe-area-inset-bottom));background:linear-gradient(to top,var(--bg) 70%,transparent)}
+.btn{width:100%;height:56px;border-radius:18px;font-weight:800;font-size:16.5px;display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .12s,opacity .2s,filter .2s;letter-spacing:-.01em}
+.btn:active{transform:scale(.98)}
+.btn svg{width:20px;height:20px}
+.btn-main{background:var(--grad);color:#fff;box-shadow:0 14px 30px -14px rgba(255,77,90,.9)}
+.btn-dark{background:var(--text);color:var(--bg)}
+.btn-ghost{background:var(--surface);box-shadow:var(--shadow)}
+.btn[disabled]{opacity:.45;pointer-events:none;filter:grayscale(.5)}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.count-note{text-align:center;color:var(--muted);font-size:13.5px;margin-bottom:10px;font-weight:600}
+.count-note b{color:var(--text)}
+
+/* quiz */
+.qtop{display:flex;align-items:center;gap:12px;margin:4px 0 14px}
+.bar{flex:1;height:12px;border-radius:99px;background:var(--surface-3);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:var(--grad);transition:width .4s cubic-bezier(.2,.8,.2,1);position:relative}
+.bar i::after{content:"";position:absolute;left:8px;right:8px;top:3px;height:3px;border-radius:9px;background:rgba(255,255,255,.35)}
+.bar.time i{background:var(--grad-2);transition:width .1s linear}
+.bar.time.low i{background:linear-gradient(135deg,#e11d48,#ff4d5a)}
+.score{font-weight:800;display:flex;align-items:center;gap:5px;min-width:64px;justify-content:flex-end;font-variant-numeric:tabular-nums}
+.score svg{width:18px;height:18px;color:var(--amber)}
+.qmeta{display:flex;align-items:center;justify-content:space-between;min-height:30px;margin-bottom:10px}
+.tag{font-size:12.5px;font-weight:700;color:var(--muted);background:var(--surface);padding:6px 10px;border-radius:9px;box-shadow:var(--shadow)}
+.combo{font-weight:800;font-size:14px;color:var(--accent);display:flex;align-items:center;gap:4px;animation:pop .35s}
+.combo svg{width:18px;height:18px}
+@keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+.qcard{position:relative;background:var(--surface);border-radius:26px;padding:30px 20px 26px;text-align:center;box-shadow:var(--shadow);margin-bottom:16px;min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.qlabel{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.qword{font-size:clamp(26px,7.5vw,38px);font-weight:800;letter-spacing:-.025em;line-height:1.15;word-break:break-word}
+.qword.long{font-size:clamp(20px,5.5vw,26px)}
+.say{margin-top:14px;width:46px;height:46px;border-radius:15px;background:var(--soft-violet);color:var(--violet);display:grid;place-items:center;transition:transform .15s}
+.say:active{transform:scale(.9)}
+.say svg{width:22px;height:22px}
+.say.sm{width:36px;height:36px;border-radius:11px;margin:0}
+.say.sm svg{width:18px;height:18px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;min-height:60px;padding:12px 14px;border-radius:18px;background:var(--surface);box-shadow:var(--shadow);border:2px solid transparent;font-weight:650;font-size:16px;transition:transform .12s,background .2s,border-color .2s}
+.opt:hover{border-color:var(--line)}
+.opt:active{transform:scale(.985)}
+.opt .k{width:30px;height:30px;border-radius:9px;flex:none;display:grid;place-items:center;background:var(--surface-2);color:var(--muted);font-size:13px;font-weight:800}
+.opt.ok{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok)}
+.opt.ok .k{background:var(--ok);color:#fff}
+.opt.bad{background:var(--bad-bg);border-color:var(--bad-line);color:var(--bad);animation:shake .4s}
+.opt.bad .k{background:var(--bad);color:#fff}
+.opt.dim{opacity:.5}
+.opts.lock .opt{pointer-events:none}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.float{position:fixed;pointer-events:none;font-weight:800;font-size:20px;color:var(--ok);animation:float 0.9s forwards;z-index:50}
+.float.bad{color:var(--bad)}
+@keyframes float{from{opacity:1;transform:translate(-50%,0) scale(.9)}to{opacity:0;transform:translate(-50%,-60px) scale(1.15)}}
+
+/* feedback sheet */
+.fb{position:fixed;left:0;right:0;bottom:0;z-index:30;transform:translateY(calc(100% + 80px));visibility:hidden;transition:transform .32s cubic-bezier(.2,.8,.2,1),visibility 0s .32s}
+.fb.show{transform:none;visibility:visible;transition:transform .32s cubic-bezier(.2,.8,.2,1),visibility 0s}
+.fb-in{max-width:560px;margin:0 auto;padding:18px 16px calc(16px + env(safe-area-inset-bottom));border-radius:26px 26px 0 0;background:var(--surface);box-shadow:0 -20px 50px -20px rgba(0,0,0,.35)}
+.fb-h{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;margin-bottom:6px}
+.fb-h .dot{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;color:#fff}
+.fb-h .dot svg{width:18px;height:18px}
+.fb.ok .fb-h{color:var(--ok)} .fb.ok .dot{background:var(--ok)}
+.fb.bad .fb-h{color:var(--bad)} .fb.bad .dot{background:var(--bad)}
+.fb.soft .fb-h{color:var(--amber)} .fb.soft .dot{background:var(--amber)}
+.fb-ans{display:flex;align-items:center;gap:10px;margin:8px 0 14px;padding:12px 14px;border-radius:16px;background:var(--surface-2)}
+.fb-ans div{flex:1;min-width:0}
+.fb-ans b{display:block;font-size:17px}
+.fb-ans span{color:var(--muted);font-size:14px}
+
+/* typing */
+.tinput{width:100%;height:62px;border-radius:18px;border:2px solid var(--line);background:var(--surface);box-shadow:var(--shadow);padding:0 18px;font-size:21px;font-weight:700;text-align:center;transition:border-color .2s}
+.tinput:focus{outline:none;border-color:var(--violet)}
+.tinput.ok{border-color:var(--ok);color:var(--ok)}
+.tinput.bad{border-color:var(--bad);color:var(--bad);animation:shake .4s}
+.tinput.soft{border-color:var(--amber)}
+.keys{display:flex;justify-content:center;gap:7px;margin:12px 0 16px;flex-wrap:wrap}
+.keys button{width:44px;height:44px;border-radius:13px;background:var(--surface);box-shadow:var(--shadow);font-weight:800;font-size:18px;transition:transform .1s}
+.keys button:active{transform:scale(.9);background:var(--surface-2)}
+
+/* flashcards */
+.stage{position:relative;height:min(62vh,440px);perspective:1400px;margin:6px 0 18px;touch-action:pan-y}
+.fc{position:absolute;inset:0;cursor:grab;user-select:none;-webkit-user-select:none;will-change:transform}
+.fc.anim{transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .35s}
+.fc-in{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.3,1.3,.5,1)}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:30px;background:var(--surface);box-shadow:var(--shadow-lg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px;text-align:center}
+.face.back{transform:rotateY(180deg);background:var(--grad-2);color:#fff}
+.face .qlabel{margin-bottom:14px}
+.face.back .qlabel{color:rgba(255,255,255,.8)}
+.face .big{font-size:clamp(28px,8vw,42px);font-weight:800;letter-spacing:-.025em;line-height:1.15;word-break:break-word}
+.face .big.long{font-size:clamp(21px,6vw,28px)}
+.face .note{margin-top:14px;font-size:14.5px;opacity:.88;max-width:420px}
+.face .tapnote{position:absolute;bottom:18px;left:0;right:0;font-size:12.5px;color:var(--muted);font-weight:600}
+.face.back .say{background:rgba(255,255,255,.2);color:#fff}
+.stamp{position:absolute;top:24px;padding:6px 14px;border-radius:12px;font-weight:800;font-size:18px;border:3px solid;opacity:0;transition:opacity .1s;z-index:3;pointer-events:none}
+.stamp.yes{left:22px;color:var(--ok);border-color:var(--ok);transform:rotate(-12deg)}
+.stamp.no{right:22px;color:var(--bad);border-color:var(--bad);transform:rotate(12deg)}
+.fc-under{position:absolute;inset:14px 18px -10px;border-radius:30px;background:var(--surface);opacity:.55;box-shadow:var(--shadow);transform:scale(.96)}
+.fbtns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fbtns .btn{height:58px}
+.b-no{background:var(--bad-bg);color:var(--bad)}
+.b-yes{background:var(--ok-bg);color:var(--ok)}
+
+/* results */
+.res{text-align:center;padding-top:10px}
+.trophy{width:96px;height:96px;margin:6px auto 14px;border-radius:30px;display:grid;place-items:center;background:var(--grad);color:#fff;box-shadow:0 18px 40px -16px rgba(255,77,90,.8);animation:pop .5s}
+.trophy svg{width:48px;height:48px}
+.res h1{margin:0;font-size:26px;letter-spacing:-.02em}
+.res .big{font-size:46px;font-weight:800;letter-spacing:-.03em;margin:4px 0 2px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.res .sub{color:var(--muted);font-weight:600}
+.newrec{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:7px 14px;border-radius:999px;background:var(--soft-amber);color:var(--amber);font-weight:800;font-size:14px;animation:pop .5s .2s both}
+.newrec svg{width:16px;height:16px}
+.stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:22px 0 18px}
+.stats4 div{background:var(--surface);border-radius:16px;padding:12px 6px;box-shadow:var(--shadow)}
+.stats4 b{display:block;font-size:20px;letter-spacing:-.02em}
+.stats4 span{font-size:11.5px;color:var(--muted);font-weight:600}
+.list{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;text-align:left;margin-bottom:16px}
+.list .li{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
+.list .li:first-child{border-top:0}
+.list .li div{flex:1;min-width:0}
+.list .li b{display:block;font-size:15.5px}
+.list .li span{display:block;color:var(--muted);font-size:13.5px}
+.list .li em{font-style:normal;font-size:11.5px;color:var(--muted);font-weight:700;background:var(--surface-2);padding:3px 7px;border-radius:7px;flex:none}
+.stack{display:grid;gap:10px}
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty .trophy{background:var(--surface-2);color:var(--ok);box-shadow:none}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:40;background:rgba(10,10,25,.45);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;animation:fade .2s}
+@keyframes fade{from{opacity:0}}
+.sheet{width:100%;max-width:560px;background:var(--bg);border-radius:28px 28px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom));animation:up .3s cubic-bezier(.2,.8,.2,1);max-height:90vh;overflow:auto}
+@keyframes up{from{transform:translateY(100%)}}
+.grab{width:42px;height:5px;border-radius:9px;background:var(--surface-3);margin:0 auto 14px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 0}
+.row b{font-size:15px}
+.row small{display:block;color:var(--muted);font-size:12.5px}
+.tg{width:52px;height:32px;border-radius:99px;background:var(--surface-3);position:relative;flex:none;transition:background .2s}
+.tg::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.2);transition:transform .2s}
+.tg.on{background:var(--ok)}
+.tg.on::after{transform:translateX(20px)}
+.danger{color:var(--bad)}
+canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:60}
+@media (min-width:640px){
+  .wrap{padding:30px 24px 40px}
+  .screen{max-width:720px}
+  .screen.home{max-width:760px}
+  .units{grid-template-columns:repeat(6,1fr)}
+  .opts{grid-template-columns:1fr 1fr}
+  .opt{min-height:72px}
+  .qcard{min-height:230px;padding:40px 28px 34px}
+  .qword{font-size:46px}
+  .qword.long{font-size:30px}
+  .stage{height:420px}
+  .fb-in{max-width:720px;margin:0 auto 18px;border-radius:26px}
+  .modal{align-items:center;padding:24px}
+  .sheet{max-width:520px;border-radius:28px;animation:fade .25s}
+  .grab{display:none}
+}
+@media (min-width:1000px){
+  .screen.home{max-width:1180px}
+  .home-grid{grid-template-columns:400px minmax(0,1fr);grid-template-areas:"hero modes" "units modes";column-gap:28px;align-items:start}
+  .area-hero{grid-area:hero}
+  .area-modes{grid-area:modes}
+  .area-units{grid-area:units}
+  .area-modes .h2{margin-top:0}
+  .area-units .units{grid-template-columns:repeat(3,1fr)}
+  .area-units .recs{grid-template-columns:1fr 1fr}
+  .mode{min-height:176px;padding:20px}
+  .mode .ic{width:50px;height:50px;border-radius:16px}
+  .mode b{font-size:17px}
+  .mode small{font-size:13.5px}
+  .wide{min-height:0}
+  .screen.setup{max-width:980px}
+  .setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;align-items:start}
+  .setup .sticky{position:static;background:none;max-width:440px;margin:8px auto 0}
+  .screen.play,.screen.res,.screen.mis{max-width:780px}
+  .stage{height:460px}
+}
+@media (hover:hover) and (pointer:fine){
+  .kbd-hint{display:block}
+}
+@media (max-width:360px){
+  .grid{gap:10px}.mode{padding:14px}
+  .stats4 b{font-size:17px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="fb" id="fb"><div class="fb-in" id="fbIn"></div></div>
+<script src="words.js"></script>
+<script>
+(() => {
+"use strict";
+/* ---------- icons ---------- */
+const P = {
+  arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+  swap:'<path d="M7 7h11l-3-3M17 17H6l3 3"/>',
+  pen:'<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/>',
+  cards:'<rect x="3" y="6" width="14" height="15" rx="3"/><path d="M7 3h11a3 3 0 0 1 3 3v11"/>',
+  zap:'<path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>',
+  target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+  vol:'<path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  back:'<path d="M15 6l-6 6 6 6"/>',
+  flame:'<path d="M12 22c4.4 0 7-2.9 7-6.8 0-3.6-2.5-6.2-4.3-8.2-.4 2-1.4 3.3-2.7 3.8.2-3.3-1.3-6.6-4.5-8.8.3 3.6-1.6 5.7-3.1 7.6C3.6 11.4 5 15 5 15.2 5 19.1 7.6 22 12 22z"/>',
+  star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3z"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  trophy:'<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h3v2a4 4 0 0 1-4 4M7 5H4v2a4 4 0 0 0 4 4"/>',
+  repeat:'<path d="M4 12a8 8 0 0 1 13.7-5.7L20 8.5M20 4v4.5h-4.5M20 12a8 8 0 0 1-13.7 5.7L4 15.5M4 20v-4.5h4.5"/>',
+  home:'<path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1v-9z"/>',
+  book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 19a2 2 0 0 1 2-2h13"/>',
+  play:'<path d="M7 4.5v15l12-7.5-12-7.5z"/>',
+  trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'
+};
+const ic = (n, fill) => `<svg viewBox="0 0 24 24" fill="${fill?'currentColor':'none'}" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
+
+/* ---------- data ---------- */
+const SEC = { i: "İsimler", k: "Kalıp ifadeler", f: "Fiiller" };
+const UNITS = [1,2,3,4,5,6];
+const mainOf = uz => { const m = uz.split("(")[0].trim().replace(/[,;:\s]+$/, ""); return m || uz; };
+const noteOf = uz => { const i = uz.indexOf("("); return i >= 0 ? uz.slice(i).trim() : ""; };
+const clean = t => t.replace(/\([^)]*\)/g, " ").replace(/\s+/g, " ").trim();
+const W = WORDS.map(r => ({ id: r[0] + "-" + r[2], u: r[0], s: r[1], n: r[2], tr: r[3], uz: r[4], uzM: mainOf(r[4]), note: noteOf(r[4]), say: clean(r[3]) }));
+const byId = Object.fromEntries(W.map(w => [w.id, w]));
+const unitTotal = u => W.filter(w => w.u === u).length;
+
+const norm = s => s.toLocaleLowerCase("tr").replace(/[’'`‘ʻʼ]/g, "").replace(/[.,!?;:()\-]/g, " ").replace(/\s+/g, " ").trim();
+const FOLD = { "ğ":"g","ş":"s","ç":"c","ı":"i","ö":"o","ü":"u","â":"a","î":"i","û":"u","i̇":"i" };
+const fold = s => norm(s).replace(/i̇/g, "i").replace(/[ğşçıöüâîû]/g, c => FOLD[c]);
+
+/* ---------- storage ---------- */
+const KEY = "kelime.v1";
+const DEF = { pts:0, ans:0, cor:0, best:{}, mis:{}, mast:{}, day:{d:"",c:0}, streak:{last:"",n:0},
+  set:{ theme:"auto", sound:true, autoSay:false, goal:20 },
+  filter:{ units:[], secs:[], from:"", to:"", count:20, order:"rand", front:"tr" } };
+const clone = o => JSON.parse(JSON.stringify(o));
+function merge(a, b){ for (const k in b) { if (b[k] && typeof b[k] === "object" && !Array.isArray(b[k]) && a[k] && typeof a[k] === "object" && !Array.isArray(a[k])) merge(a[k], b[k]); else a[k] = b[k]; } return a; }
+function load(){ try { const v = JSON.parse(localStorage.getItem(KEY) || "null"); return merge(clone(DEF), v || {}); } catch(e){ return clone(DEF); } }
+let S = load();
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} };
+
+const dstr = d => d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+const today = () => dstr(new Date());
+const yesterday = () => { const d = new Date(); d.setDate(d.getDate()-1); return dstr(d); };
+function touchDay(){
+  const t = today();
+  if (S.day.d !== t) S.day = { d:t, c:0 };
+  if (S.streak.last !== t) { S.streak.n = S.streak.last === yesterday() ? S.streak.n + 1 : 1; S.streak.last = t; }
+}
+const streakNow = () => (S.streak.last === today() || S.streak.last === yesterday()) ? S.streak.n : 0;
+const dayCount = () => S.day.d === today() ? S.day.c : 0;
+const mastered = (list = W) => list.filter(w => (S.mast[w.id] || 0) >= 3).length;
+const misCount = () => Object.keys(S.mis).filter(id => byId[id]).length;
+
+function record(w, ok, pts){
+  touchDay();
+  S.ans++;
+  if (ok) {
+    S.cor++; S.pts += pts; S.day.c++;
+    S.mast[w.id] = (S.mast[w.id] || 0) + 1;
+    if (S.mis[w.id]) { S.mis[w.id]--; if (S.mis[w.id] <= 0) delete S.mis[w.id]; }
+  } else {
+    S.mis[w.id] = 2; S.mast[w.id] = 0;
+  }
+  save();
+}
+function flashMark(w, ok){
+  touchDay();
+  if (ok) { S.mast[w.id] = (S.mast[w.id] || 0) + 1; if (S.mis[w.id]) { S.mis[w.id]--; if (S.mis[w.id] <= 0) delete S.mis[w.id]; } }
+  else { S.mis[w.id] = 2; S.mast[w.id] = 0; }
+  save();
+}
+
+/* ---------- helpers ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const app = $("#app"), fb = $("#fb"), fbIn = $("#fbIn");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+const tagOf = w => `${w.u}-ünite · ${SEC[w.s]} · №${w.n}`;
+
+function applyTheme(){ const t = S.set.theme; if (t === "auto") document.documentElement.removeAttribute("data-theme"); else document.documentElement.setAttribute("data-theme", t); }
+applyTheme();
+
+/* speech */
+let trVoice = null;
+function loadVoices(){ try { const v = speechSynthesis.getVoices(); trVoice = v.find(x => /^tr(-|_|$)/i.test(x.lang)) || null; } catch(e){} }
+if ("speechSynthesis" in window) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+function say(t){
+  if (!("speechSynthesis" in window)) return;
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = "tr-TR"; if (trVoice) u.voice = trVoice; u.rate = .9; speechSynthesis.speak(u); } catch(e){}
+}
+
+/* sounds */
+let ac = null;
+function tone(seq){
+  if (!S.set.sound) return;
+  try {
+    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+    if (ac.state === "suspended") ac.resume();
+    const t0 = ac.currentTime;
+    seq.forEach(([f, d, st, type = "sine", vol = .12]) => {
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.type = type; o.frequency.value = f;
+      g.gain.setValueAtTime(0, t0 + st); g.gain.linearRampToValueAtTime(vol, t0 + st + .012);
+      g.gain.exponentialRampToValueAtTime(.0001, t0 + st + d);
+      o.connect(g).connect(ac.destination); o.start(t0 + st); o.stop(t0 + st + d + .03);
+    });
+  } catch(e){}
+}
+const SND = {
+  ok: () => tone([[660,.12,0],[988,.2,.07]]),
+  bad: () => tone([[196,.28,0,"triangle",.16],[165,.3,.08,"triangle",.1]]),
+  flip: () => tone([[520,.06,0,"sine",.05]]),
+  win: () => tone([[523,.16,0],[659,.16,.12],[784,.16,.24],[1047,.4,.36]])
+};
+const buzz = () => { try { navigator.vibrate && navigator.vibrate(40); } catch(e){} };
+
+function floatText(txt, x, y, bad){
+  const d = document.createElement("div"); d.className = "float" + (bad ? " bad" : ""); d.textContent = txt;
+  d.style.left = x + "px"; d.style.top = y + "px"; document.body.appendChild(d); setTimeout(() => d.remove(), 900);
+}
+
+function confetti(){
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const c = document.createElement("canvas"); c.className = "confetti"; document.body.appendChild(c);
+  const x = c.getContext("2d"), dpr = Math.min(2, devicePixelRatio || 1);
+  const resize = () => { c.width = innerWidth * dpr; c.height = innerHeight * dpr; }; resize();
+  const cols = ["#ff4d5a","#ff8a3d","#6d5dfc","#a46bff","#0ea5a4","#f59e0b"];
+  const ps = Array.from({ length: 140 }, () => ({ x: innerWidth / 2 + (Math.random() - .5) * 120, y: innerHeight * .35, vx: (Math.random() - .5) * 13, vy: -Math.random() * 13 - 4, r: Math.random() * 6 + 4, a: Math.random() * 6, va: (Math.random() - .5) * .3, c: cols[Math.random() * cols.length | 0] }));
+  const t0 = performance.now();
+  (function f(t){
+    const el = t - t0; x.clearRect(0, 0, c.width, c.height);
+    ps.forEach(p => { p.vy += .32; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.a += p.va;
+      x.save(); x.translate(p.x * dpr, p.y * dpr); x.rotate(p.a); x.globalAlpha = Math.max(0, 1 - el / 2600); x.fillStyle = p.c; x.fillRect(-p.r * dpr / 2, -p.r * dpr / 4, p.r * dpr, p.r * dpr / 2); x.restore(); });
+    if (el < 2600) requestAnimationFrame(f); else c.remove();
+  })(t0);
+}
+
+/* ---------- routing ---------- */
+let timers = [];
+const later = (fn, ms) => { const t = setTimeout(fn, ms); timers.push(t); return t; };
+function stopTimers(){ timers.forEach(clearTimeout); timers = []; if (blitzInt) { clearInterval(blitzInt); blitzInt = null; } hideFb(); }
+if (history.state && history.state.k) history.replaceState(null, "");
+function go(fn){ stopTimers(); if (!(history.state && history.state.k)) history.pushState({ k:1 }, ""); fn(); scrollTo(0, 0); }
+function goHome(){ stopTimers(); if (history.state && history.state.k) history.back(); else renderHome(); }
+addEventListener("popstate", () => { stopTimers(); sess = null; flash = null; closeModal(); renderHome(); });
+
+/* ---------- modes ---------- */
+const MODES = {
+  tr:   { t:"Turkcha → O'zbekcha", s:"Turkcha so'zning tarjimasini toping", icon:"arrow", c:"c-red" },
+  uz:   { t:"O'zbekcha → Turkcha", s:"Tarjimaga mos turkcha so'zni toping", icon:"swap", c:"c-violet" },
+  type: { t:"Yozib javob", s:"Turkcha so'zni o'zingiz yozing", icon:"pen", c:"c-teal" },
+  flash:{ t:"Kartochkalar", s:"Ag'darib, surib yodlang", icon:"cards", c:"c-amber" },
+  blitz:{ t:"60 soniya chellenj", s:"Vaqt tugaguncha imkon qadar ko'p toping", icon:"zap" },
+  mix:  { t:"Xatolar ustida ishlash", s:"Xato qilingan so'zlarni mustahkamlang", icon:"target" }
+};
+
+/* ---------- home ---------- */
+function renderHome(){
+  sess = null; flash = null;
+  const goal = S.set.goal, dc = dayCount(), prog = Math.min(1, dc / goal);
+  const C = 2 * Math.PI * 36;
+  const mc = misCount();
+  const rec = m => S.best[m] ? `<span class="rec">${ic("trophy")}${S.best[m]}</span>` : "";
+  app.innerHTML = `
+  <div class="screen home">
+    <div class="top">
+      <div class="brand"><div class="logo">K</div><div><b>Kelime</b><small>Turk tili · A1 lug'at</small></div></div>
+      <div class="pill" title="Kunlik seriya" style="color:var(--accent)">${ic("flame", 1)}<span style="color:var(--text)">${streakNow()}</span></div>
+      <button class="icon-btn" data-a="settings" aria-label="Sozlamalar">${ic("gear")}</button>
+    </div>
+    <div class="home-grid">
+    <div class="area-hero">
+    <div class="hero">
+      <div class="hero-row">
+        <div class="ring">
+          <svg viewBox="0 0 84 84"><circle cx="42" cy="42" r="36" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="8"/>
+          <circle cx="42" cy="42" r="36" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - prog)}" style="transition:stroke-dashoffset .8s"/></svg>
+          <div class="v"><div>${dc}<small>/ ${goal}</small></div></div>
+        </div>
+        <div>
+          <h1>${dc >= goal ? "Bugungi maqsad bajarildi!" : dc ? "Zo'r ketyapsiz!" : "Xush kelibsiz!"}</h1>
+          <p>${dc >= goal ? "Ajoyib natija. Davom etsangiz, so'zlar yanada mustahkam o'rnashadi." : `Bugun ${goal} ta to'g'ri javob bering — kunlik seriyangiz o'sib boradi.`}</p>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div><b>${mastered()}<small style="font-size:12px;opacity:.8;font-weight:700"> / ${W.length}</small></b><span>yodlangan</span></div>
+        <div><b>${pct(S.cor, S.ans)}%</b><span>aniqlik</span></div>
+        <div><b>${S.pts.toLocaleString("ru-RU")}</b><span>jami ball</span></div>
+      </div>
+    </div>
+    </div>
+    <div class="area-modes">
+    <div class="h2"><h2>Mashqlar</h2><span>${W.length} ta so'z</span></div>
+    <div class="grid">
+      ${["tr","uz","type","flash"].map(m => `
+      <button class="mode ${MODES[m].c}" data-a="setup" data-m="${m}">
+        <div class="ic">${ic(MODES[m].icon)}</div>${m !== "flash" ? rec(m) : ""}
+        <div><b>${MODES[m].t}</b><small>${MODES[m].s}</small></div>
+      </button>`).join("")}
+      <button class="mode wide blitz" data-a="setup" data-m="blitz">
+        <div class="ic">${ic("zap", 1)}</div>
+        <div class="txt"><b>${MODES.blitz.t}</b><small>${S.best.blitz ? "Rekordingiz: " + S.best.blitz + " ta" : MODES.blitz.s}</small></div>
+        <div class="go">${ic("play", 1)}</div>
+      </button>
+      <button class="mode wide c-red" data-a="mistakes">
+        <div class="ic">${ic("target")}</div>
+        <div class="txt"><b>${MODES.mix.t}</b><small>${mc ? "Takrorlash kerak bo'lgan so'zlar" : "Hozircha xato yo'q — zo'r!"}</small></div>
+        ${mc ? `<span class="badge">${mc}</span>` : `<div class="go">${ic("arrow")}</div>`}
+      </button>
+    </div>
+    </div>
+    <div class="area-units">
+
+    <div class="h2"><h2>Yunitlar</h2><span>yodlanganlar</span></div>
+    <div class="units">
+      ${UNITS.map(u => { const list = W.filter(w => w.u === u), m = mastered(list); return `
+      <button class="unit" data-a="unit" data-u="${u}">
+        <b>${u}-ünite</b><small>${m} / ${list.length}</small>
+        <div class="prog"><i style="width:${pct(m, list.length)}%"></i></div>
+      </button>`; }).join("")}
+    </div>
+    <div class="h2"><h2>Rekordlar</h2><span>eng yaxshi natijalar</span></div>
+    <div class="recs">
+      ${[["tr","TR → UZ"],["uz","UZ → TR"],["type","Yozib javob"],["blitz","60 soniya"]].map(([m, t]) => `<div><b>${S.best[m] || "—"}</b><span>${t}</span></div>`).join("")}
+    </div>
+    <div class="foot">So'z 3 marta ketma-ket to'g'ri topilsa — «yodlangan» hisoblanadi.</div>
+    </div>
+    </div>
+  </div>`;
+}
+
+/* ---------- setup ---------- */
+let setupMode = "tr";
+function pickWords(f){
+  let a = W.filter(w => (!f.units.length || f.units.includes(w.u)) && (!f.secs.length || f.secs.includes(w.s)));
+  if (f.units.length === 1) {
+    const from = parseInt(f.from) || 1, to = parseInt(f.to) || Infinity;
+    a = a.filter(w => w.n >= from && w.n <= to);
+  }
+  return a;
+}
+function renderSetup(){
+  const f = S.filter, m = setupMode, M = MODES[m];
+  const pool = pickWords(f);
+  const one = f.units.length === 1;
+  const secCount = s => W.filter(w => (!f.units.length || f.units.includes(w.u)) && w.s === s).length;
+  const counts = [10, 20, 50, "all"];
+  const n = f.count === "all" ? pool.length : Math.min(f.count, pool.length);
+  app.innerHTML = `
+  <div class="screen setup">
+    <div class="head">
+      <button class="icon-btn" data-a="home" aria-label="Orqaga">${ic("back")}</button>
+      <div><h1>${M.t}</h1><p>${M.s}</p></div>
+    </div>
+    <div class="setup-grid"><div>
+    <div class="panel">
+      <h3>Yunitlar</h3>
+      <div class="chips">
+        <button class="chip ${!f.units.length ? "on" : ""}" data-a="u-all">Hammasi <small>${W.length}</small></button>
+        ${UNITS.map(u => `<button class="chip ${f.units.includes(u) ? "on" : ""}" data-a="u" data-u="${u}">${u}-ünite <small>${unitTotal(u)}</small></button>`).join("")}
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Bo'lim</h3>
+      <div class="chips">
+        <button class="chip ${!f.secs.length ? "on" : ""}" data-a="s-all">Hammasi</button>
+        ${["i","k","f"].map(s => { const c = secCount(s); return `<button class="chip ${f.secs.includes(s) ? "on" : ""}" data-a="s" data-s="${s}" ${c ? "" : "disabled"}>${SEC[s]} <small>${c}</small></button>`; }).join("")}
+      </div>
+    </div>
+    </div><div>
+    <div class="panel">
+      <h3>Raqam oralig'i</h3>
+      ${one ? `
+      <div class="range">
+        <input type="number" inputmode="numeric" min="1" max="${unitTotal(f.units[0])}" placeholder="1" value="${esc(f.from)}" data-in="from" aria-label="Boshlanish raqami">
+        <span>—</span>
+        <input type="number" inputmode="numeric" min="1" max="${unitTotal(f.units[0])}" placeholder="${unitTotal(f.units[0])}" value="${esc(f.to)}" data-in="to" aria-label="Tugash raqami">
+      </div>
+      <p class="hint">Word fayldagi raqamlar bo'yicha: masalan, 1 dan 50 gacha.</p>` : `<p class="hint" style="margin:0">Raqam oralig'ini tanlash uchun bitta yunitni belgilang.</p>`}
+    </div>
+    ${m === "flash" ? `
+    <div class="panel">
+      <h3>Kartochka old tomoni</h3>
+      <div class="seg"><button class="${f.front === "tr" ? "on" : ""}" data-a="front" data-v="tr">Turkcha</button><button class="${f.front === "uz" ? "on" : ""}" data-a="front" data-v="uz">O'zbekcha</button></div>
+      <h3 style="margin-top:16px">Tartib</h3>
+      <div class="seg"><button class="${f.order === "rand" ? "on" : ""}" data-a="order" data-v="rand">Aralash</button><button class="${f.order === "seq" ? "on" : ""}" data-a="order" data-v="seq">Raqam bo'yicha</button></div>
+    </div>` : ""}
+    ${m !== "blitz" ? `
+    <div class="panel">
+      <h3>${m === "flash" ? "Kartochkalar soni" : "Savollar soni"}</h3>
+      <div class="seg">${counts.map(c => `<button class="${f.count === c ? "on" : ""}" data-a="count" data-v="${c}">${c === "all" ? "Hammasi" : c}</button>`).join("")}</div>
+    </div>` : `
+    <div class="panel"><h3>Qoidalar</h3><p class="hint" style="margin:0;color:var(--text)">60 soniya ichida imkon qadar ko'p to'g'ri javob bering. Savollar ikki yo'nalishda aralash keladi. Har bir xato javob <b>3 soniya</b> vaqtingizni oladi.</p></div>`}
+    </div></div>
+    <div class="sticky">
+      <div class="count-note">${pool.length ? (m === "blitz" ? `<b>${pool.length}</b> ta so'z ichidan` : `<b>${n}</b> ta ${m === "flash" ? "kartochka" : "savol"} · ${pool.length} ta so'zdan`) : "Bu tanlovda so'z topilmadi"}</div>
+      <button class="btn btn-main" data-a="start" ${pool.length ? "" : "disabled"}>${ic("play", 1)} Boshlash</button>
+    </div>
+  </div>`;
+}
+
+/* ---------- quiz ---------- */
+let sess = null, blitzInt = null;
+function distractors(w, dir, k){
+  const key = x => dir === "tr" ? x.uzM.toLocaleLowerCase("tr") : norm(x.tr);
+  const seen = new Set([key(w)]);
+  let pool = W.filter(x => x.s === w.s);
+  if (pool.length < 12) pool = W;
+  const out = [];
+  for (let tries = 0; out.length < k && tries < 400; tries++) {
+    const x = pool[Math.random() * pool.length | 0], kk = key(x);
+    if (!seen.has(kk)) { seen.add(kk); out.push(x); }
+  }
+  return out;
+}
+function makeQ(w, dir){ return { w, dir, opts: shuffle([w, ...distractors(w, dir, 3)]) }; }
+
+function startSession(mode, words, opts = {}){
+  const s = { mode, words, i:0, score:0, combo:0, maxCombo:0, right:0, wrong:0, wrongList:[], done:false, answered:false };
+  if (mode === "blitz") { s.end = Date.now() + 60000; s.total = 60000; }
+  sess = s; flash = null;
+  if (mode === "blitz") {
+    blitzInt = setInterval(tickBlitz, 100);
+  }
+  nextQ(true);
+}
+function dirFor(mode){ return mode === "tr" ? "tr" : mode === "uz" ? "uz" : mode === "type" ? "type" : (Math.random() < .5 ? "tr" : "uz"); }
+function nextQ(first){
+  hideFb();
+  const s = sess; if (!s) return;
+  if (!first) { if (!s.answered) return; s.i++; }
+  if (s.mode === "blitz") { if (s.i >= s.words.length) { s.words = s.words.concat(shuffle(s.words)); } }
+  else if (s.i >= s.words.length) return finish();
+  const w = s.words[s.i];
+  s.answered = false;
+  const dir = dirFor(s.mode);
+  s.q = dir === "type" ? { w, dir } : makeQ(w, dir);
+  renderQ();
+  if (S.set.autoSay && dir === "tr") later(() => say(w.say), 250);
+}
+function topBar(){
+  const s = sess;
+  if (s.mode === "blitz") {
+    const left = Math.max(0, s.end - Date.now());
+    return `<div class="qtop"><button class="icon-btn" data-a="quit" aria-label="Chiqish">${ic("x")}</button>
+      <div class="bar time ${left < 10000 ? "low" : ""}" id="tbar"><i style="width:${left / s.total * 100}%"></i></div>
+      <div class="score" id="tleft" style="min-width:44px">${Math.ceil(left / 1000)}s</div></div>`;
+  }
+  return `<div class="qtop"><button class="icon-btn" data-a="quit" aria-label="Chiqish">${ic("x")}</button>
+    <div class="bar"><i style="width:${s.i / s.words.length * 100}%"></i></div>
+    <div class="score">${ic("star", 1)}<span id="sc">${s.score}</span></div></div>`;
+}
+function metaRow(){
+  const s = sess;
+  const right = s.mode === "blitz" ? `<span class="score" style="min-width:0">${ic("check")}<span id="sc">${s.right}</span></span>` : (s.combo >= 2 ? `<span class="combo">${ic("flame", 1)}×${s.combo}</span>` : `<span class="tag" style="box-shadow:none;background:transparent">${s.i + 1} / ${s.words.length}</span>`);
+  return `<div class="qmeta"><span class="tag">${tagOf(s.q.w)}</span>${right}</div>`;
+}
+function renderQ(){
+  const s = sess, q = s.q, w = q.w;
+  if (q.dir === "type") return renderType();
+  const prompt = q.dir === "tr" ? w.tr : w.uzM;
+  const label = q.dir === "tr" ? "Tarjimasini tanlang" : "Turkchasini tanlang";
+  app.innerHTML = `
+  <div class="screen play" style="animation:none">
+    ${topBar()}${metaRow()}
+    <div class="qcard" style="animation:enter .3s">
+      <div class="qlabel">${label}</div>
+      <div class="qword ${prompt.length > 22 ? "long" : ""}">${esc(prompt)}</div>
+      ${q.dir === "tr" ? `<button class="say" data-a="say" data-t="${esc(w.say)}" aria-label="Tinglash">${ic("vol")}</button>` : ""}
+    </div>
+    <div class="opts" id="opts">
+      ${q.opts.map((o, i) => `<button class="opt" data-a="ans" data-i="${i}"><span class="k">${i + 1}</span><span>${esc(q.dir === "tr" ? o.uzM : o.tr)}</span></button>`).join("")}
+    </div>
+    <div class="kbd-hint">Klaviatura: <kbd>1</kbd>–<kbd>4</kbd> javob tanlash · <kbd>Enter</kbd> davom etish</div>
+  </div>`;
+}
+function pointsFor(base){ const s = sess; return base + Math.min(s.combo, 5) * 2; }
+function onAnswer(i, el){
+  const s = sess; if (!s || s.answered) return;
+  s.answered = true;
+  const q = s.q, ok = q.opts[i] === q.w;
+  const box = $("#opts"); box.classList.add("lock");
+  const btns = [...box.children];
+  btns.forEach((b, j) => { if (q.opts[j] === q.w) b.classList.add("ok"); else if (j === i) b.classList.add("bad"); else b.classList.add("dim"); });
+  const r = el.getBoundingClientRect();
+  if (ok) {
+    s.combo++; s.maxCombo = Math.max(s.maxCombo, s.combo); s.right++;
+    const p = s.mode === "blitz" ? 1 : pointsFor(10);
+    s.score += p; record(q.w, true, s.mode === "blitz" ? 10 : p);
+    SND.ok(); floatText(s.mode === "blitz" ? "+1" : "+" + p, r.left + r.width / 2, r.top);
+    const sc = $("#sc"); if (sc) sc.textContent = s.mode === "blitz" ? s.right : s.score;
+    later(() => nextQ(), s.mode === "blitz" ? 380 : 750);
+  } else {
+    s.combo = 0; s.wrong++; s.wrongList.push(q.w); record(q.w, false, 0);
+    SND.bad(); buzz();
+    if (s.mode === "blitz") { s.end -= 3000; floatText("−3s", r.left + r.width / 2, r.top, true); later(() => nextQ(), 900); }
+    else showFb("bad", q.w, q.dir);
+  }
+}
+
+/* typing */
+function renderType(){
+  const s = sess, w = s.q.w;
+  app.innerHTML = `
+  <div class="screen play" style="animation:none">
+    ${topBar()}${metaRow()}
+    <div class="qcard" style="animation:enter .3s">
+      <div class="qlabel">Turkchasini yozing</div>
+      <div class="qword ${w.uzM.length > 22 ? "long" : ""}">${esc(w.uzM)}</div>
+    </div>
+    <form id="tform" autocomplete="off">
+      <input class="tinput" id="tin" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Javobni yozing…" aria-label="Javob">
+      <div class="keys">${["ç","ğ","ı","İ","ö","ş","ü"].map(c => `<button type="button" data-a="key" data-c="${c}">${c}</button>`).join("")}</div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-ghost" data-a="skip">Bilmayman</button>
+        <button type="submit" class="btn btn-dark">${ic("check")} Tekshirish</button>
+      </div>
+      <div class="kbd-hint"><kbd>Enter</kbd> tekshirish va davom etish</div>
+    </form>
+  </div>`;
+  const inp = $("#tin");
+  if (!matchMedia("(pointer:coarse)").matches) inp.focus(); else setTimeout(() => inp.focus(), 50);
+}
+function variantsFor(w){
+  const same = W.filter(x => x.uzM.toLocaleLowerCase("tr") === w.uzM.toLocaleLowerCase("tr"));
+  const v = new Set();
+  same.forEach(x => { v.add(norm(clean(x.tr))); v.add(norm(x.tr)); clean(x.tr).split(/[,/;]/).forEach(p => { p = norm(p); if (p) v.add(p); }); });
+  return [...v];
+}
+function checkType(skip){
+  const s = sess; if (!s || s.answered) return;
+  const w = s.q.w, inp = $("#tin"), val = skip ? "" : inp.value;
+  if (!skip && !norm(val)) { inp.classList.remove("bad"); void inp.offsetWidth; inp.classList.add("bad"); return; }
+  s.answered = true;
+  const vars = variantsFor(w), n = norm(val), f = fold(val);
+  let res = "bad";
+  if (n && vars.includes(n)) res = "ok";
+  else if (f && vars.map(fold).includes(f)) res = "soft";
+  inp.classList.add(res); inp.readOnly = true;
+  const r = inp.getBoundingClientRect();
+  if (res !== "bad") {
+    s.combo++; s.maxCombo = Math.max(s.maxCombo, s.combo); s.right++;
+    const p = pointsFor(res === "ok" ? 15 : 10);
+    s.score += p; record(w, true, p); SND.ok(); floatText("+" + p, r.left + r.width / 2, r.top);
+    const sc = $("#sc"); if (sc) sc.textContent = s.score;
+    if (res === "ok") { say(w.say); later(() => nextQ(), 900); }
+    else showFb("soft", w, "type");
+  } else {
+    s.combo = 0; s.wrong++; s.wrongList.push(w); record(w, false, 0); SND.bad(); buzz();
+    showFb("bad", w, "type");
+  }
+}
+
+/* feedback */
+function showFb(kind, w, dir){
+  const title = kind === "bad" ? "To'g'ri javob:" : kind === "soft" ? "Qabul qilindi! To'g'ri yozilishi:" : "To'g'ri!";
+  fb.className = "fb " + kind;
+  fbIn.innerHTML = `
+    <div class="fb-h"><span class="dot">${ic(kind === "bad" ? "x" : "check")}</span>${title}</div>
+    <div class="fb-ans"><div><b>${esc(w.tr)}</b><span>${esc(w.uz)}</span></div>
+      <button class="say sm" data-a="say" data-t="${esc(w.say)}" aria-label="Tinglash">${ic("vol")}</button></div>
+    <button class="btn ${kind === "bad" ? "btn-main" : "btn-dark"}" data-a="next" id="nextBtn">Davom etish ${ic("arrow")}</button>`;
+  requestAnimationFrame(() => fb.classList.add("show"));
+  if (kind !== "ok" && dir !== "uz") later(() => say(w.say), 300);
+  setTimeout(() => { const b = $("#nextBtn"); if (b) b.focus({ preventScroll: true }); }, 60);
+}
+function hideFb(){ fb.classList.remove("show"); }
+
+/* blitz */
+function tickBlitz(){
+  const s = sess; if (!s || s.mode !== "blitz") return;
+  const left = s.end - Date.now();
+  const bar = $("#tbar"), t = $("#tleft");
+  if (bar) { bar.firstElementChild.style.width = Math.max(0, left / s.total * 100) + "%"; bar.classList.toggle("low", left < 10000); }
+  if (t) t.textContent = Math.max(0, Math.ceil(left / 1000)) + "s";
+  if (left <= 0) { clearInterval(blitzInt); blitzInt = null; finish(); }
+}
+
+/* finish */
+function finish(){
+  const s = sess; if (!s || s.done) return;
+  s.done = true; stopTimers();
+  const score = s.mode === "blitz" ? s.right : s.score;
+  let isRec = false;
+  if (s.mode !== "mix" && score > 0 && score > (S.best[s.mode] || 0)) { isRec = true; S.best[s.mode] = score; save(); }
+  const acc = pct(s.right, s.right + s.wrong);
+  const title = s.mode === "blitz" ? (s.right >= 25 ? "Chaqmoqdek tez!" : s.right >= 12 ? "Zo'r tezlik!" : "Yaxshi boshlanish!")
+    : acc >= 90 ? "Zo'r natija!" : acc >= 70 ? "Yaxshi!" : acc >= 40 ? "Yomon emas!" : "Mashqda davom eting!";
+  const uniqWrong = [...new Map(s.wrongList.map(w => [w.id, w])).values()];
+  app.innerHTML = `
+  <div class="screen res">
+    <div class="trophy">${ic("trophy")}</div>
+    <h1>${title}</h1>
+    <div class="big">${score}</div>
+    <div class="sub">${s.mode === "blitz" ? "ta to'g'ri javob · 60 soniyada" : "ball · " + MODES[s.mode].t}</div>
+    ${isRec ? `<div class="newrec">${ic("star", 1)} Yangi rekord!</div>` : s.mode !== "mix" && S.best[s.mode] ? `<div class="sub" style="margin-top:10px">Rekord: ${S.best[s.mode]}</div>` : ""}
+    <div class="stats4">
+      <div><b style="color:var(--ok)">${s.right}</b><span>to'g'ri</span></div>
+      <div><b style="color:var(--bad)">${s.wrong}</b><span>xato</span></div>
+      <div><b>${acc}%</b><span>aniqlik</span></div>
+      <div><b>${s.maxCombo}</b><span>seriya</span></div>
+    </div>
+    ${uniqWrong.length ? `<div class="h2" style="margin-top:0"><h2>Xato qilingan so'zlar</h2><span>${uniqWrong.length} ta</span></div>
+    <div class="list">${uniqWrong.map(wordLi).join("")}</div>` : ""}
+    <div class="stack">
+      ${uniqWrong.length ? `<button class="btn btn-main" data-a="fixwrong">${ic("target")} Xatolarni mashq qilish</button>` : ""}
+      <div class="btn-row">
+        <button class="btn btn-ghost" data-a="again">${ic("repeat")} Yana</button>
+        <button class="btn btn-ghost" data-a="home">${ic("home")} Bosh sahifa</button>
+      </div>
+    </div>
+  </div>`;
+  sess.lastWrong = uniqWrong;
+  if (isRec) { SND.win(); confetti(); }
+  else if (acc >= 90 && s.right >= 5) confetti();
+}
+const wordLi = w => `<div class="li"><div><b>${esc(w.tr)}</b><span>${esc(w.uz)}</span></div><em>${w.u}·${w.n}</em><button class="say sm" data-a="say" data-t="${esc(w.say)}" aria-label="Tinglash">${ic("vol")}</button></div>`;
+
+/* ---------- flashcards ---------- */
+let flash = null;
+function startFlash(words){
+  sess = null;
+  flash = { words, i:0, known:[], unknown:[], flipped:false, front:S.filter.front };
+  renderFlash();
+}
+function renderFlash(){
+  const F = flash, w = F.words[F.i];
+  if (!w) return finishFlash();
+  const frontTr = F.front === "tr";
+  const ftext = frontTr ? w.tr : w.uzM;
+  const btext = frontTr ? w.uzM : w.tr;
+  const bnote = frontTr ? w.note : (w.note ? w.uzM + " " + w.note : "");
+  app.innerHTML = `
+  <div class="screen play" style="animation:none">
+    <div class="qtop"><button class="icon-btn" data-a="quit" aria-label="Chiqish">${ic("x")}</button>
+      <div class="bar"><i style="width:${F.i / F.words.length * 100}%"></i></div>
+      <div class="score" style="min-width:56px">${F.i + 1}/${F.words.length}</div></div>
+    <div class="qmeta"><span class="tag">${tagOf(w)}</span>
+      <span class="tag" style="box-shadow:none;background:transparent"><span style="color:var(--ok)">✓ ${F.known.length}</span> &nbsp; <span style="color:var(--bad)">✕ ${F.unknown.length}</span></span></div>
+    <div class="stage">
+      ${F.i + 1 < F.words.length ? `<div class="fc-under"></div>` : ""}
+      <div class="fc" id="fc" style="animation:enter .3s">
+        <div class="stamp yes" id="sy">BILAMAN</div><div class="stamp no" id="sn">BILMAYMAN</div>
+        <div class="fc-in">
+          <div class="face front">
+            <div class="qlabel">${frontTr ? "Turkcha" : "O'zbekcha"}</div>
+            <div class="big ${ftext.length > 20 ? "long" : ""}">${esc(ftext)}</div>
+            ${frontTr ? `<button class="say" data-a="say" data-t="${esc(w.say)}" aria-label="Tinglash">${ic("vol")}</button>` : ""}
+            <div class="tapnote">Bosing — ag'dariladi · o'ngga/chapga suring</div>
+          </div>
+          <div class="face back">
+            <div class="qlabel">${frontTr ? "Tarjimasi" : "Turkchasi"}</div>
+            <div class="big ${btext.length > 20 ? "long" : ""}">${esc(btext)}</div>
+            ${bnote ? `<div class="note">${esc(bnote)}</div>` : ""}
+            <button class="say" data-a="say" data-t="${esc(w.say)}" aria-label="Tinglash" style="margin-top:16px">${ic("vol")}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fbtns">
+      <button class="btn b-no" data-a="fno">${ic("x")} Bilmayman</button>
+      <button class="btn b-yes" data-a="fyes">${ic("check")} Bilaman</button>
+    </div>
+    <div class="kbd-hint"><kbd>Probel</kbd> ag'darish · <kbd>←</kbd> bilmayman · <kbd>→</kbd> bilaman</div>
+  </div>`;
+  F.flipped = false;
+  bindSwipe($("#fc"));
+  if (S.set.autoSay && frontTr) later(() => say(w.say), 250);
+}
+function flipCard(){ const c = $("#fc"); if (!c) return; flash.flipped = !flash.flipped; c.classList.toggle("flip", flash.flipped); SND.flip(); }
+function flashAnswer(ok){
+  const F = flash; if (!F || F.busy) return;
+  const w = F.words[F.i], c = $("#fc");
+  F.busy = true;
+  (ok ? F.known : F.unknown).push(w); flashMark(w, ok);
+  ok ? SND.ok() : SND.bad();
+  if (c) { c.classList.add("anim"); c.style.transform = `translateX(${ok ? 130 : -130}%) rotate(${ok ? 18 : -18}deg)`; c.style.opacity = "0"; }
+  later(() => { F.busy = false; F.i++; renderFlash(); }, 260);
+}
+function bindSwipe(c){
+  let x0 = 0, y0 = 0, dx = 0, down = false, moved = false;
+  const sy = $("#sy"), sn = $("#sn");
+  c.addEventListener("pointerdown", e => { if (e.target.closest("[data-a='say']")) return; down = true; moved = false; x0 = e.clientX; y0 = e.clientY; dx = 0; c.classList.remove("anim"); try { c.setPointerCapture(e.pointerId); } catch(_){} });
+  c.addEventListener("pointermove", e => {
+    if (!down) return; dx = e.clientX - x0;
+    if (Math.abs(dx) > 6) moved = true;
+    c.style.transform = `translateX(${dx}px) rotate(${dx / 18}deg)`;
+    sy.style.opacity = Math.max(0, Math.min(1, dx / 90)); sn.style.opacity = Math.max(0, Math.min(1, -dx / 90));
+  });
+  const up = () => {
+    if (!down) return; down = false;
+    if (Math.abs(dx) > 90) return flashAnswer(dx > 0);
+    c.classList.add("anim"); c.style.transform = ""; sy.style.opacity = 0; sn.style.opacity = 0;
+    if (!moved) flipCard();
+  };
+  c.addEventListener("pointerup", up); c.addEventListener("pointercancel", () => { down = false; c.classList.add("anim"); c.style.transform = ""; sy.style.opacity = 0; sn.style.opacity = 0; });
+}
+function finishFlash(){
+  const F = flash;
+  const k = F.known.length, u = F.unknown.length;
+  app.innerHTML = `
+  <div class="screen res">
+    <div class="trophy">${ic("cards")}</div>
+    <h1>${u === 0 ? "Hammasini bilasiz!" : "Kartochkalar tugadi"}</h1>
+    <div class="big">${pct(k, k + u)}%</div>
+    <div class="sub">${k} ta bildim · ${u} ta bilmadim</div>
+    ${u ? `<div class="h2"><h2>Takrorlash kerak</h2><span>${u} ta</span></div><div class="list">${F.unknown.map(wordLi).join("")}</div>` : `<div style="height:20px"></div>`}
+    <div class="stack">
+      ${u ? `<button class="btn btn-main" data-a="fagain">${ic("repeat")} Bilmaganlarni qayta ko'rish</button>` : ""}
+      <div class="btn-row">
+        <button class="btn btn-ghost" data-a="again">${ic("cards")} Yangi to'plam</button>
+        <button class="btn btn-ghost" data-a="home">${ic("home")} Bosh sahifa</button>
+      </div>
+    </div>
+  </div>`;
+  if (u === 0 && k >= 5) { SND.win(); confetti(); }
+}
+
+/* ---------- mistakes ---------- */
+function renderMistakes(confirmClear){
+  const list = Object.keys(S.mis).map(id => byId[id]).filter(Boolean).sort((a, b) => a.u - b.u || a.n - b.n);
+  app.innerHTML = `
+  <div class="screen mis">
+    <div class="head">
+      <button class="icon-btn" data-a="home" aria-label="Orqaga">${ic("back")}</button>
+      <div><h1>Xatolar ustida ishlash</h1><p>So'zni 2 marta to'g'ri topsangiz, ro'yxatdan chiqadi</p></div>
+    </div>
+    ${list.length ? `
+    <div class="stack" style="margin-bottom:18px">
+      <button class="btn btn-main" data-a="mis-test">${ic("target")} Test qilish · ${list.length} ta</button>
+      <div class="btn-row">
+        <button class="btn btn-ghost" data-a="mis-type">${ic("pen")} Yozib</button>
+        <button class="btn btn-ghost" data-a="mis-flash">${ic("cards")} Kartochka</button>
+      </div>
+    </div>
+    <div class="list">${list.map(wordLi).join("")}</div>
+    <button class="btn ${confirmClear ? "btn-main" : "btn-ghost"} ${confirmClear ? "" : "danger"}" data-a="${confirmClear ? "mis-clear-yes" : "mis-clear"}">${ic("trash")} ${confirmClear ? "Ha, ro'yxatni tozalash" : "Ro'yxatni tozalash"}</button>`
+    : `<div class="empty"><div class="trophy">${ic("check")}</div><h2 style="color:var(--text);margin:0 0 6px">Xatolar yo'q</h2><p>Test yoki kartochkalarda xato qilgan so'zlaringiz shu yerga tushadi.</p>
+      <button class="btn btn-main" data-a="setup" data-m="tr" style="margin-top:16px">${ic("play", 1)} Test boshlash</button></div>`}
+  </div>`;
+}
+
+/* ---------- settings ---------- */
+let modal = null;
+function openSettings(confirmReset){
+  closeModal();
+  modal = document.createElement("div"); modal.className = "modal";
+  modal.innerHTML = `<div class="sheet" role="dialog" aria-label="Sozlamalar">
+    <div class="grab"></div>
+    <div class="head" style="margin:0 0 14px"><div style="flex:1"><h1>Sozlamalar</h1></div><button class="icon-btn" data-a="close" aria-label="Yopish">${ic("x")}</button></div>
+    <div class="panel">
+      <h3>Ko'rinish</h3>
+      <div class="seg">${[["auto","Avto"],["light","Yorug'"],["dark","Qorong'i"]].map(([v, t]) => `<button class="${S.set.theme === v ? "on" : ""}" data-a="theme" data-v="${v}">${t}</button>`).join("")}</div>
+    </div>
+    <div class="panel">
+      <div class="row"><div><b>Ovoz effektlari</b><small>To'g'ri va xato javob tovushlari</small></div><button class="tg ${S.set.sound ? "on" : ""}" data-a="tg" data-k="sound" aria-label="Ovoz effektlari"></button></div>
+      <div class="row"><div><b>Avtomatik talaffuz</b><small>Turkcha so'z chiqqanda o'qib beriladi</small></div><button class="tg ${S.set.autoSay ? "on" : ""}" data-a="tg" data-k="autoSay" aria-label="Avtomatik talaffuz"></button></div>
+    </div>
+    <div class="panel">
+      <h3>Kunlik maqsad</h3>
+      <div class="seg">${[10,20,30,50].map(g => `<button class="${S.set.goal === g ? "on" : ""}" data-a="goal" data-v="${g}">${g}</button>`).join("")}</div>
+    </div>
+    <div class="panel">
+      <div class="row"><div><b>Natijalarni tozalash</b><small>Ball, rekordlar, xatolar va yodlanganlar o'chadi</small></div></div>
+      <button class="btn ${confirmReset ? "btn-main" : "btn-ghost"} danger" style="margin-top:10px;${confirmReset ? "color:#fff" : ""}" data-a="${confirmReset ? "reset-yes" : "reset"}">${ic("trash")} ${confirmReset ? "Ha, hammasini o'chirish" : "Tozalash"}</button>
+    </div>
+    <p class="hint" style="text-align:center">Talaffuz qurilmangizdagi turkcha ovozdan foydalanadi.${trVoice ? "" : " Agar ovoz chiqmasa, qurilma sozlamalarida turk tili ovozini o'rnating."}</p>
+  </div>`;
+  modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
+  document.body.appendChild(modal);
+}
+function closeModal(){ if (modal) { modal.remove(); modal = null; } }
+
+/* ---------- start helpers ---------- */
+function startFromSetup(){
+  const f = S.filter, m = setupMode;
+  let pool = pickWords(f);
+  if (!pool.length) return;
+  if (m === "blitz") return go(() => startSession("blitz", shuffle(pool)));
+  const n = f.count === "all" ? pool.length : Math.min(f.count, pool.length);
+  if (m === "flash") {
+    const list = f.order === "seq" ? pool.slice().sort((a, b) => a.u - b.u || a.n - b.n).slice(0, n) : shuffle(pool).slice(0, n);
+    return go(() => startFlash(list));
+  }
+  go(() => startSession(m, shuffle(pool).slice(0, n)));
+}
+function misWords(){ return shuffle(Object.keys(S.mis).map(id => byId[id]).filter(Boolean)); }
+
+/* ---------- events ---------- */
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-a]"); if (!b) return;
+  const a = b.dataset.a, f = S.filter;
+  switch (a) {
+    case "home": goHome(); break;
+    case "settings": openSettings(); break;
+    case "close": closeModal(); break;
+    case "setup": setupMode = b.dataset.m; go(renderSetup); break;
+    case "unit": setupMode = "tr"; f.units = [+b.dataset.u]; f.secs = []; f.from = ""; f.to = ""; save(); go(renderSetup); break;
+    case "mistakes": go(() => renderMistakes()); break;
+    case "u-all": f.units = []; f.from = ""; f.to = ""; save(); renderSetup(); break;
+    case "u": { const u = +b.dataset.u; f.units = f.units.includes(u) ? f.units.filter(x => x !== u) : [...f.units, u].sort(); f.from = ""; f.to = ""; save(); renderSetup(); break; }
+    case "s-all": f.secs = []; save(); renderSetup(); break;
+    case "s": { const s = b.dataset.s; f.secs = f.secs.includes(s) ? f.secs.filter(x => x !== s) : [...f.secs, s]; save(); renderSetup(); break; }
+    case "count": f.count = b.dataset.v === "all" ? "all" : +b.dataset.v; save(); renderSetup(); break;
+    case "front": f.front = b.dataset.v; save(); renderSetup(); break;
+    case "order": f.order = b.dataset.v; save(); renderSetup(); break;
+    case "start": startFromSetup(); break;
+    case "say": e.stopPropagation(); say(b.dataset.t); break;
+    case "ans": onAnswer(+b.dataset.i, b); break;
+    case "next": nextQ(); break;
+    case "key": { const inp = $("#tin"); if (inp && !inp.readOnly) { const p = inp.selectionStart ?? inp.value.length; inp.value = inp.value.slice(0, p) + b.dataset.c + inp.value.slice(inp.selectionEnd ?? p); inp.focus(); inp.setSelectionRange(p + 1, p + 1); } break; }
+    case "skip": checkType(true); break;
+    case "quit":
+      if (sess && !sess.done && (sess.right + sess.wrong) > 0) { finish(); }
+      else if (flash && (flash.known.length + flash.unknown.length) > 0) { stopTimers(); finishFlash(); }
+      else goHome();
+      break;
+    case "again":
+      if (flash) startFromSetupLike("flash");
+      else if (sess) { const m = sess.mode; if (m === "mix") { stopTimers(); startSession("mix", misWords().slice(0, 30)); if (!sess.words.length) goHome(); } else startFromSetupLike(m); }
+      break;
+    case "fixwrong": { const ws = shuffle(sess.lastWrong); stopTimers(); startSession("mix", ws); break; }
+    case "fagain": { const ws = shuffle(flash.unknown); stopTimers(); startFlash(ws); break; }
+    case "fyes": flashAnswer(true); break;
+    case "fno": flashAnswer(false); break;
+    case "mis-test": stopTimers(); startSession("mix", misWords().slice(0, 30)); break;
+    case "mis-type": stopTimers(); startSession("type", misWords().slice(0, 30)); break;
+    case "mis-flash": stopTimers(); startFlash(misWords()); break;
+    case "mis-clear": renderMistakes(true); break;
+    case "mis-clear-yes": S.mis = {}; save(); renderMistakes(); break;
+    case "theme": S.set.theme = b.dataset.v; save(); applyTheme(); openSettings(); break;
+    case "tg": S.set[b.dataset.k] = !S.set[b.dataset.k]; save(); b.classList.toggle("on", S.set[b.dataset.k]); break;
+    case "goal": S.set.goal = +b.dataset.v; save(); openSettings(); if (!sess && !flash) renderHome(); break;
+    case "reset": openSettings(true); break;
+    case "reset-yes": { const keep = { set: S.set, filter: S.filter }; S = merge(clone(DEF), keep); save(); closeModal(); goHome(); break; }
+  }
+});
+function startFromSetupLike(m){ setupMode = m; sess = null; flash = null; stopTimers(); startFromSetup(); }
+
+document.addEventListener("input", e => {
+  const k = e.target.dataset && e.target.dataset.in; if (!k) return;
+  S.filter[k] = e.target.value.replace(/\D/g, ""); save();
+  const note = $(".count-note"), btn = $("[data-a='start']");
+  const pool = pickWords(S.filter), f = S.filter, n = f.count === "all" ? pool.length : Math.min(f.count, pool.length);
+  if (note) note.innerHTML = pool.length ? (setupMode === "blitz" ? `<b>${pool.length}</b> ta so'z ichidan` : `<b>${n}</b> ta ${setupMode === "flash" ? "kartochka" : "savol"} · ${pool.length} ta so'zdan`) : "Bu tanlovda so'z topilmadi";
+  if (btn) btn.disabled = !pool.length;
+});
+document.addEventListener("submit", e => { if (e.target.id === "tform") { e.preventDefault(); if (sess && sess.answered) { if (fb.classList.contains("show")) nextQ(); } else checkType(false); } });
+
+document.addEventListener("keydown", e => {
+  if (modal) { if (e.key === "Escape") closeModal(); return; }
+  if (flash && $("#fc")) {
+    if (e.key === " " || e.key === "Enter") { e.preventDefault(); flipCard(); }
+    else if (e.key === "ArrowRight") flashAnswer(true);
+    else if (e.key === "ArrowLeft") flashAnswer(false);
+    return;
+  }
+  if (!sess || sess.done) return;
+  if (fb.classList.contains("show") && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); nextQ(); return; }
+  if (sess.q && sess.q.dir !== "type" && !sess.answered && /^[1-4]$/.test(e.key)) {
+    const btn = document.querySelector(`.opt[data-i="${+e.key - 1}"]`); if (btn) onAnswer(+e.key - 1, btn);
+  }
+});
+
+renderHome();
+if ("serviceWorker" in navigator && location.protocol === "https:") addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+})();
+</script>
+</body>
+</html>
