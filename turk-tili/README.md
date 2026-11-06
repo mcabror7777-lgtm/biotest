@@ -13,3 +13,5 @@ A1 Sözlük'dagi 927 ta so'zni (1–6 ünite) o'yin orqali yodlash uchun web das
 - Natijalar shu qurilmada saqlanadi; internet bo'lmasa ham ochiladi
 
 So'zlar `words.js` faylida: `[ünite, bo'lim, raqam, turkcha, o'zbekcha]`.
+
+Telefonga o'rnatish: Safari/Chrome → «Bosh ekranga qo'shish».
