@@ -232,6 +232,17 @@ svg{display:block}
 .fb.ok .fb-h{color:var(--ok)} .fb.ok .dot{background:var(--ok)}
 .fb.bad .fb-h{color:var(--bad)} .fb.bad .dot{background:var(--bad)}
 .fb.soft .fb-h{color:var(--amber)} .fb.soft .dot{background:var(--amber)}
+.fb.part .fb-h{color:var(--amber)} .fb.part .dot{background:var(--amber)}
+.tinput.part{border-color:var(--amber);color:var(--amber)}
+.cmp{display:grid;gap:6px;margin:8px 0 14px;padding:12px 14px;border-radius:16px;background:var(--surface-2)}
+.cmp .r{display:flex;align-items:baseline;gap:10px;min-width:0}
+.cmp .r small{flex:none;width:96px;color:var(--muted);font-size:12.5px;font-weight:700}
+.cmp .r b{font-size:18px;letter-spacing:.01em;word-break:break-word}
+.cmp .r .mk{color:var(--bad);background:var(--bad-bg);border-radius:4px;padding:0 1px}
+.cmp .r.good .mk{color:var(--ok);background:var(--ok-bg)}
+.cmp .uz{color:var(--muted);font-size:14px}
+.cmp .say{position:absolute;right:14px;top:12px}
+.list .li span.typed{display:inline;color:var(--amber);font-weight:700}
 .fb-ans{display:flex;align-items:center;gap:10px;margin:8px 0 14px;padding:12px 14px;border-radius:16px;background:var(--surface-2)}
 .fb-ans div{flex:1;min-width:0}
 .fb-ans b{display:block;font-size:17px}
@@ -280,7 +291,7 @@ svg{display:block}
 .res .sub{color:var(--muted);font-weight:600}
 .newrec{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:7px 14px;border-radius:999px;background:var(--soft-amber);color:var(--amber);font-weight:800;font-size:14px;animation:pop .5s .2s both}
 .newrec svg{width:16px;height:16px}
-.stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:22px 0 18px}
+.stats4{display:grid;grid-template-columns:repeat(var(--n,4),minmax(0,1fr));gap:8px;margin:22px 0 18px}
 .stats4 div{background:var(--surface);border-radius:16px;padding:12px 6px;box-shadow:var(--shadow)}
 .stats4 b{display:block;font-size:20px;letter-spacing:-.02em}
 .stats4 span{font-size:11.5px;color:var(--muted);font-weight:600}
@@ -437,6 +448,32 @@ function record(w, ok, pts){
   }
   save();
 }
+function recordPartial(w, pts){
+  touchDay();
+  S.ans++; S.part = (S.part || 0) + 1; S.pts += pts;
+  S.mis[w.id] = 2; S.mast[w.id] = 0;
+  save();
+}
+function lev(a, b){
+  const m = a.length, n = b.length; if (!m) return n; if (!n) return m;
+  let prev = Array.from({ length: n + 1 }, (_, j) => j);
+  for (let i = 1; i <= m; i++) { const cur = [i]; for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); prev = cur; }
+  return prev[n];
+}
+function diffMarks(a, b){
+  const A = [...a], B = [...b], m = A.length, n = B.length;
+  const d = Array.from({ length: m + 1 }, (_, i) => Array.from({ length: n + 1 }, (_, j) => i ? (j ? 0 : i) : j));
+  for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) d[i][j] = Math.min(d[i-1][j] + 1, d[i][j-1] + 1, d[i-1][j-1] + (A[i-1] === B[j-1] ? 0 : 1));
+  const ma = new Array(m).fill(false), mb = new Array(n).fill(false);
+  let i = m, j = n;
+  while (i > 0 || j > 0) {
+    if (i > 0 && j > 0 && d[i][j] === d[i-1][j-1] + (A[i-1] === B[j-1] ? 0 : 1)) { if (A[i-1] !== B[j-1]) { ma[i-1] = true; mb[j-1] = true; } i--; j--; }
+    else if (i > 0 && d[i][j] === d[i-1][j] + 1) { ma[i-1] = true; i--; }
+    else { mb[j-1] = true; j--; }
+  }
+  return { a: ma, b: mb };
+}
+const markHtml = (str, marks) => [...str].map((c, k) => marks[k] ? `<span class="mk">${c === " " ? "&nbsp;" : esc(c)}</span>` : esc(c)).join("");
 function flashMark(w, ok){
   touchDay();
   if (ok) { S.mast[w.id] = (S.mast[w.id] || 0) + 1; if (S.mis[w.id]) { S.mis[w.id]--; if (S.mis[w.id] <= 0) delete S.mis[w.id]; } }
@@ -482,6 +519,7 @@ function tone(seq){
   } catch(e){}
 }
 const SND = {
+  part: () => tone([[523,.12,0],[587,.18,.09]]),
   ok: () => tone([[660,.12,0],[988,.2,.07]]),
   bad: () => tone([[196,.28,0,"triangle",.16],[165,.3,.08,"triangle",.1]]),
   flip: () => tone([[520,.06,0,"sine",.05]]),
@@ -691,7 +729,7 @@ function distractors(w, dir, k){
 function makeQ(w, dir){ return { w, dir, opts: shuffle([w, ...distractors(w, dir, 3)]) }; }
 
 function startSession(mode, words, opts = {}){
-  const s = { mode, words, i:0, score:0, combo:0, maxCombo:0, right:0, wrong:0, wrongList:[], done:false, answered:false };
+  const s = { mode, words, i:0, score:0, combo:0, maxCombo:0, right:0, wrong:0, part:0, wrongList:[], partList:[], done:false, answered:false };
   if (mode === "blitz") { s.end = Date.now() + 60000; s.total = 60000; }
   sess = s; flash = null;
   if (mode === "blitz") {
@@ -808,18 +846,27 @@ function checkType(skip){
   if (!skip && !norm(val)) { inp.classList.remove("bad"); void inp.offsetWidth; inp.classList.add("bad"); return; }
   s.answered = true;
   const vars = variantsFor(w), n = norm(val), f = fold(val);
-  let res = "bad";
+  let res = "bad", best = vars[0], bestD = Infinity;
   if (n && vars.includes(n)) res = "ok";
-  else if (f && vars.map(fold).includes(f)) res = "soft";
+  else if (f) {
+    vars.forEach(v => { const d = lev(f, fold(v)); if (d < bestD || (d === bestD && lev(n, v) < lev(n, best))) { bestD = d; best = v; } });
+    const L = fold(best).replace(/ /g, "").length, allow = L <= 3 ? 0 : L <= 6 ? 1 : 2;
+    if (bestD === 0 || bestD <= allow) res = "part";
+  }
   inp.classList.add(res); inp.readOnly = true;
   const r = inp.getBoundingClientRect();
-  if (res !== "bad") {
+  if (res === "ok") {
     s.combo++; s.maxCombo = Math.max(s.maxCombo, s.combo); s.right++;
-    const p = pointsFor(res === "ok" ? 15 : 10);
+    const p = pointsFor(15);
     s.score += p; record(w, true, p); SND.ok(); floatText("+" + p, r.left + r.width / 2, r.top);
     const sc = $("#sc"); if (sc) sc.textContent = s.score;
-    if (res === "ok") { say(w.say); later(() => nextQ(), 900); }
-    else showFb("soft", w, "type");
+    say(w.say); later(() => nextQ(), 900);
+  } else if (res === "part") {
+    s.part++; s.partList.push({ w, typed: n, target: best });
+    const p = 5;
+    s.score += p; recordPartial(w, p); SND.part(); floatText("+" + p, r.left + r.width / 2, r.top);
+    const sc = $("#sc"); if (sc) sc.textContent = s.score;
+    showFb("part", w, "type", { typed: n, target: best });
   } else {
     s.combo = 0; s.wrong++; s.wrongList.push(w); record(w, false, 0); SND.bad(); buzz();
     showFb("bad", w, "type");
@@ -827,13 +874,23 @@ function checkType(skip){
 }
 
 /* feedback */
-function showFb(kind, w, dir){
-  const title = kind === "bad" ? "To'g'ri javob:" : kind === "soft" ? "Qabul qilindi! To'g'ri yozilishi:" : "To'g'ri!";
+function showFb(kind, w, dir, cmp){
+  const title = kind === "bad" ? "To'g'ri javob:" : kind === "part" ? "Qisman to'g'ri" : "To'g'ri!";
   fb.className = "fb " + kind;
+  let body;
+  if (kind === "part" && cmp) {
+    const m = diffMarks(cmp.typed, cmp.target);
+    body = `<div class="cmp" style="position:relative">
+      <div class="r"><small>Siz yozdingiz</small><b>${markHtml(cmp.typed, m.a)}</b></div>
+      <div class="r good"><small>To'g'risi</small><b>${markHtml(cmp.target, m.b)}</b></div>
+      <div class="uz">${esc(w.tr)} — ${esc(w.uz)}</div>
+      <button class="say sm" data-a="say" data-t="${esc(w.say)}" aria-label="Tinglash">${ic("vol")}</button></div>
+      <p class="hint" style="margin:-6px 0 12px">Bir-ikki harfda adashdingiz. So'z «Xatolar ustida ishlash» ro'yxatiga qo'shildi.</p>`;
+  } else body = `<div class="fb-ans"><div><b>${esc(w.tr)}</b><span>${esc(w.uz)}</span></div>
+      <button class="say sm" data-a="say" data-t="${esc(w.say)}" aria-label="Tinglash">${ic("vol")}</button></div>`;
   fbIn.innerHTML = `
     <div class="fb-h"><span class="dot">${ic(kind === "bad" ? "x" : "check")}</span>${title}</div>
-    <div class="fb-ans"><div><b>${esc(w.tr)}</b><span>${esc(w.uz)}</span></div>
-      <button class="say sm" data-a="say" data-t="${esc(w.say)}" aria-label="Tinglash">${ic("vol")}</button></div>
+    ${body}
     <button class="btn ${kind === "bad" ? "btn-main" : "btn-dark"}" data-a="next" id="nextBtn">Davom etish ${ic("arrow")}</button>`;
   requestAnimationFrame(() => fb.classList.add("show"));
   if (kind !== "ok" && dir !== "uz") later(() => say(w.say), 300);
@@ -858,10 +915,13 @@ function finish(){
   const score = s.mode === "blitz" ? s.right : s.score;
   let isRec = false;
   if (s.mode !== "mix" && score > 0 && score > (S.best[s.mode] || 0)) { isRec = true; S.best[s.mode] = score; save(); }
-  const acc = pct(s.right, s.right + s.wrong);
+  const acc = pct(s.right, s.right + s.wrong + s.part);
   const title = s.mode === "blitz" ? (s.right >= 25 ? "Chaqmoqdek tez!" : s.right >= 12 ? "Zo'r tezlik!" : "Yaxshi boshlanish!")
     : acc >= 90 ? "Zo'r natija!" : acc >= 70 ? "Yaxshi!" : acc >= 40 ? "Yomon emas!" : "Mashqda davom eting!";
   const uniqWrong = [...new Map(s.wrongList.map(w => [w.id, w])).values()];
+  const uniqPart = [...new Map(s.partList.map(x => [x.w.id, x])).values()];
+  const fixList = [...new Map(s.wrongList.concat(s.partList.map(x => x.w)).map(w => [w.id, w])).values()];
+  const showPart = s.mode === "type" || s.part > 0;
   app.innerHTML = `
   <div class="screen res">
     <div class="trophy">${ic("trophy")}</div>
@@ -869,23 +929,26 @@ function finish(){
     <div class="big">${score}</div>
     <div class="sub">${s.mode === "blitz" ? "ta to'g'ri javob · 60 soniyada" : "ball · " + MODES[s.mode].t}</div>
     ${isRec ? `<div class="newrec">${ic("star", 1)} Yangi rekord!</div>` : s.mode !== "mix" && S.best[s.mode] ? `<div class="sub" style="margin-top:10px">Rekord: ${S.best[s.mode]}</div>` : ""}
-    <div class="stats4">
+    <div class="stats4" style="--n:${showPart ? 5 : 4}">
       <div><b style="color:var(--ok)">${s.right}</b><span>to'g'ri</span></div>
+      ${showPart ? `<div><b style="color:var(--amber)">${s.part}</b><span>qisman</span></div>` : ""}
       <div><b style="color:var(--bad)">${s.wrong}</b><span>xato</span></div>
       <div><b>${acc}%</b><span>aniqlik</span></div>
       <div><b>${s.maxCombo}</b><span>seriya</span></div>
     </div>
     ${uniqWrong.length ? `<div class="h2" style="margin-top:0"><h2>Xato qilingan so'zlar</h2><span>${uniqWrong.length} ta</span></div>
     <div class="list">${uniqWrong.map(wordLi).join("")}</div>` : ""}
+    ${uniqPart.length ? `<div class="h2" style="margin-top:0"><h2>Qisman to'g'ri</h2><span>${uniqPart.length} ta</span></div>
+    <div class="list">${uniqPart.map(x => `<div class="li"><div><b>${esc(x.target)}</b><span>Siz: <span class="typed">${esc(x.typed)}</span> · ${esc(x.w.uzM)}</span></div><em>${x.w.u}·${x.w.n}</em><button class="say sm" data-a="say" data-t="${esc(x.w.say)}" aria-label="Tinglash">${ic("vol")}</button></div>`).join("")}</div>` : ""}
     <div class="stack">
-      ${uniqWrong.length ? `<button class="btn btn-main" data-a="fixwrong">${ic("target")} Xatolarni mashq qilish</button>` : ""}
+      ${fixList.length ? `<button class="btn btn-main" data-a="fixwrong">${ic("target")} Xatolarni mashq qilish</button>` : ""}
       <div class="btn-row">
         <button class="btn btn-ghost" data-a="again">${ic("repeat")} Yana</button>
         <button class="btn btn-ghost" data-a="home">${ic("home")} Bosh sahifa</button>
       </div>
     </div>
   </div>`;
-  sess.lastWrong = uniqWrong;
+  sess.lastWrong = fixList;
   if (isRec) { SND.win(); confetti(); }
   else if (acc >= 90 && s.right >= 5) confetti();
 }
