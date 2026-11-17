@@ -1,5 +1,5 @@
 // Kelime — tarmoq birinchi, internet bo'lmasa keshdan ochiladi
-const CACHE = "kelime-v5";
+const CACHE = "kelime-v6";
 const SHELL = ["./", "./index.html", "./words.js", "./sentences.js", "./listening.js", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png", "./icon-180.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL))); self.skipWaiting(); });
 self.addEventListener("activate", e => {

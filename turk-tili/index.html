@@ -1293,8 +1293,10 @@ function fbSay(w, dir){ dir === "ls" ? saySent(w) : sayWord(w); }
 /* ================= PLAYER (eshitib yodlash) ================= */
 // Tanlangan so'zlar bitta uzluksiz MP3 oqimiga yig'iladi: qulflangan ekranda ham to'xtamaydi.
 const BPS = 6000; // 48 kbit/s CBR MP3 -> 6000 bayt = 1 soniya
-const CHUNK = 150; // bitta oqimdagi so'zlar soni
-const PL = { a: new Audio(), words: [], items: [], starts: [], wstart: {}, chunk: -1, chunks: 0, cur: null, playing: false, loading: false, gen: 0, url: null, sleepAt: 0, cache: new Map(), packs: new Map() };
+const FIRST = 12, CHUNK = 60; // birinchi bo'lak tez yuklanadi, keyingilari fonda tayyorlanadi
+const PL = { a: new Audio(), words: [], items: [], starts: [], wstart: {}, chunk: -1, chunks: 0, bounds: [0], cur: null, playing: false, loading: false, gen: 0, url: null, sleepAt: 0, cache: new Map(), ix: new Map(), next: null };
+function plBounds(n){ const b = [0]; let p = Math.min(FIRST, n); while (p < n) { b.push(p); p += CHUNK; } b.push(n); return b; }
+const chunkOf = wi => { const b = PL.bounds; let c = 0; while (c + 1 < b.length - 1 && b[c + 1] <= wi) c++; return c; };
 PL.a.preload = "auto";
 const PLD = { units: [], src: "all", order: "seq", sent: true, rep: 1, pause: 500, sleep: 0, loop: true, count: 0, from: 1 };
 const LONG = { 250: 500, 500: 1000, 1000: 2000, 2000: 3000 };
@@ -1322,50 +1324,41 @@ function plItemsFor(ws, base){
   });
   return items;
 }
-async function plPack(key, gen, label){
-  if (PL.packs.has(key)) return PL.packs.get(key);
-  const base = `${AUDIO_BASE}pack/${key}`;
-  const [ix, r] = await Promise.all([fetch(base + ".json").then(x => x.json()), fetch(base + ".mp3")]);
-  if (!r.ok) throw new Error("pack");
-  const total = +r.headers.get("content-length") || 0, rd = r.body && r.body.getReader ? r.body.getReader() : null;
-  let bytes;
-  if (rd && total) {
-    bytes = new Uint8Array(total); let got = 0;
-    for (;;) { const { done, value } = await rd.read(); if (done) break; bytes.set(value, got); got += value.length; if (gen === PL.gen) plUi(`Yuklanmoqda${label}… ${Math.round(got / total * 100)}%`); }
-    if (got < total) bytes = bytes.subarray(0, got);
-  } else bytes = new Uint8Array(await r.arrayBuffer());
-  const pk = { ix, bytes }; PL.packs.set(key, pk); return pk;
+async function plIx(key){
+  if (!PL.ix.has(key)) PL.ix.set(key, fetch(`${AUDIO_BASE}pack/${key}.json`).then(r => r.json()).catch(e => { PL.ix.delete(key); throw e; }));
+  return PL.ix.get(key);
 }
-async function plFetch(urls, gen){
-  const g = S.set.voice || "f", keys = new Map(), loose = [];
+async function plFetch(urls){
+  const g = S.set.voice || "f", byKey = new Map(), loose = [];
   urls.forEach(u => {
     if (PL.cache.has(u)) return;
     const rel = u.slice(AUDIO_BASE.length), m = rel.match(/^[ws]\/(\d+)-/);
-    if (m) { const k = `${m[1]}-${g}`; if (!keys.has(k)) keys.set(k, []); keys.get(k).push([u, rel]); } else loose.push(u);
+    if (m) { const k = `${m[1]}-${g}`; if (!byKey.has(k)) byKey.set(k, []); byKey.get(k).push([u, rel]); } else loose.push(u);
   });
-  let n = 0;
-  for (const [k, list] of keys) {
-    n++;
-    try {
-      const pk = await plPack(k, gen, keys.size > 1 ? ` (${n}/${keys.size})` : "");
-      list.forEach(([u, rel]) => { const o = pk.ix[rel]; PL.cache.set(u, o ? pk.bytes.subarray(o[0], o[0] + o[1]) : new Uint8Array(0)); });
-    } catch(e){ list.forEach(([u]) => PL.cache.set(u, new Uint8Array(0))); }
+  const jobs = [];
+  for (const [k, list] of byKey) {
+    let ix; try { ix = await plIx(k); } catch(e){ list.forEach(([u]) => PL.cache.set(u, new Uint8Array(0))); continue; }
+    const segs = list.map(([u, rel]) => ({ u, o: ix[rel] })).filter(x => x.o).sort((x, y) => x.o[0] - y.o[0]);
+    list.forEach(([u, rel]) => { if (!ix[rel]) PL.cache.set(u, new Uint8Array(0)); });
+    const groups = [];
+    segs.forEach(sg => { const last = groups[groups.length - 1], st = sg.o[0], en = sg.o[0] + sg.o[1];
+      if (last && st - last.end < 30000) { last.end = Math.max(last.end, en); last.segs.push(sg); } else groups.push({ start: st, end: en, segs: [sg] }); });
+    groups.forEach(gr => jobs.push(async () => {
+      try {
+        const r = await fetch(`${AUDIO_BASE}pack/${k}.mp3`, { headers: { Range: `bytes=${gr.start}-${gr.end - 1}` } });
+        const buf = new Uint8Array(await r.arrayBuffer()), off = r.status === 206 ? gr.start : 0;
+        gr.segs.forEach(sg => PL.cache.set(sg.u, buf.subarray(sg.o[0] - off, sg.o[0] - off + sg.o[1])));
+      } catch(e){ gr.segs.forEach(sg => PL.cache.set(sg.u, new Uint8Array(0))); }
+    }));
   }
-  await Promise.all(loose.map(async u => { try { const r = await fetch(u); PL.cache.set(u, r.ok ? new Uint8Array(await r.arrayBuffer()) : new Uint8Array(0)); } catch(e){ PL.cache.set(u, new Uint8Array(0)); } }));
+  loose.forEach(u => jobs.push(async () => { try { const r = await fetch(u); PL.cache.set(u, r.ok ? new Uint8Array(await r.arrayBuffer()) : new Uint8Array(0)); } catch(e){ PL.cache.set(u, new Uint8Array(0)); } }));
+  let i = 0; const run = async () => { while (i < jobs.length) await jobs[i++](); };
+  await Promise.all(Array.from({ length: 6 }, run));
 }
-function plUnlock(){
-  // iPhone: ovozni foydalanuvchi bosgan paytda "ochib" qo'yamiz, keyin dastur o'zi davom ettira oladi
-  if (PL.unlocked) return;
-  PL.unlocked = true;
-  try { PL.a.src = AU.sil(250); const p = PL.a.play(); if (p) p.catch(() => {}); } catch(e){}
-}
-async function plLoad(chunk, wi, autoplay){
-  const gen = ++PL.gen;
-  PL.loading = true; plUi("Yuklanmoqda…");
-  const ws = PL.words.slice(chunk * CHUNK, (chunk + 1) * CHUNK);
-  const items = plItemsFor(ws, chunk * CHUNK);
-  await plFetch([...new Set(items.map(x => x.url))], gen);
-  if (gen !== PL.gen) return;
+async function plPrepare(chunk){
+  const ws = PL.words.slice(PL.bounds[chunk], PL.bounds[chunk + 1]);
+  const items = plItemsFor(ws, PL.bounds[chunk]);
+  await plFetch([...new Set(items.map(x => x.url))]);
   const parts = [], starts = [], wstart = {};
   let pos = 0, bad = 0;
   items.forEach(it => {
@@ -1375,39 +1368,64 @@ async function plLoad(chunk, wi, autoplay){
     if (wstart[it.wi] == null) wstart[it.wi] = pos / BPS;
     parts.push(b); pos += b.length;
   });
-  if (bad > items.length / 4) { PL.loading = false; PL.playing = false; plUi("Audio yuklanmadi. Internetni tekshiring."); return; }
+  if (bad > items.length / 4) throw new Error("audio");
+  return { chunk, items, starts, wstart, url: URL.createObjectURL(new Blob(parts, { type: "audio/mpeg" })) };
+}
+function plPrefetch(){
+  const nc = PL.chunk + 1 < PL.chunks ? PL.chunk + 1 : (plCfg().loop && PL.chunks > 1 ? 0 : -1);
+  if (nc < 0 || (PL.next && PL.next.chunk === nc)) return;
+  const gen = PL.gen, job = { chunk: nc, p: plPrepare(nc) };
+  job.p.then(r => { if (gen === PL.gen && PL.next === job) job.ready = r; else URL.revokeObjectURL(r.url); }).catch(() => { if (PL.next === job) PL.next = null; });
+  PL.next = job;
+}
+function plApply(prep, wi, autoplay){
   if (PL.url) URL.revokeObjectURL(PL.url);
-  PL.url = URL.createObjectURL(new Blob(parts, { type: "audio/mpeg" }));
-  PL.items = items; PL.starts = starts; PL.wstart = wstart; PL.chunk = chunk;
-  PL.a.pause();
+  PL.url = prep.url; PL.items = prep.items; PL.starts = prep.starts; PL.wstart = prep.wstart; PL.chunk = prep.chunk;
   PL.a.loop = PL.chunks === 1 && plCfg().loop;
   PL.a.src = PL.url;
   PL.a.playbackRate = S.set.rate || 1;
-  const t = wstart[wi] || 0;
+  const t = prep.wstart[wi] || 0;
   const go = () => { try { PL.a.currentTime = t; } catch(e){} PL.a.playbackRate = S.set.rate || 1; if (autoplay) PL.a.play().then(() => { PL.playing = true; plUi(); }).catch(() => { PL.playing = false; plUi("▶ ni bosing"); }); };
-  if (PL.a.readyState >= 1) go(); else PL.a.addEventListener("loadedmetadata", go, { once: true });
-  PL.loading = false;
-  PL.cur = items.find(x => x.wi === wi) || items[0];
+  if (t === 0) { if (autoplay) { PL.playing = true; PL.a.play().then(() => plUi()).catch(() => { PL.playing = false; plUi("▶ ni bosing"); }); } }
+  else if (PL.a.readyState >= 1) go(); else PL.a.addEventListener("loadedmetadata", go, { once: true });
+  PL.cur = prep.items.find(x => x.wi === wi) || prep.items[0];
   plMeta(PL.cur.w); plUi();
+  PL.next = null; plPrefetch();
+}
+function plUnlock(){
+  // iPhone: ovozni foydalanuvchi bosgan paytda "ochib" qo'yamiz, keyin dastur o'zi davom ettira oladi
+  if (PL.unlocked) return;
+  PL.unlocked = true;
+  try { PL.a.src = AU.sil(250); const p = PL.a.play(); if (p) p.catch(() => {}); } catch(e){}
+}
+async function plLoad(chunk, wi, autoplay){
+  const gen = ++PL.gen;
+  PL.loading = true; PL.next = null; plUi("Yuklanmoqda…");
+  PL.a.pause();
+  let prep;
+  try { prep = await plPrepare(chunk); } catch(e){ if (gen === PL.gen) { PL.loading = false; PL.playing = false; plUi("Audio yuklanmadi. Internetni tekshiring."); } return; }
+  if (gen !== PL.gen) { URL.revokeObjectURL(prep.url); return; }
+  PL.loading = false;
+  plApply(prep, wi, autoplay);
 }
 function plStart(wi){
   const c = plCfg();
   PL.words = plWords(c);
   if (!PL.words.length) { plUi("Bu tanlovda so'z yo'q"); return; }
-  PL.chunks = Math.ceil(PL.words.length / CHUNK);
   wi = Math.max(0, Math.min(PL.words.length - 1, wi || 0));
+  PL.bounds = plBounds(PL.words.length); PL.chunks = PL.bounds.length - 1;
   PL.sleepAt = c.sleep ? Date.now() + c.sleep * 60000 : 0;
-  plLoad(Math.floor(wi / CHUNK), wi, true);
+  plLoad(chunkOf(wi), wi, true);
 }
 function plRefresh(){
   // sozlama o'zgarsa: joriy so'zdan davom etamiz
   if (!PL.words.length) return;
   const curId = PL.cur && PL.cur.w.id, was = PL.playing;
   PL.words = plWords(plCfg());
-  PL.chunks = Math.ceil(PL.words.length / CHUNK);
   let wi = PL.words.findIndex(w => w.id === curId); if (wi < 0) wi = 0;
   if (!PL.words.length) { plStop(); return; }
-  plLoad(Math.floor(wi / CHUNK), wi, was);
+  PL.bounds = plBounds(PL.words.length); PL.chunks = PL.bounds.length - 1;
+  plLoad(chunkOf(wi), wi, was);
 }
 function plIndexAt(t){
   const s = PL.starts; let lo = 0, hi = s.length - 1;
@@ -1422,10 +1440,10 @@ PL.a.addEventListener("timeupdate", () => {
 });
 PL.a.addEventListener("ended", () => {
   if (PL.loading || PL.a.loop) return;
-  const next = PL.chunk + 1;
-  if (next < PL.chunks) plLoad(next, next * CHUNK, true);
-  else if (plCfg().loop) plLoad(0, 0, true);
-  else { PL.playing = false; plUi(); }
+  const nc = PL.chunk + 1 < PL.chunks ? PL.chunk + 1 : (plCfg().loop ? 0 : -1);
+  if (nc < 0) { PL.playing = false; plUi(); return; }
+  if (PL.next && PL.next.chunk === nc && PL.next.ready) { plApply(PL.next.ready, PL.bounds[nc], true); return; }
+  plLoad(nc, PL.bounds[nc], true);
 });
 PL.a.addEventListener("pause", () => { if (!PL.loading && PL.playing && !PL.a.ended) { PL.playing = false; plUi(); } });
 PL.a.addEventListener("play", () => { if (PL.items.length) { PL.playing = true; plUi(); } });
@@ -1435,8 +1453,8 @@ function plJump(d){
   const tIn = PL.a.currentTime - (PL.wstart[wi] || 0);
   if (d < 0 && tIn > 1.5) d = 0; // birinchi bosish: shu so'zning boshiga
   wi = Math.max(0, Math.min(PL.words.length - 1, wi + d));
-  const ch = Math.floor(wi / CHUNK);
-  if (ch !== PL.chunk) return plLoad(ch, wi, PL.playing);
+  const ch = chunkOf(wi);
+  if (ch !== PL.chunk) { if (PL.next && PL.next.chunk === ch && PL.next.ready && wi === PL.bounds[ch]) return plApply(PL.next.ready, wi, PL.playing); return plLoad(ch, wi, PL.playing); }
   PL.a.currentTime = PL.wstart[wi] || 0;
   PL.cur = PL.items.find(x => x.wi === wi); plMeta(PL.cur.w); plUi();
 }
