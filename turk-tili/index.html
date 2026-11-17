@@ -320,6 +320,44 @@ svg{display:block}
 .tg.on{background:var(--ok)}
 .tg.on::after{transform:translateX(20px)}
 .danger{color:var(--bad)}
+
+/* audio + listening */
+.listen-card{background:linear-gradient(135deg,#0ea5a4 0%,#22c3a6 100%);color:#fff;box-shadow:0 16px 36px -18px rgba(14,165,164,.8)}
+.listen-card .ic{background:rgba(255,255,255,.18);color:#fff}
+.listen-card small{color:rgba(255,255,255,.88)}
+.listen-card .go{background:rgba(255,255,255,.18)}
+.pl-uz{font-size:18px;font-weight:700;color:var(--muted);margin-top:6px}
+.pl-sent{margin-top:16px;padding:12px 14px;border-radius:16px;background:var(--surface-2);text-align:left;width:100%}
+.pl-sent b{display:block;font-size:16px}
+.pl-sent span{display:block;color:var(--muted);font-size:14px;margin-top:2px}
+.pl-ctl{display:flex;align-items:center;justify-content:center;gap:22px;margin:4px 0 6px}
+.pl-big{width:72px;height:72px;border-radius:24px;background:var(--grad);color:#fff;display:grid;place-items:center;box-shadow:0 14px 30px -14px rgba(255,77,90,.9);transition:transform .12s}
+.pl-big:active{transform:scale(.94)}
+.pl-big svg{width:30px;height:30px}
+.qcard .pl-big{margin:4px auto 0}
+a.chip{color:inherit;text-decoration:none}
+a.chip svg{width:16px;height:16px}
+.mini-pl{position:sticky;top:8px;z-index:20;align-items:center;gap:10px;padding:8px;margin-bottom:12px;border-radius:18px;background:var(--surface);box-shadow:var(--shadow-lg)}
+.mini-pl b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-pl small{display:block;color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li-card{display:flex;align-items:center;gap:12px;text-align:left;padding:14px;border-radius:18px;background:var(--surface);box-shadow:var(--shadow)}
+.li-card .ic{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--soft-violet);color:var(--violet);flex:none}
+.li-card .ic svg{width:20px;height:20px}
+.li-card b{display:block;font-size:15.5px}
+.li-card small{color:var(--muted);font-size:12.5px}
+.li-card .go{width:34px;height:34px;border-radius:11px;background:var(--surface-2);display:grid;place-items:center}
+.li-card .go svg{width:16px;height:16px}
+.dlg{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.bub{max-width:86%;text-align:left;padding:10px 14px;border-radius:18px;background:var(--surface);box-shadow:var(--shadow);border:2px solid transparent;transition:border-color .2s,background .2s}
+.bub.a{align-self:flex-start;border-bottom-left-radius:6px}
+.bub.b{align-self:flex-end;border-bottom-right-radius:6px;background:var(--soft-violet)}
+.bub.n{align-self:stretch;max-width:100%}
+.bub.cur{border-color:var(--accent)}
+.bub .who{display:block;font-size:11.5px;font-weight:800;color:var(--muted);margin-bottom:2px}
+.bub .t{display:flex;align-items:center;gap:6px;font-weight:650;font-size:16px}
+.bub .t svg{width:16px;height:16px;color:var(--muted)}
+.bub .u{display:block;color:var(--muted);font-size:14px;margin-top:3px}
+.opt[disabled]{pointer-events:none}
 canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:60}
 @media (min-width:640px){
   .wrap{padding:30px 24px 40px}
@@ -371,6 +409,8 @@ canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:60}
 <div class="wrap" id="app"></div>
 <div class="fb" id="fb"><div class="fb-in" id="fbIn"></div></div>
 <script src="words.js"></script>
+<script src="sentences.js"></script>
+<script src="listening.js"></script>
 <script>
 (() => {
 "use strict";
@@ -394,7 +434,13 @@ const P = {
   home:'<path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1v-9z"/>',
   book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 19a2 2 0 0 1 2-2h13"/>',
   play:'<path d="M7 4.5v15l12-7.5-12-7.5z"/>',
-  trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'
+  trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+  pause:'<path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/>',
+  next:'<path d="M5 5l10 7-10 7zM17 5h2v14h-2z"/>',
+  prev:'<path d="M19 5L9 12l10 7zM5 5h2v14H5z"/>',
+  head:'<path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3zM3 19a2 2 0 0 0 2 2h1v-6H3z"/>',
+  chat:'<path d="M4 5h16v11H9l-5 4z"/>',
+  download:'<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>'
 };
 const ic = (n, fill) => `<svg viewBox="0 0 24 24" fill="${fill?'currentColor':'none'}" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
 
@@ -415,7 +461,7 @@ const fold = s => norm(s).replace(/i̇/g, "i").replace(/[ğşçıöüâîû]/g, 
 /* ---------- storage ---------- */
 const KEY = "kelime.v1";
 const DEF = { pts:0, ans:0, cor:0, best:{}, mis:{}, mast:{}, day:{d:"",c:0}, streak:{last:"",n:0},
-  set:{ theme:"auto", sound:true, autoSay:false, goal:20 },
+  set:{ theme:"auto", sound:true, autoSay:false, goal:20, voice:"f", rate:1 },
   filter:{ units:[], secs:[], from:"", to:"", count:20, order:"rand", front:"tr" } };
 const clone = o => JSON.parse(JSON.stringify(o));
 function merge(a, b){ for (const k in b) { if (b[k] && typeof b[k] === "object" && !Array.isArray(b[k]) && a[k] && typeof a[k] === "object" && !Array.isArray(a[k])) merge(a[k], b[k]); else a[k] = b[k]; } return a; }
@@ -496,10 +542,7 @@ applyTheme();
 let trVoice = null;
 function loadVoices(){ try { const v = speechSynthesis.getVoices(); trVoice = v.find(x => /^tr(-|_|$)/i.test(x.lang)) || null; } catch(e){} }
 if ("speechSynthesis" in window) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
-function say(t){
-  if (!("speechSynthesis" in window)) return;
-  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = "tr-TR"; if (trVoice) u.voice = trVoice; u.rate = .9; speechSynthesis.speak(u); } catch(e){}
-}
+function say(t){ const w = sayMap.get(t); if (w) return playUrl(AU.w(w), t); ttsSay(t); }
 
 /* sounds */
 let ac = null;
@@ -564,7 +607,9 @@ const MODES = {
   type: { t:"Yozib javob", s:"Turkcha so'zni o'zingiz yozing", icon:"pen", c:"c-teal" },
   flash:{ t:"Kartochkalar", s:"Ag'darib, surib yodlang", icon:"cards", c:"c-amber" },
   blitz:{ t:"60 soniya chellenj", s:"Vaqt tugaguncha imkon qadar ko'p toping", icon:"zap" },
-  mix:  { t:"Xatolar ustida ishlash", s:"Xato qilingan so'zlarni mustahkamlang", icon:"target" }
+  mix:  { t:"Xatolar ustida ishlash", s:"Xato qilingan so'zlarni mustahkamlang", icon:"target" },
+  lw:   { t:"Eshitib so'zni top", s:"So'zni tinglab, tarjimasini tanlang", icon:"head" },
+  ls:   { t:"Eshitib gapni top", s:"Gapni tinglab, tarjimasini tanlang", icon:"vol" }
 };
 
 /* ---------- home ---------- */
@@ -576,6 +621,7 @@ function renderHome(){
   const rec = m => S.best[m] ? `<span class="rec">${ic("trophy")}${S.best[m]}</span>` : "";
   app.innerHTML = `
   <div class="screen home">
+    <div class="mini-pl" id="miniPl" style="display:none"></div>
     <div class="top">
       <div class="brand"><div class="logo">K</div><div><b>Kelime</b><small>Turk tili · A1 lug'at</small></div></div>
       <div class="pill" title="Kunlik seriya" style="color:var(--accent)">${ic("flame", 1)}<span style="color:var(--text)">${streakNow()}</span></div>
@@ -615,6 +661,16 @@ function renderHome(){
         <div class="txt"><b>${MODES.blitz.t}</b><small>${S.best.blitz ? "Rekordingiz: " + S.best.blitz + " ta" : MODES.blitz.s}</small></div>
         <div class="go">${ic("play", 1)}</div>
       </button>
+      <button class="mode wide listen-card" data-a="audio">
+        <div class="ic">${ic("head")}</div>
+        <div class="txt"><b>Eshitib yodlash</b><small>Ekran o'chiq holda ham: turkcha → o'zbekcha → misol gap</small></div>
+        <div class="go">${ic("play", 1)}</div>
+      </button>
+      <button class="mode wide c-violet" data-a="listen">
+        <div class="ic">${ic("chat")}</div>
+        <div class="txt"><b>Listening</b><small>Eshitib topish, dialoglar va hikoyalar</small></div>
+        <div class="go">${ic("arrow")}</div>
+      </button>
       <button class="mode wide c-red" data-a="mistakes">
         <div class="ic">${ic("target")}</div>
         <div class="txt"><b>${MODES.mix.t}</b><small>${mc ? "Takrorlash kerak bo'lgan so'zlar" : "Hozircha xato yo'q — zo'r!"}</small></div>
@@ -640,6 +696,7 @@ function renderHome(){
     </div>
     </div>
   </div>`;
+  miniBar();
 }
 
 /* ---------- setup ---------- */
@@ -726,7 +783,7 @@ function distractors(w, dir, k){
   }
   return out;
 }
-function makeQ(w, dir){ return { w, dir, opts: shuffle([w, ...distractors(w, dir, 3)]) }; }
+function makeQ(w, dir){ return { w, dir, opts: shuffle([w, ...distractors(w, dir === "uz" ? "uz" : "tr", 3)]) }; }
 
 function startSession(mode, words, opts = {}){
   const s = { mode, words, i:0, score:0, combo:0, maxCombo:0, right:0, wrong:0, part:0, wrongList:[], partList:[], done:false, answered:false };
@@ -737,7 +794,7 @@ function startSession(mode, words, opts = {}){
   }
   nextQ(true);
 }
-function dirFor(mode){ return mode === "tr" ? "tr" : mode === "uz" ? "uz" : mode === "type" ? "type" : (Math.random() < .5 ? "tr" : "uz"); }
+function dirFor(mode){ return mode === "tr" ? "tr" : mode === "uz" ? "uz" : mode === "type" ? "type" : mode === "lw" ? "lw" : mode === "ls" ? "ls" : (Math.random() < .5 ? "tr" : "uz"); }
 function nextQ(first){
   hideFb();
   const s = sess; if (!s) return;
@@ -771,6 +828,7 @@ function metaRow(){
 function renderQ(){
   const s = sess, q = s.q, w = q.w;
   if (q.dir === "type") return renderType();
+  if (q.dir === "lw" || q.dir === "ls") return renderListenQ();
   const prompt = q.dir === "tr" ? w.tr : w.uzM;
   const label = q.dir === "tr" ? "Tarjimasini tanlang" : "Turkchasini tanlang";
   app.innerHTML = `
@@ -886,14 +944,15 @@ function showFb(kind, w, dir, cmp){
       <div class="uz">${esc(w.tr)} — ${esc(w.uz)}</div>
       <button class="say sm" data-a="say" data-t="${esc(w.say)}" aria-label="Tinglash">${ic("vol")}</button></div>
       <p class="hint" style="margin:-6px 0 12px">Bir-ikki harfda adashdingiz. So'z «Xatolar ustida ishlash» ro'yxatiga qo'shildi.</p>`;
-  } else body = `<div class="fb-ans"><div><b>${esc(w.tr)}</b><span>${esc(w.uz)}</span></div>
+  } else if (dir === "ls" && sentOf(w)) { const st = sentOf(w); body = `<div class="fb-ans"><div><b>${esc(st[0])}</b><span>${esc(st[1])}</span></div><button class="say sm" data-a="lq-say" aria-label="Tinglash">${ic("vol")}</button></div>`; }
+  else body = `<div class="fb-ans"><div><b>${esc(w.tr)}</b><span>${esc(w.uz)}</span></div>
       <button class="say sm" data-a="say" data-t="${esc(w.say)}" aria-label="Tinglash">${ic("vol")}</button></div>`;
   fbIn.innerHTML = `
     <div class="fb-h"><span class="dot">${ic(kind === "bad" ? "x" : "check")}</span>${title}</div>
     ${body}
     <button class="btn ${kind === "bad" ? "btn-main" : "btn-dark"}" data-a="next" id="nextBtn">Davom etish ${ic("arrow")}</button>`;
   requestAnimationFrame(() => fb.classList.add("show"));
-  if (kind !== "ok" && dir !== "uz") later(() => say(w.say), 300);
+  if (kind !== "ok" && dir !== "uz") later(() => fbSay(w, dir), 300);
   setTimeout(() => { const b = $("#nextBtn"); if (b) b.focus({ preventScroll: true }); }, 60);
 }
 function hideFb(){ fb.classList.remove("show"); }
@@ -1199,6 +1258,355 @@ document.addEventListener("keydown", e => {
     const btn = document.querySelector(`.opt[data-i="${+e.key - 1}"]`); if (btn) onAnswer(+e.key - 1, btn);
   }
 });
+
+/* ================= AUDIO: shared ================= */
+const AUDIO_BASE = "https://mcabror7777-lgtm.github.io/kelime-audio/a1/";
+const AU = {
+  w: (w, g) => `${AUDIO_BASE}w/${w.id}-tr-${g || S.set.voice}.mp3`,
+  uz: w => `${AUDIO_BASE}w/${w.id}-uz.mp3`,
+  s: (w, g) => `${AUDIO_BASE}s/${w.id}-tr-${g || S.set.voice}.mp3`,
+  suz: w => `${AUDIO_BASE}s/${w.id}-uz.mp3`,
+  line: (id, k) => `${AUDIO_BASE}l/${id}-${k}.mp3`,
+  sil: ms => `${AUDIO_BASE}sil/${ms}.mp3`,
+  unit: u => `${AUDIO_BASE}unit/${u}-unite.mp3`
+};
+const sentOf = w => (typeof SENT !== "undefined" && SENT[w.id]) || null;
+const sayMap = new Map(); W.forEach(w => { if (!sayMap.has(w.say)) sayMap.set(w.say, w); });
+const fx = new Audio(); fx.preload = "auto";
+let fxToken = 0;
+function playUrl(url, fallback, lang){
+  const tok = ++fxToken;
+  try { speechSynthesis.cancel(); } catch(e){}
+  if (PL.playing) plPause();
+  fx.onerror = () => { if (tok === fxToken && fallback) ttsSay(fallback, lang); };
+  fx.src = url; fx.playbackRate = S.set.rate || 1;
+  fx.play().catch(() => { if (tok === fxToken && fallback) ttsSay(fallback, lang); });
+}
+function ttsSay(t, lang){
+  if (!("speechSynthesis" in window)) return;
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = lang || "tr-TR"; if (!lang && trVoice) u.voice = trVoice; u.rate = .9 * (S.set.rate || 1); speechSynthesis.speak(u); } catch(e){}
+}
+function sayWord(w){ playUrl(AU.w(w), w.say); }
+function saySent(w){ const s = sentOf(w); if (s) playUrl(AU.s(w), s[0]); }
+function fbSay(w, dir){ dir === "ls" ? saySent(w) : sayWord(w); }
+
+/* ================= PLAYER (eshitib yodlash) ================= */
+const PL = { a: new Audio(), items: [], i: 0, playing: false, started: 0, words: [], err: 0, sleepAt: 0 };
+PL.a.preload = "auto";
+const PLD = { units: [], src: "all", order: "seq", sent: true, rep: 1, pause: 1000, sleep: 0, loop: true, count: 0, from: 1 };
+function plCfg(){ S.set.pl = Object.assign({}, PLD, S.set.pl || {}); return S.set.pl; }
+function plWords(c){
+  let a;
+  if (c.src === "mis") a = Object.keys(S.mis).map(id => byId[id]).filter(Boolean);
+  else if (c.src === "new") a = W.filter(w => (S.mast[w.id] || 0) < 3);
+  else a = W.slice();
+  if (c.units.length) a = a.filter(w => c.units.includes(w.u));
+  a.sort((x, y) => x.u - y.u || x.n - y.n);
+  if (c.units.length === 1 && c.from > 1) a = a.filter(w => w.n >= c.from);
+  if (c.order === "rand") a = shuffle(a);
+  return c.count ? a.slice(0, c.count) : a;
+}
+function plBuild(){
+  const c = plCfg(), p = c.pause, items = [];
+  PL.words = plWords(c);
+  PL.words.forEach((w, wi) => {
+    const push = (url, k, t) => items.push({ url, k, w, wi, t });
+    push(AU.w(w), "tr", w.say); push(AU.sil(p), "sil");
+    push(AU.uz(w), "uz", w.uzM); push(AU.sil(p), "sil");
+    for (let r = 0; r < c.rep; r++) { push(AU.w(w), "tr", w.say); push(AU.sil(p), "sil"); }
+    const s = sentOf(w);
+    if (c.sent && s) { push(AU.s(w), "str", s[0]); push(AU.sil(p), "sil"); push(AU.suz(w), "suz", s[1]); push(AU.sil(Math.min(3000, p * 2)), "sil"); }
+    else items[items.length - 1].url = AU.sil(Math.min(3000, p * 2));
+  });
+  PL.items = items; PL.i = 0;
+}
+function plStart(){
+  plBuild();
+  if (!PL.items.length) return;
+  const c = plCfg();
+  PL.sleepAt = c.sleep ? Date.now() + c.sleep * 60000 : 0;
+  PL.err = 0; plGo();
+}
+function plGo(){
+  const it = PL.items[PL.i]; if (!it) return plStop();
+  try { speechSynthesis.cancel(); } catch(e){}
+  fx.pause();
+  PL.playing = true;
+  PL.a.src = it.url;
+  PL.a.playbackRate = S.set.rate || 1;
+  PL.a.play().catch(() => { PL.playing = false; plUi(); });
+  if (it.k !== "sil") plMeta(it.w);
+  plUi();
+}
+PL.a.addEventListener("loadedmetadata", () => { PL.a.playbackRate = S.set.rate || 1; });
+PL.a.addEventListener("playing", () => { PL.err = 0; });
+PL.a.addEventListener("ended", plNext);
+PL.a.addEventListener("error", () => {
+  if (!PL.playing) return;
+  PL.err++;
+  if (PL.err > 4) { plStop(); plUi("Audio yuklanmadi. Internetni tekshiring."); return; }
+  plNext();
+});
+function plNext(){
+  if (PL.sleepAt && Date.now() >= PL.sleepAt) { plStop(); plUi("Uyqu taymeri: to'xtatildi"); return; }
+  PL.i++;
+  if (PL.i >= PL.items.length) { if (plCfg().loop) PL.i = 0; else { plStop(); return; } }
+  plGo();
+}
+function plJump(d){
+  if (!PL.items.length) return;
+  const cur = (PL.items[PL.i] || {}).wi || 0;
+  let target = Math.max(0, Math.min(PL.words.length - 1, cur + d));
+  if (d < 0 && PL.items[PL.i] && PL.items[PL.i].k !== "tr" && PL.items.findIndex(x => x.wi === cur) < PL.i) target = cur;
+  PL.i = PL.items.findIndex(x => x.wi === target);
+  plGo();
+}
+function plPause(){ PL.a.pause(); PL.playing = false; plUi(); }
+function plResume(){ if (!PL.items.length) return plStart(); PL.playing = true; PL.a.play().catch(() => {}); plUi(); }
+function plStop(){ PL.a.pause(); PL.playing = false; plUi(); }
+function plMeta(w){
+  if (!("mediaSession" in navigator)) return;
+  try {
+    navigator.mediaSession.metadata = new MediaMetadata({ title: w.tr, artist: w.uzM, album: `Kelime · ${w.u}-ünite`, artwork: [{ src: "icon-512.png", sizes: "512x512", type: "image/png" }] });
+  } catch(e){}
+}
+if ("mediaSession" in navigator) {
+  const h = (a, f) => { try { navigator.mediaSession.setActionHandler(a, f); } catch(e){} };
+  h("play", () => plResume()); h("pause", () => plPause());
+  h("nexttrack", () => plJump(1)); h("previoustrack", () => plJump(-1));
+}
+function plUi(msg){
+  const box = $("#plNow"); if (!box) { miniBar(); return; }
+  const it = PL.items[PL.i], w = it && it.w, s = w && sentOf(w), c = plCfg();
+  box.innerHTML = w ? `
+    <div class="qlabel">${w.u}-ünite · №${w.n} · ${it.wi + 1} / ${PL.words.length}</div>
+    <div class="qword ${w.tr.length > 22 ? "long" : ""}">${esc(w.tr)}</div>
+    <div class="pl-uz">${esc(w.uzM)}</div>
+    ${c.sent && s ? `<div class="pl-sent"><b>${esc(s[0])}</b><span>${esc(s[1])}</span></div>` : ""}
+    <div class="prog" style="margin-top:16px"><i style="width:${(it.wi + 1) / PL.words.length * 100}%"></i></div>`
+    : `<div class="qlabel">Eshitib yodlash</div><div class="pl-uz">${msg || "So'zlarni tanlang va ▶ ni bosing"}</div>`;
+  const pb = $("#plPlay"); if (pb) pb.innerHTML = ic(PL.playing ? "pause" : "play", 1);
+  const m = $("#plMsg"); if (m) m.textContent = msg || (PL.sleepAt ? `Uyqu taymeri: ${Math.max(0, Math.ceil((PL.sleepAt - Date.now()) / 60000))} daqiqa qoldi` : "");
+}
+function miniBar(){
+  const el = $("#miniPl"); if (!el) return;
+  const it = PL.items[PL.i];
+  el.style.display = PL.items.length && it ? "flex" : "none";
+  if (it) el.innerHTML = `<button class="icon-btn" data-a="pl-toggle" aria-label="Pauza">${ic(PL.playing ? "pause" : "play", 1)}</button>
+    <div style="flex:1;min-width:0" data-a="audio"><b>${esc(it.w.tr)}</b><small>${esc(it.w.uzM)}</small></div>
+    <button class="icon-btn" data-a="pl-next" aria-label="Keyingi">${ic("next", 1)}</button>`;
+}
+function chipRow(key, opts, cur){
+  return `<div class="seg">${opts.map(([v, t]) => `<button class="${String(cur) === String(v) ? "on" : ""}" data-a="plset" data-k="${key}" data-v="${v}">${t}</button>`).join("")}</div>`;
+}
+function renderAudio(){
+  const c = plCfg(), n = plWords(c).length, mc = misCount();
+  app.innerHTML = `
+  <div class="screen setup">
+    <div class="head">
+      <button class="icon-btn" data-a="home" aria-label="Orqaga">${ic("back")}</button>
+      <div><h1>Eshitib yodlash</h1><p>Ekran o'chiq bo'lsa ham ishlaydi — quloqchin bilan eshiting</p></div>
+    </div>
+    <div class="setup-grid"><div>
+    <div class="qcard" id="plNow" style="min-height:220px"></div>
+    <div class="pl-ctl">
+      <button class="icon-btn" data-a="pl-prev" aria-label="Oldingi">${ic("prev", 1)}</button>
+      <button class="pl-big" id="plPlay" data-a="pl-toggle" aria-label="Ijro">${ic("play", 1)}</button>
+      <button class="icon-btn" data-a="pl-next" aria-label="Keyingi">${ic("next", 1)}</button>
+    </div>
+    <p class="hint" id="plMsg" style="text-align:center;min-height:18px"></p>
+    <div class="panel">
+      <h3>Butun yunit — MP3</h3>
+      <p class="hint" style="margin:0 0 10px">Telegram, mashina yoki istalgan pleerda eshitish uchun.</p>
+      <div class="chips">${UNITS.map(u => `<a class="chip" href="${AU.unit(u)}" target="_blank" rel="noopener" download>${ic("download")} ${u}-ünite</a>`).join("")}</div>
+    </div>
+    </div><div>
+    <div class="panel">
+      <h3>So'zlar</h3>
+      <div class="chips" style="margin-bottom:12px">
+        <button class="chip ${!c.units.length ? "on" : ""}" data-a="plu" data-u="0">Hammasi</button>
+        ${UNITS.map(u => `<button class="chip ${c.units.includes(u) ? "on" : ""}" data-a="plu" data-u="${u}">${u}-ünite</button>`).join("")}
+      </div>
+      ${chipRow("src", [["all", "Barchasi"], ["new", "Yodlanmagan"], ["mis", `Xatolar (${mc})`]], c.src)}
+      <h3 style="margin-top:16px">Nechta so'z</h3>
+      ${chipRow("count", [[20, "20"], [50, "50"], [100, "100"], [0, "Hammasi"]], c.count)}
+      ${c.units.length === 1 ? `<div class="range" style="margin-top:12px"><span style="white-space:nowrap">№ dan boshlab:</span><input type="number" inputmode="numeric" min="1" max="${unitTotal(c.units[0])}" value="${c.from}" data-plin="from" aria-label="Boshlanish raqami"></div>` : `<p class="hint">Raqamdan boshlash uchun bitta yunitni tanlang.</p>`}
+      <p class="hint" id="plCount">${n} ta so'z</p>
+    </div>
+    <div class="panel">
+      <h3>Tartib</h3>
+      ${chipRow("order", [["seq", "Ketma-ket"], ["rand", "Aralash"]], c.order)}
+      <h3 style="margin-top:16px">Misol gap</h3>
+      ${chipRow("sent", [["true", "Bilan"], ["false", "Siz"]], c.sent)}
+      <h3 style="margin-top:16px">Turkcha takror</h3>
+      ${chipRow("rep", [[0, "Yo'q"], [1, "1 marta"], [2, "2 marta"]], c.rep)}
+      <h3 style="margin-top:16px">Pauza</h3>
+      ${chipRow("pause", [[500, "0.5 s"], [1000, "1 s"], [2000, "2 s"], [3000, "3 s"]], c.pause)}
+    </div>
+    <div class="panel">
+      <h3>Ovoz va tezlik</h3>
+      ${chipRow("voice", [["f", "Ayol"], ["m", "Erkak"]], S.set.voice)}
+      <div style="height:10px"></div>
+      ${chipRow("rate", [[0.75, "0.75×"], [1, "1×"], [1.25, "1.25×"]], S.set.rate)}
+      <h3 style="margin-top:16px">Uyqu taymeri</h3>
+      ${chipRow("sleep", [[0, "Yo'q"], [15, "15 daq"], [30, "30 daq"], [60, "60 daq"]], c.sleep)}
+    </div>
+    </div></div>
+  </div>`;
+  plUi();
+}
+function plSet(k, v){
+  const c = plCfg();
+  if (k === "voice") { S.set.voice = v; }
+  else if (k === "rate") { S.set.rate = +v; PL.a.playbackRate = +v; }
+  else if (k === "sent") c.sent = v === "true";
+  else if (["rep", "pause", "sleep", "count"].includes(k)) c[k] = +v;
+  else c[k] = v;
+  save();
+  if (k === "sleep") PL.sleepAt = c.sleep && PL.items.length ? Date.now() + c.sleep * 60000 : 0;
+  const wasPlaying = PL.playing, cur = PL.items[PL.i] && PL.items[PL.i].w;
+  if (["src", "order", "sent", "rep", "pause", "voice", "count"].includes(k) && PL.items.length) {
+    plBuild();
+    if (cur) { const idx = PL.items.findIndex(x => x.w === cur); PL.i = Math.max(0, idx); }
+    if (wasPlaying) plGo();
+  }
+  renderAudio();
+}
+
+/* ================= LISTENING ================= */
+function renderListen(){
+  const L = typeof LISTEN !== "undefined" ? LISTEN : { dialogs: [], stories: [] };
+  const done = S.lis || {};
+  const card = (x, kind) => `<button class="li-card" data-a="ls-open" data-id="${x.id}">
+      <div class="ic">${ic(kind === "d" ? "chat" : "book")}</div>
+      <div style="flex:1;min-width:0"><b>${esc(x.t)}</b><small>${x.u}-ünite · ${x.lines.length} ${kind === "d" ? "replika" : "gap"}</small></div>
+      ${done[x.id] != null ? `<span class="badge" style="background:var(--ok)">${done[x.id]}/${x.q.length}</span>` : `<div class="go">${ic("play", 1)}</div>`}
+    </button>`;
+  app.innerHTML = `
+  <div class="screen mis">
+    <div class="head">
+      <button class="icon-btn" data-a="home" aria-label="Orqaga">${ic("back")}</button>
+      <div><h1>Listening</h1><p>Eshitib tushunish mashqlari</p></div>
+    </div>
+    <div class="grid" style="margin-bottom:8px">
+      <button class="mode c-violet" data-a="setup" data-m="lw"><div class="ic">${ic("head")}</div>${S.best.lw ? `<span class="rec">${ic("trophy")}${S.best.lw}</span>` : ""}<div><b>${MODES.lw.t}</b><small>${MODES.lw.s}</small></div></button>
+      <button class="mode c-teal" data-a="setup" data-m="ls"><div class="ic">${ic("vol")}</div>${S.best.ls ? `<span class="rec">${ic("trophy")}${S.best.ls}</span>` : ""}<div><b>${MODES.ls.t}</b><small>${MODES.ls.s}</small></div></button>
+    </div>
+    <div class="h2"><h2>Dialoglar</h2><span>${L.dialogs.length} ta</span></div>
+    <div class="stack">${L.dialogs.map(d => card(d, "d")).join("")}</div>
+    <div class="h2"><h2>Hikoyalar</h2><span>${L.stories.length} ta</span></div>
+    <div class="stack">${L.stories.map(s => card(s, "s")).join("")}</div>
+  </div>`;
+}
+let LS = null;
+function lsFind(id){ const L = LISTEN; return L.dialogs.find(x => x.id === id) || L.stories.find(x => x.id === id); }
+function renderLsItem(){
+  const x = LS.x, isD = !!x.lines[0] && x.lines[0].length === 3;
+  app.innerHTML = `
+  <div class="screen mis">
+    <div class="head">
+      <button class="icon-btn" data-a="listen" aria-label="Orqaga">${ic("back")}</button>
+      <div><h1>${esc(x.t)}</h1><p>${x.u}-ünite · ${isD ? "Dialog" : "Hikoya"}</p></div>
+    </div>
+    <div class="pl-ctl" style="margin-top:0">
+      <button class="pl-big" id="lsPlay" data-a="ls-play" aria-label="Ijro">${ic(LS.playing ? "pause" : "play", 1)}</button>
+    </div>
+    <div class="panel" style="display:grid;gap:10px">
+      ${chipRow("ls-text", [["hide", "Matnsiz"], ["tr", "Turkcha"], ["both", "Tarjima bilan"]], LS.view).replace(/data-a="plset" data-k="ls-text"/g, 'data-a="ls-view"')}
+      ${chipRow("rate", [[0.75, "0.75×"], [1, "1×"], [1.25, "1.25×"]], S.set.rate).replace(/data-a="plset"/g, 'data-a="ls-rate"')}
+    </div>
+    <div class="dlg">
+      ${x.lines.map((l, k) => { const tr = isD ? l[1] : l[0], uz = isD ? l[2] : l[1], side = isD ? (l[0] === "A" ? "a" : "b") : "n";
+        return `<button class="bub ${side} ${LS.k === k ? "cur" : ""}" data-a="ls-line" data-k="${k}">
+          ${isD ? `<span class="who">${l[0]}</span>` : ""}
+          <span class="t">${LS.view === "hide" ? "• • • &nbsp;" + ic("vol") : esc(tr)}</span>
+          ${LS.view === "both" ? `<span class="u">${esc(uz)}</span>` : ""}
+        </button>`; }).join("")}
+    </div>
+    <div class="h2"><h2>Savollar</h2><span>${x.q.length} ta</span></div>
+    <div class="stack">
+      ${x.q.map((q, qi) => `<div class="panel" style="margin:0"><b style="display:block;margin-bottom:10px">${qi + 1}. ${esc(q[0])}</b>
+        <div class="opts">${q[1].map((o, oi) => { const a = LS.ans[qi]; const cls = a == null ? "" : oi === q[2] ? "ok" : oi === a ? "bad" : "dim";
+          return `<button class="opt ${cls}" data-a="ls-ans" data-q="${qi}" data-o="${oi}" ${a != null ? "disabled" : ""}><span class="k">${"ABC"[oi]}</span><span>${esc(o)}</span></button>`; }).join("")}</div></div>`).join("")}
+    </div>
+    ${LS.ans.filter(a => a != null).length === x.q.length ? `<div class="count-note" style="margin-top:14px">Natija: <b>${x.q.filter((q, i) => LS.ans[i] === q[2]).length} / ${x.q.length}</b></div>` : ""}
+  </div>`;
+}
+const lsAudio = new Audio();
+lsAudio.addEventListener("ended", () => { if (LS && LS.playing) { if (LS.k + 1 < LS.x.lines.length) lsPlayLine(LS.k + 1, true); else { LS.playing = false; LS.k = -1; renderLsItem(); } } });
+lsAudio.addEventListener("error", () => { if (LS && LS.k >= 0) { const l = LS.x.lines[LS.k]; ttsSay(l.length === 3 ? l[1] : l[0]); if (LS.playing) setTimeout(() => lsAudio.dispatchEvent(new Event("ended")), 2500); } });
+function lsPlayLine(k, auto){
+  if (PL.playing) plPause();
+  fx.pause();
+  LS.k = k; if (!auto) LS.playing = false;
+  lsAudio.src = AU.line(LS.x.id, k); lsAudio.playbackRate = S.set.rate || 1;
+  lsAudio.play().catch(() => {});
+  document.querySelectorAll(".bub").forEach((b, i) => b.classList.toggle("cur", i === k));
+  const pb = $("#lsPlay"); if (pb) pb.innerHTML = ic(LS.playing ? "pause" : "play", 1);
+}
+
+/* ================= events ================= */
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-a]"); if (!b) return;
+  const a = b.dataset.a;
+  switch (a) {
+    case "audio": go(renderAudio); break;
+    case "listen": LS && (LS.playing = false); lsAudio.pause(); go(renderListen); break;
+    case "pl-toggle": PL.playing ? plPause() : plResume(); break;
+    case "pl-next": plJump(1); break;
+    case "pl-prev": plJump(-1); break;
+    case "plu": { const c = plCfg(), u = +b.dataset.u; c.from = 1; c.units = u === 0 ? [] : c.units.includes(u) ? c.units.filter(x => x !== u) : [...c.units, u].sort(); save(); if (PL.items.length) { const was = PL.playing; plBuild(); if (was) plGo(); } renderAudio(); break; }
+    case "plset": plSet(b.dataset.k, b.dataset.v); break;
+    case "ls-open": LS = { x: lsFind(b.dataset.id), k: -1, playing: false, view: "tr", ans: [] }; go(renderLsItem); break;
+    case "ls-play": if (LS.playing) { LS.playing = false; lsAudio.pause(); renderLsItem(); } else { LS.playing = true; lsPlayLine(LS.k >= 0 ? LS.k : 0, true); } break;
+    case "ls-line": lsPlayLine(+b.dataset.k); break;
+    case "ls-view": LS.view = b.dataset.v; renderLsItem(); break;
+    case "ls-rate": S.set.rate = +b.dataset.v; save(); lsAudio.playbackRate = S.set.rate; renderLsItem(); break;
+    case "ls-ans": {
+      const qi = +b.dataset.q, oi = +b.dataset.o; if (LS.ans[qi] != null) break;
+      LS.ans[qi] = oi; const ok = oi === LS.x.q[qi][2]; ok ? SND.ok() : SND.bad();
+      if (LS.ans.filter(v => v != null).length === LS.x.q.length) { S.lis = S.lis || {}; S.lis[LS.x.id] = LS.x.q.filter((q, i) => LS.ans[i] === q[2]).length; save(); }
+      renderLsItem(); break;
+    }
+  }
+});
+
+document.addEventListener("change", e => {
+  if (e.target.dataset && e.target.dataset.plin === "from") {
+    const c = plCfg(); c.from = Math.max(1, parseInt(e.target.value) || 1); save();
+    if (PL.items.length) { const was = PL.playing; plBuild(); if (was) plGo(); }
+    renderAudio();
+  }
+});
+
+/* listening quiz questions (lw: so'zni eshitib, ls: gapni eshitib) */
+function renderListenQ(){
+  const s = sess, q = s.q, w = q.w, isS = q.dir === "ls", st = sentOf(w);
+  app.innerHTML = `
+  <div class="screen play" style="animation:none">
+    ${topBar()}${metaRow()}
+    <div class="qcard" style="animation:enter .3s">
+      <div class="qlabel">${isS ? "Gapni tinglang va tarjimasini tanlang" : "So'zni tinglang va tarjimasini tanlang"}</div>
+      <button class="pl-big" data-a="lq-say" aria-label="Qayta tinglash">${ic("vol")}</button>
+      <div class="qword long" id="lqReveal" style="margin-top:14px;min-height:30px;opacity:.0;transition:opacity .3s">${esc(isS && st ? st[0] : w.tr)}</div>
+    </div>
+    <div class="opts" id="opts">
+      ${q.opts.map((o, i) => { const t = isS ? (sentOf(o) || [o.tr, o.uzM])[1] : o.uzM; return `<button class="opt" data-a="ans" data-i="${i}"><span class="k">${i + 1}</span><span>${esc(t)}</span></button>`; }).join("")}
+    </div>
+    <div class="kbd-hint"><kbd>1</kbd>–<kbd>4</kbd> javob · <kbd>R</kbd> qayta tinglash</div>
+  </div>`;
+  later(() => isS ? saySent(w) : sayWord(w), 200);
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest('[data-a="lq-say"]'); if (!b || !sess) return;
+  sess.q.dir === "ls" ? saySent(sess.q.w) : sayWord(sess.q.w);
+});
+document.addEventListener("keydown", e => {
+  if ((e.key === "r" || e.key === "R") && sess && sess.q && (sess.q.dir === "lw" || sess.q.dir === "ls")) sess.q.dir === "ls" ? saySent(sess.q.w) : sayWord(sess.q.w);
+});
+document.addEventListener("click", e => {
+  if (e.target.closest('[data-a="ans"]') && sess && sess.q && (sess.q.dir === "lw" || sess.q.dir === "ls")) { const r = $("#lqReveal"); if (r) r.style.opacity = "1"; }
+}, true);
 
 renderHome();
 if ("serviceWorker" in navigator && location.protocol === "https:") addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
