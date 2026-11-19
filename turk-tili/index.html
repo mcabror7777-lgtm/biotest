@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kelime — Turk tili A1 so'zlari</title>
+<title>Kelime — Turk tili so'zlari</title>
 <meta name="description" content="Turk tili A1 lug'atidagi 927 ta so'zni test, kartochka va o'yinlar orqali yodlang.">
 <meta name="theme-color" content="#f5f4fa" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0d0d18" media="(prefers-color-scheme: dark)">
@@ -446,7 +446,9 @@ const ic = (n, fill) => `<svg viewBox="0 0 24 24" fill="${fill?'currentColor':'n
 
 /* ---------- data ---------- */
 const SEC = { i: "İsimler", k: "Kalıp ifadeler", f: "Fiiller" };
-const UNITS = [1,2,3,4,5,6];
+const UNITS = [...new Set(WORDS.map(r => r[0]))].sort((a, b) => a - b);
+const uName = u => u > 100 ? `A2 · ${u - 100}-ünite` : u + "-ünite";
+const uShort = u => u > 100 ? `A2·${u - 100}` : `${u}`;
 const mainOf = uz => { const m = uz.split("(")[0].trim().replace(/[,;:\s]+$/, ""); return m || uz; };
 const noteOf = uz => { const i = uz.indexOf("("); return i >= 0 ? uz.slice(i).trim() : ""; };
 const clean = t => t.replace(/\([^)]*\)/g, " ").replace(/\s+/g, " ").trim();
@@ -533,7 +535,7 @@ const app = $("#app"), fb = $("#fb"), fbIn = $("#fbIn");
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
-const tagOf = w => `${w.u}-ünite · ${SEC[w.s]} · №${w.n}`;
+const tagOf = w => `${uName(w.u)} · ${SEC[w.s]} · №${w.n}`;
 
 function applyTheme(){ const t = S.set.theme; if (t === "auto") document.documentElement.removeAttribute("data-theme"); else document.documentElement.setAttribute("data-theme", t); }
 applyTheme();
@@ -542,7 +544,7 @@ applyTheme();
 let trVoice = null;
 function loadVoices(){ try { const v = speechSynthesis.getVoices(); trVoice = v.find(x => /^tr(-|_|$)/i.test(x.lang)) || null; } catch(e){} }
 if ("speechSynthesis" in window) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
-function say(t){ const w = sayMap.get(t); if (w) return playUrl(AU.w(w), t); ttsSay(t); }
+function say(t){ const w = sayMap.get(t); if (w && HAS_AUDIO(w.u)) return playUrl(AU.w(w), t); ttsSay(t); }
 
 /* sounds */
 let ac = null;
@@ -623,7 +625,7 @@ function renderHome(){
   <div class="screen home">
     <div class="mini-pl" id="miniPl" style="display:none"></div>
     <div class="top">
-      <div class="brand"><div class="logo">K</div><div><b>Kelime</b><small>Turk tili · A1 lug'at</small></div></div>
+      <div class="brand"><div class="logo">K</div><div><b>Kelime</b><small>Turk tili · A1–A2 lug'at</small></div></div>
       <div class="pill" title="Kunlik seriya" style="color:var(--accent)">${ic("flame", 1)}<span style="color:var(--text)">${streakNow()}</span></div>
       <button class="icon-btn" data-a="settings" aria-label="Sozlamalar">${ic("gear")}</button>
     </div>
@@ -684,7 +686,7 @@ function renderHome(){
     <div class="units">
       ${UNITS.map(u => { const list = W.filter(w => w.u === u), m = mastered(list); return `
       <button class="unit" data-a="unit" data-u="${u}">
-        <b>${u}-ünite</b><small>${m} / ${list.length}</small>
+        <b>${uName(u)}</b><small>${m} / ${list.length}</small>
         <div class="prog"><i style="width:${pct(m, list.length)}%"></i></div>
       </button>`; }).join("")}
     </div>
@@ -727,7 +729,7 @@ function renderSetup(){
       <h3>Yunitlar</h3>
       <div class="chips">
         <button class="chip ${!f.units.length ? "on" : ""}" data-a="u-all">Hammasi <small>${W.length}</small></button>
-        ${UNITS.map(u => `<button class="chip ${f.units.includes(u) ? "on" : ""}" data-a="u" data-u="${u}">${u}-ünite <small>${unitTotal(u)}</small></button>`).join("")}
+        ${UNITS.map(u => `<button class="chip ${f.units.includes(u) ? "on" : ""}" data-a="u" data-u="${u}">${uName(u)} <small>${unitTotal(u)}</small></button>`).join("")}
       </div>
     </div>
     <div class="panel">
@@ -1011,7 +1013,7 @@ function finish(){
   if (isRec) { SND.win(); confetti(); }
   else if (acc >= 90 && s.right >= 5) confetti();
 }
-const wordLi = w => `<div class="li"><div><b>${esc(w.tr)}</b><span>${esc(w.uz)}</span></div><em>${w.u}·${w.n}</em><button class="say sm" data-a="say" data-t="${esc(w.say)}" aria-label="Tinglash">${ic("vol")}</button></div>`;
+const wordLi = w => `<div class="li"><div><b>${esc(w.tr)}</b><span>${esc(w.uz)}</span></div><em>${uShort(w.u)}·${w.n}</em><button class="say sm" data-a="say" data-t="${esc(w.say)}" aria-label="Tinglash">${ic("vol")}</button></div>`;
 
 /* ---------- flashcards ---------- */
 let flash = null;
@@ -1260,16 +1262,18 @@ document.addEventListener("keydown", e => {
 });
 
 /* ================= AUDIO: shared ================= */
-const AUDIO_BASE = "https://mcabror7777-lgtm.github.io/kelime-audio/a1/";
+const AUDIO_ROOT = "https://mcabror7777-lgtm.github.io/kelime-audio/";
+const lv = u => AUDIO_ROOT + (u > 100 ? "a2/" : "a1/");
 const AU = {
-  w: (w, g) => `${AUDIO_BASE}w/${w.id}-tr-${g || S.set.voice}.mp3`,
-  uz: w => `${AUDIO_BASE}w/${w.id}-uz.mp3`,
-  s: (w, g) => `${AUDIO_BASE}s/${w.id}-tr-${g || S.set.voice}.mp3`,
-  suz: w => `${AUDIO_BASE}s/${w.id}-uz.mp3`,
-  line: (id, k) => `${AUDIO_BASE}l/${id}-${k}.mp3`,
-  sil: ms => `${AUDIO_BASE}sil/${ms}.mp3`,
-  unit: u => `${AUDIO_BASE}unit/${u}-unite.mp3`
+  w: (w, g) => `${lv(w.u)}w/${w.id}-tr-${g || S.set.voice}.mp3`,
+  uz: w => `${lv(w.u)}w/${w.id}-uz.mp3`,
+  s: (w, g) => `${lv(w.u)}s/${w.id}-tr-${g || S.set.voice}.mp3`,
+  suz: w => `${lv(w.u)}s/${w.id}-uz.mp3`,
+  line: (id, k) => `${AUDIO_ROOT}a1/l/${id}-${k}.mp3`,
+  sil: ms => `${AUDIO_ROOT}a1/sil/${ms}.mp3`,
+  unit: u => `${lv(u)}unit/${u}-unite.mp3`
 };
+const HAS_AUDIO = u => u < 100; // A2 ovozlari hali yo'q: telefon ovozi ishlatiladi
 const sentOf = w => (typeof SENT !== "undefined" && SENT[w.id]) || null;
 const sayMap = new Map(); W.forEach(w => { if (!sayMap.has(w.say)) sayMap.set(w.say, w); });
 const fx = new Audio(); fx.preload = "auto";
@@ -1286,8 +1290,8 @@ function ttsSay(t, lang){
   if (!("speechSynthesis" in window)) return;
   try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = lang || "tr-TR"; if (!lang && trVoice) u.voice = trVoice; u.rate = .9 * (S.set.rate || 1); speechSynthesis.speak(u); } catch(e){}
 }
-function sayWord(w){ playUrl(AU.w(w), w.say); }
-function saySent(w){ const s = sentOf(w); if (s) playUrl(AU.s(w), s[0]); }
+function sayWord(w){ HAS_AUDIO(w.u) ? playUrl(AU.w(w), w.say) : ttsSay(w.say); }
+function saySent(w){ const s = sentOf(w); if (!s) return; HAS_AUDIO(w.u) ? playUrl(AU.s(w), s[0]) : ttsSay(s[0]); }
 function fbSay(w, dir){ dir === "ls" ? saySent(w) : sayWord(w); }
 
 /* ================= PLAYER (eshitib yodlash) ================= */
@@ -1306,6 +1310,7 @@ function plWords(c){
   if (c.src === "mis") a = Object.keys(S.mis).map(id => byId[id]).filter(Boolean);
   else if (c.src === "new") a = W.filter(w => (S.mast[w.id] || 0) < 3);
   else a = W.slice();
+  a = a.filter(w => HAS_AUDIO(w.u));
   if (c.units.length) a = a.filter(w => c.units.includes(w.u));
   a.sort((x, y) => x.u - y.u || x.n - y.n);
   if (c.units.length === 1 && c.from > 1) a = a.filter(w => w.n >= c.from);
@@ -1325,15 +1330,15 @@ function plItemsFor(ws, base){
   return items;
 }
 async function plIx(key){
-  if (!PL.ix.has(key)) PL.ix.set(key, fetch(`${AUDIO_BASE}pack/${key}.json`).then(r => r.json()).catch(e => { PL.ix.delete(key); throw e; }));
+  if (!PL.ix.has(key)) PL.ix.set(key, fetch(`${AUDIO_ROOT}${key}.json`).then(r => r.json()).catch(e => { PL.ix.delete(key); throw e; }));
   return PL.ix.get(key);
 }
 async function plFetch(urls){
   const g = S.set.voice || "f", byKey = new Map(), loose = [];
   urls.forEach(u => {
     if (PL.cache.has(u)) return;
-    const rel = u.slice(AUDIO_BASE.length), m = rel.match(/^[ws]\/(\d+)-/);
-    if (m) { const k = `${m[1]}-${g}`; if (!byKey.has(k)) byKey.set(k, []); byKey.get(k).push([u, rel]); } else loose.push(u);
+    const rel0 = u.slice(AUDIO_ROOT.length), m0 = rel0.match(/^(a\d\/)(([ws])\/(\d+)-.*)$/), rel = m0 ? m0[2] : rel0, m = m0 ? [null, m0[4], m0[1]] : null;
+    if (m) { const k = `${m[2]}pack/${m[1]}-${g}`; if (!byKey.has(k)) byKey.set(k, []); byKey.get(k).push([u, rel]); } else loose.push(u);
   });
   const jobs = [];
   for (const [k, list] of byKey) {
@@ -1345,7 +1350,7 @@ async function plFetch(urls){
       if (last && st - last.end < 30000) { last.end = Math.max(last.end, en); last.segs.push(sg); } else groups.push({ start: st, end: en, segs: [sg] }); });
     groups.forEach(gr => jobs.push(async () => {
       try {
-        const r = await fetch(`${AUDIO_BASE}pack/${k}.mp3`, { headers: { Range: `bytes=${gr.start}-${gr.end - 1}` } });
+        const r = await fetch(`${AUDIO_ROOT}${k}.mp3`, { headers: { Range: `bytes=${gr.start}-${gr.end - 1}` } });
         const buf = new Uint8Array(await r.arrayBuffer()), off = r.status === 206 ? gr.start : 0;
         gr.segs.forEach(sg => PL.cache.set(sg.u, buf.subarray(sg.o[0] - off, sg.o[0] - off + sg.o[1])));
       } catch(e){ gr.segs.forEach(sg => PL.cache.set(sg.u, new Uint8Array(0))); }
@@ -1468,7 +1473,7 @@ function plResume(){
 function plStop(){ PL.a.pause(); PL.playing = false; plUi(); }
 function plMeta(w){
   if (!("mediaSession" in navigator) || !w) return;
-  try { navigator.mediaSession.metadata = new MediaMetadata({ title: w.tr, artist: w.uzM, album: `Kelime · ${w.u}-ünite`, artwork: [{ src: "icon-512.png", sizes: "512x512", type: "image/png" }] }); } catch(e){}
+  try { navigator.mediaSession.metadata = new MediaMetadata({ title: w.tr, artist: w.uzM, album: `Kelime · ${uName(w.u)}`, artwork: [{ src: "icon-512.png", sizes: "512x512", type: "image/png" }] }); } catch(e){}
 }
 if ("mediaSession" in navigator) {
   const h = (a, f) => { try { navigator.mediaSession.setActionHandler(a, f); } catch(e){} };
@@ -1479,7 +1484,7 @@ function plUi(msg){
   const box = $("#plNow"); if (!box) { miniBar(); return; }
   const it = PL.cur, w = it && it.w, s = w && sentOf(w), c = plCfg();
   box.innerHTML = w ? `
-    <div class="qlabel">${w.u}-ünite · №${w.n} · ${it.wi + 1} / ${PL.words.length}</div>
+    <div class="qlabel">${uName(w.u)} · №${w.n} · ${it.wi + 1} / ${PL.words.length}</div>
     <div class="qword ${w.tr.length > 22 ? "long" : ""}">${esc(w.tr)}</div>
     <div class="pl-uz">${esc(w.uzM)}</div>
     ${c.sent && s ? `<div class="pl-sent"><b>${esc(s[0])}</b><span>${esc(s[1])}</span></div>` : ""}
@@ -1518,14 +1523,14 @@ function renderAudio(){
     <div class="panel">
       <h3>Butun yunit — MP3</h3>
       <p class="hint" style="margin:0 0 10px">Telegram, mashina yoki istalgan pleerda eshitish uchun.</p>
-      <div class="chips">${UNITS.map(u => `<a class="chip" href="${AU.unit(u)}" target="_blank" rel="noopener" download>${ic("download")} ${u}-ünite</a>`).join("")}</div>
+      <div class="chips">${UNITS.filter(HAS_AUDIO).map(u => `<a class="chip" href="${AU.unit(u)}" target="_blank" rel="noopener" download>${ic("download")} ${uName(u)}</a>`).join("")}</div>
     </div>
     </div><div>
     <div class="panel">
       <h3>So'zlar</h3>
       <div class="chips" style="margin-bottom:12px">
         <button class="chip ${!c.units.length ? "on" : ""}" data-a="plu" data-u="0">Hammasi</button>
-        ${UNITS.map(u => `<button class="chip ${c.units.includes(u) ? "on" : ""}" data-a="plu" data-u="${u}">${u}-ünite</button>`).join("")}
+        ${UNITS.filter(HAS_AUDIO).map(u => `<button class="chip ${c.units.includes(u) ? "on" : ""}" data-a="plu" data-u="${u}">${uName(u)}</button>`).join("")}
       </div>
       ${chipRow("src", [["all", "Barchasi"], ["new", "Yodlanmagan"], ["mis", `Xatolar (${mc})`]], c.src)}
       <h3 style="margin-top:16px">Nechta so'z</h3>
